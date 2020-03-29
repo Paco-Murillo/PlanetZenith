@@ -13,10 +13,10 @@ public class Enemigo extends Objeto {
         float dx = vx*dt;
         sprite.setX(sprite.getX()+dx);
     }
-    public float getLife(){
+    public float getLifeEnemigo(){
         return life;
     }
-    public void setLife(float dano){
+    public void setLifeEnemigo(float dano){
         this.life = life-dano;
     }
 }
