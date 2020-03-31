@@ -42,11 +42,20 @@ public class PantallaJuegoNivelUno extends Pantalla {
 
     @Override
     public void render(float delta) {
+        // TODO: ACTUALIZACIONES
+
+
+
+        //DIBUJAR
+        borrarPantalla(0,0,0);
+
         batch.setProjectionMatrix(camara.combined);
+
         batch.begin();
         personaje.render(batch);
         enemigoUno.render(batch);
         enemigoDos.render(batch);
+
         batch.end();
     }
 

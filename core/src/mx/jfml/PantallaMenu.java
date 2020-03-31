@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -37,7 +38,11 @@ class PantallaMenu extends Pantalla {
         Texture texturaBotonJugar = new Texture("button_jugar.png");
         TextureRegionDrawable trdJugar = new TextureRegionDrawable(new TextureRegion(texturaBotonJugar));
 
-        ImageButton botonJugar = new ImageButton(trdJugar);
+        //Boton jugar Presionado
+        Texture texturaBtnJugarP = new Texture("button_JugarP.png");
+        TextureRegionDrawable trdJugarP = new TextureRegionDrawable(new TextureRegion(texturaBtnJugarP));
+
+        ImageButton botonJugar = new ImageButton(trdJugar, trdJugarP);
         botonJugar.setPosition(ANCHO/2-botonJugar.getWidth()/2, 2*ALTO/3);
 
         //Boton Creditos
@@ -53,6 +58,16 @@ class PantallaMenu extends Pantalla {
 
         ImageButton botonConfigurar = new ImageButton(trdConfigurar);
         botonConfigurar.setPosition(ANCHO/2-botonConfigurar.getWidth()/2, 2*ALTO/3-4*botonConfigurar.getHeight());
+
+        //Listener
+
+        botonJugar.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                juego.setScreen(new PantallaJuegoNivelUno(juego));
+            }
+        });
 
         escenaMenu.addActor(botonJugar);
         escenaMenu.addActor(botonCreditos);
