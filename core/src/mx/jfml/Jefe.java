@@ -2,7 +2,7 @@ package mx.jfml;
 import com.badlogic.gdx.graphics.Texture;
 
 public class Jefe extends Objeto {
-    private float life = 400f;
+    private float life = 400;
     private float vx = 360;
 
     public Jefe(Texture textura, float x, float y) {
