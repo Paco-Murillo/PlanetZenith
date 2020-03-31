@@ -11,12 +11,21 @@ public class PantallaJuegoNivelUno extends Pantalla {
     private Juego juego;
 
     //Necesario para dibujar en la pantalla
-    protected SpriteBatch batch;
+    //protected SpriteBatch batch;
 
     //Personaje
-    private Personaje personaje;
+    //Pulir esto (Personaje es un abstract, no puede ser inicializado, crear clase protagonista)
+    //private Personaje personaje;
     private Texture texturaPersonaje;
     private Movimiento movimiento = Movimiento.QUIETO;
+
+    //Pausa
+    //private EscenaPausa escenaPausa;
+    private EstadoJuego estadoJuego = EstadoJuego.JUGANDO; //Jugando, PAusado
+
+    //Bala
+    private Bala bala;
+    private Texture TexturaBala;
 
     //Enemigos
     private Enemigo enemigoUno;
@@ -30,8 +39,15 @@ public class PantallaJuegoNivelUno extends Pantalla {
     @Override
     public void show() {
         cargarTexturas();
+        crearProtagonista();
+
 
         Gdx.input.setInputProcessor(new ProcesadorEntrada());
+    }
+
+    private void crearProtagonista(){
+        //Pulir esto (Personaje es un abstract, no puede ser inicializado, crear clase protagonista)
+        //personaje = new Personaje(texturaPersonaje, 400, 300);
     }
 
     private void cargarTexturas() {
@@ -42,12 +58,17 @@ public class PantallaJuegoNivelUno extends Pantalla {
 
     @Override
     public void render(float delta) {
+        borrarPantalla(0,0,0);
         batch.setProjectionMatrix(camara.combined);
         batch.begin();
-        personaje.render(batch);
-        enemigoUno.render(batch);
-        enemigoDos.render(batch);
+        //Pulir esto (Personaje es un abstract, no puede ser inicializado, crear clase protagonista)
+        //personaje.render(batch);
+        //enemigoUno.render(batch);
+        //enemigoDos.render(batch);
         batch.end();
+        if(estadoJuego == EstadoJuego.PAUSADO){
+            //escenaPausa.draw();
+        }
     }
 
     @Override
@@ -108,6 +129,23 @@ public class PantallaJuegoNivelUno extends Pantalla {
         }
     }
 
+
+    //Clase Pausa( Ventana que se muestra cuando el usuario pausa el juego
+    //class EscenaPausa extends Stage{
+     //   public EscenaPausa(Viewport vista, SpriteBatch batch){
+      //      super(vista, batch);
+
+            //Texture texturaPausa = new Texture("pausa.png");
+
+
+            //Image pausa = new Image(texturaPausa);
+            //pausa.setPosition(50,800);
+            //this.addActor(pausa);
+
+        //}
+    //}
+
+
     //Movimiento Personaje
     public enum Movimiento{
         DERECHA,
@@ -120,4 +158,12 @@ public class PantallaJuegoNivelUno extends Pantalla {
         DERECHA,
         IZQUIERDA
     }
+
+    private enum EstadoJuego {
+        JUGANDO,
+        PAUSADO,
+        GANO,
+        PERDIO
+    }
+
 }

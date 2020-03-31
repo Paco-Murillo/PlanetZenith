@@ -6,4 +6,7 @@ public abstract class Personaje extends Objeto{
     public Personaje(Texture textura, float x, float y) {
         super(textura, x, y);
     }
+
+
+
 }

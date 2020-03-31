@@ -54,9 +54,23 @@ class PantallaMenu extends Pantalla {
         ImageButton botonConfigurar = new ImageButton(trdConfigurar);
         botonConfigurar.setPosition(ANCHO/2-botonConfigurar.getWidth()/2, 2*ALTO/3-4*botonConfigurar.getHeight());
 
+
+        //Listener
+        botonJugar.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                juego.setScreen(new PantallaJuegoNivelUno(juego));
+            }
+        });
+
+
+
         escenaMenu.addActor(botonJugar);
         escenaMenu.addActor(botonCreditos);
         escenaMenu.addActor(botonConfigurar);
+
+
 
         Gdx.input.setInputProcessor(escenaMenu);
     }
@@ -67,6 +81,7 @@ class PantallaMenu extends Pantalla {
         batch.setProjectionMatrix(camara.combined);
 
         batch.begin();
+
         batch.draw(texturaFondo,0,0);
         batch.end();
 
