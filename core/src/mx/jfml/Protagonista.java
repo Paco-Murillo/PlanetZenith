@@ -2,10 +2,8 @@ package mx.jfml;
 
 import com.badlogic.gdx.graphics.Texture;
 
-public class Enemigo extends Personaje {
-
-
-    public Enemigo(Texture textura, float x, float y, float vx, float vy, float vida) {
+public class Protagonista extends Personaje {
+    public Protagonista(Texture textura, float x, float y, float vx, float vy, float vida) {
         super(textura, x, y, vx, vy, vida);
     }
 
