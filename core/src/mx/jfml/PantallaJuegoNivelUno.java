@@ -12,14 +12,14 @@ public class PantallaJuegoNivelUno extends Pantalla {
 
 
     //Botones (No hacen nada, pero estan ahi para orientar)
-    private Texture texturabotonIzquierdo;
-    private Texture texturabotonDerecho;
-    private Texture texturabotonDisparar;
-    private Texture texturabotonPausa;
-    private Boton botonIzquierdo;
-    private Boton botonDerecho;
-    private Boton botondisparar;
-    private Boton botonpausa;
+    //private Texture texturabotonIzquierdo;
+    //private Texture texturabotonDerecho;
+    //private Texture texturabotonDisparar;
+    //private Texture texturabotonPausa;
+    //private Boton botonIzquierdo;
+    //private Boton botonDerecho;
+    //private Boton botondisparar;
+    //private Boton botonpausa;
 
 
 
@@ -55,7 +55,7 @@ public class PantallaJuegoNivelUno extends Pantalla {
         cargarTexturas();
         crearProtagonista();
         crearEnemigos();
-        crearBotones();
+        //crearBotones();
 
 
         Gdx.input.setInputProcessor(new ProcesadorEntrada());
@@ -70,21 +70,21 @@ public class PantallaJuegoNivelUno extends Pantalla {
         enemigoUno = new Enemigo(texturaEnemigoUno,900f, 250f, 30f, 30f, 30f);
         enemigoDos = new Enemigo(texturaEnemigoDos, 700f, 250f, 30f, 30f, 30f);
     }
-    private void crearBotones(){
-        botonDerecho = new Boton(texturabotonDerecho, 300, 30 );
-        botonIzquierdo = new Boton(texturabotonIzquierdo, 30, 30);
-        botondisparar = new Boton(texturabotonDisparar, 1000, 30);
-        botonpausa = new Boton(texturabotonPausa, 30, 550);
-    }
+    //private void crearBotones(){
+    //    botonDerecho = new Boton(texturabotonDerecho, 300, 30 );
+    //    botonIzquierdo = new Boton(texturabotonIzquierdo, 30, 30);
+    //    botondisparar = new Boton(texturabotonDisparar, 1000, 30);
+    //    botonpausa = new Boton(texturabotonPausa, 30, 550);
+    //}
 
     private void cargarTexturas() {
         texturaEnemigoUno = new Texture("enemigo.jpg");
         texturaEnemigoDos = new Texture("enemigo2.jpg");
         texturaProtagonista =new Texture("principal.jpg");
-        texturabotonIzquierdo = new Texture("botonIzquierdo.png");
-        texturabotonDerecho = new Texture("botonDerecho.png");
-        texturabotonDisparar = new Texture("botonDisparar.png");
-        texturabotonPausa = new Texture("pausa.png");
+        //texturabotonIzquierdo = new Texture("botonIzquierdo.png");
+        //texturabotonDerecho = new Texture("botonDerecho.png");
+        //texturabotonDisparar = new Texture("botonDisparar.png");
+        //texturabotonPausa = new Texture("pausa.png");
     }
 
     @Override
@@ -95,10 +95,10 @@ public class PantallaJuegoNivelUno extends Pantalla {
         protagonista.render(batch);
         enemigoUno.render(batch);
         enemigoDos.render(batch);
-        botonIzquierdo.render(batch);
-        botonDerecho.render(batch);
-        botonpausa.render(batch);
-        botondisparar.render(batch);
+        //botonIzquierdo.render(batch);
+        //botonDerecho.render(batch);
+        //botonpausa.render(batch);
+        //botondisparar.render(batch);
         //Pulir esto (Personaje es un abstract, no puede ser inicializado, crear clase protagonista)
         //personaje.render(batch);
         //enemigoUno.render(batch);
