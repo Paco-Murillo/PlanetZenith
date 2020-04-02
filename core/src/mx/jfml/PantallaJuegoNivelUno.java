@@ -2,10 +2,16 @@ package mx.jfml;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class PantallaJuegoNivelUno extends Pantalla {
     private Juego juego;
@@ -34,7 +40,7 @@ public class PantallaJuegoNivelUno extends Pantalla {
     private Movimiento movimiento = Movimiento.QUIETO;
 
     //Pausa
-    //private EscenaPausa escenaPausa;
+    private EscenaPausa escenaPausa;
     private EstadoJuego estadoJuego = EstadoJuego.JUGANDO; //Jugando, PAusado
 
     //Bala
@@ -168,19 +174,22 @@ public class PantallaJuegoNivelUno extends Pantalla {
 
 
     //Clase Pausa( Ventana que se muestra cuando el usuario pausa el juego
-    //class EscenaPausa extends Stage{
-     //   public EscenaPausa(Viewport vista, SpriteBatch batch){
-      //      super(vista, batch);
+    class EscenaPausa extends Stage{
+        public EscenaPausa(Viewport vista, SpriteBatch batch){
+            super(vista, batch);
+            Pixmap pixmap = new Pixmap((int)(ANCHO*0.7f), (int)(ALTO*0.8f),
+                    Pixmap.Format.RGBA8888);
+            pixmap.setColor(.3f,0,0,0.5f);
+            pixmap.fillCircle(300,300,300);
+            Texture texturaCirculo = new Texture(pixmap);
 
-            //Texture texturaPausa = new Texture("pausa.png");
 
+            Image imgCirculo = new Image(texturaCirculo);
+            imgCirculo.setPosition(ANCHO/2 - pixmap.getWidth()/2, ALTO/2-pixmap.getHeight()/2);
+            this.addActor(imgCirculo);
 
-            //Image pausa = new Image(texturaPausa);
-            //pausa.setPosition(50,800);
-            //this.addActor(pausa);
-
-        //}
-    //}
+        }
+    }
 
 
     //Movimiento Personaje
