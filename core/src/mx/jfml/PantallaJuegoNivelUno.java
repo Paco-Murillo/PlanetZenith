@@ -16,25 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 public class PantallaJuegoNivelUno extends Pantalla {
     private Juego juego;
 
-
-    //Botones (No hacen nada, pero estan ahi para orientar)
-    //private Texture texturabotonIzquierdo;
-    //private Texture texturabotonDerecho;
-    //private Texture texturabotonDisparar;
-    //private Texture texturabotonPausa;
-    //private Boton botonIzquierdo;
-    //private Boton botonDerecho;
-    //private Boton botondisparar;
-    //private Boton botonpausa;
-
-
-
-    //Necesario para dibujar en la pantalla
-    //protected SpriteBatch batch;
-
     //Personaje
-    //Pulir esto (Personaje es un abstract, no puede ser inicializado, crear clase protagonista)
-    //private Personaje personaje;
     private Protagonista protagonista;
     private Texture texturaProtagonista;
     private Movimiento movimiento = Movimiento.QUIETO;
@@ -44,8 +26,8 @@ public class PantallaJuegoNivelUno extends Pantalla {
     private EstadoJuego estadoJuego = EstadoJuego.JUGANDO; //Jugando, PAusado
 
     //Bala
-    private Bala bala;
-    private Texture TexturaBala;
+    private Bala bala1;
+    private Texture TexturaBala1;
 
     //Enemigos
     private Enemigo enemigoUno;
@@ -68,7 +50,6 @@ public class PantallaJuegoNivelUno extends Pantalla {
     }
 
     private void crearProtagonista(){
-        //Pulir esto (Personaje es un abstract, no puede ser inicializado, crear clase protagonista)
         protagonista = new Protagonista(texturaProtagonista, 30f, 250f, 30f, 30f, 30f);
     }
 
@@ -76,44 +57,68 @@ public class PantallaJuegoNivelUno extends Pantalla {
         enemigoUno = new Enemigo(texturaEnemigoUno,900f, 250f, 30f, 30f, 30f);
         enemigoDos = new Enemigo(texturaEnemigoDos, 700f, 250f, 30f, 30f, 30f);
     }
-    //private void crearBotones(){
-    //    botonDerecho = new Boton(texturabotonDerecho, 300, 30 );
-    //    botonIzquierdo = new Boton(texturabotonIzquierdo, 30, 30);
-    //    botondisparar = new Boton(texturabotonDisparar, 1000, 30);
-    //    botonpausa = new Boton(texturabotonPausa, 30, 550);
-    //}
+
 
     private void cargarTexturas() {
         texturaEnemigoUno = new Texture("enemigo.jpg");
         texturaEnemigoDos = new Texture("enemigo2.jpg");
         texturaProtagonista =new Texture("principal.jpg");
-        //texturabotonIzquierdo = new Texture("botonIzquierdo.png");
-        //texturabotonDerecho = new Texture("botonDerecho.png");
-        //texturabotonDisparar = new Texture("botonDisparar.png");
-        //texturabotonPausa = new Texture("pausa.png");
     }
 
     @Override
     public void render(float delta) {
+
+        if(estadoJuego== EstadoJuego.JUGANDO){
+            actualizar(delta);
+
+        }
         borrarPantalla(0,0,0);
         batch.setProjectionMatrix(camara.combined);
         batch.begin();
         protagonista.render(batch);
         enemigoUno.render(batch);
         enemigoDos.render(batch);
-        //botonIzquierdo.render(batch);
-        //botonDerecho.render(batch);
-        //botonpausa.render(batch);
-        //botondisparar.render(batch);
-        //Pulir esto (Personaje es un abstract, no puede ser inicializado, crear clase protagonista)
-        //personaje.render(batch);
-        //enemigoUno.render(batch);
-        //enemigoDos.render(batch);
         batch.end();
         if(estadoJuego == EstadoJuego.PAUSADO){
             //escenaPausa.draw();
         }
     }
+
+    private void actualizar(float delta) {
+        //Actualizaciones
+        moverProtagonista();
+        moverBala1(delta);
+    }
+
+
+
+
+    private void moverProtagonista() {
+        switch(movimiento){
+            case DERECHA:
+                protagonista.moverX(10);
+                break;
+            case IZQUIERDA:
+                protagonista.moverX(-10);
+                break;
+            default:
+                break;
+        }
+    }
+
+
+    private void moverBala1(float delta) {
+        if(bala1 != null){
+            bala1.moverX(delta);
+            //Salio??
+            //Esto debe ser mejorado cuando nos enseñen a desplazarnos por pantallas
+            if(bala1.sprite.getY() > ALTO || bala1.sprite.getX() >ANCHO){
+                //Fuera de la pantalla
+                bala1 = null;
+            }
+        }
+    }
+
 
     @Override
     public void pause() {
@@ -127,6 +132,10 @@ public class PantallaJuegoNivelUno extends Pantalla {
 
     @Override
     public void dispose() {
+        texturaEnemigoDos.dispose();
+        texturaEnemigoUno.dispose();
+        texturaProtagonista.dispose();
+
     }
 
     private class ProcesadorEntrada implements InputProcessor{
