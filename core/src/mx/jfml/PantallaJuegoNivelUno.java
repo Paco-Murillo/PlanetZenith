@@ -12,9 +12,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 
 public class PantallaJuegoNivelUno extends Pantalla {
-    private Juego juego;
+    private final Juego juego;
 
     //Personaje
     private Protagonista protagonista;
@@ -30,11 +31,15 @@ public class PantallaJuegoNivelUno extends Pantalla {
     private Texture TexturaBala1;
 
     //Enemigos
+    private Array<Enemigo> arrEnemigos;
     private Enemigo enemigoUno;
     private Enemigo enemigoDos;
     private Texture texturaEnemigoUno;
     private Texture texturaEnemigoDos;
     private int maxPasosPositivos = 30;
+
+
+
 
     public PantallaJuegoNivelUno(Juego juego){this.juego = juego;}
 
@@ -54,8 +59,13 @@ public class PantallaJuegoNivelUno extends Pantalla {
     }
 
     private void crearEnemigos(){
+        arrEnemigos = new Array<>(20);
         enemigoUno = new Enemigo(texturaEnemigoUno,900f, 250f, 30f, 30f, 30f);
         enemigoDos = new Enemigo(texturaEnemigoDos, 700f, 250f, 30f, 30f, 30f);
+        enemigoUno.direccion=Enemigo.MovimientoEnemigos.IZQUIERDA;
+        enemigoDos.direccion=Enemigo.MovimientoEnemigos.IZQUIERDA;
+        arrEnemigos.add(enemigoUno);
+        arrEnemigos.add(enemigoDos);
     }
 
 
@@ -88,6 +98,7 @@ public class PantallaJuegoNivelUno extends Pantalla {
         //Actualizaciones
         moverProtagonista();
         moverBala1(delta);
+        moverEnemigos();
     }
 
 
@@ -96,13 +107,37 @@ public class PantallaJuegoNivelUno extends Pantalla {
     private void moverProtagonista() {
         switch(movimiento){
             case DERECHA:
-                protagonista.moverX(10);
+                protagonista.moverX(.1f);
                 break;
             case IZQUIERDA:
-                protagonista.moverX(-10);
+                protagonista.moverX(-.1f);
                 break;
             default:
                 break;
+        }
+    }
+    private void moverEnemigos(){
+
+        for(Enemigo enemy: arrEnemigos){
+            if (protagonista.sprite.getX()-enemy.sprite.getX()<=0){
+                enemy.direccion=Enemigo.MovimientoEnemigos.IZQUIERDA;
+            }
+            else{
+                enemy.direccion=Enemigo.MovimientoEnemigos.DERECHA;
+            }
+        }
+
+        for(Enemigo enemy: arrEnemigos){
+            switch(enemy.direccion){
+                case DERECHA:
+                    enemy.moverX(.1f);
+                    break;
+                case IZQUIERDA:
+                    enemy.moverX(-.1f);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -157,11 +192,21 @@ public class PantallaJuegoNivelUno extends Pantalla {
 
         @Override
         public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-            return false;
+            Vector3 v = new Vector3(screenX, screenY, 0);
+            camara.unproject(v);
+            if (v.x >= ANCHO / 2) {
+                //Derecha
+                movimiento = Movimiento.DERECHA;
+            } else {
+                //Izquierda
+                movimiento = Movimiento.IZQUIERDA;
+            }
+            return true;
         }
 
         @Override
         public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+            movimiento = Movimiento.QUIETO;
             return false;
         }
 
@@ -209,11 +254,7 @@ public class PantallaJuegoNivelUno extends Pantalla {
         QUIETO
     }
     //Movimiento enemigos
-    public enum MovimientoEnemigos{
-        DERECHA,
-        IZQUIERDA,
-        QUIETO
-    }
+
 
     private enum EstadoJuego {
         JUGANDO,
