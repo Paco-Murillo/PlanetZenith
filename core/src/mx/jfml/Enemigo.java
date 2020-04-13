@@ -12,26 +12,6 @@ public class Enemigo extends Personaje {
         direccion = MovimientoEnemigos.QUIETO;
     }
 
-    @Override
-    public void moverX(float delta) {
-        super.moverX(delta);
-    }
-
-    @Override
-    public void moverY(float delta) {
-        super.moverY(delta);
-    }
-
-    @Override
-    public float getVida() {
-        return super.getVida();
-    }
-
-    @Override
-    public void setVida(float danio) {
-        super.setVida(danio);
-    }
-
     public enum MovimientoEnemigos{
         DERECHA,
         IZQUIERDA,
