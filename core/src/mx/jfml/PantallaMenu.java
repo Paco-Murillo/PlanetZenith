@@ -2,6 +2,9 @@ package mx.jfml;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -18,6 +21,10 @@ class PantallaMenu extends Pantalla {
     // Menu
     private Stage escenaMenu;
 
+    // Audio
+    private Music audioFondo;
+    private Sound efectoBoton;
+
     public PantallaMenu(Juego juego) {
         this.juego = juego;
     }
@@ -32,6 +39,8 @@ class PantallaMenu extends Pantalla {
 
     private void crearMenu() {
         escenaMenu = new Stage(vista);
+
+        musicayEfectos();
 
         // Boton jugar
         Texture texturaBotonJugar = new Texture("button_jugar.png");
@@ -60,6 +69,8 @@ class PantallaMenu extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                efectoBoton.play();
+                audioFondo.stop();
                 juego.setScreen(new PantallaJuegoNivelUno(juego));
             }
         });
@@ -73,6 +84,22 @@ class PantallaMenu extends Pantalla {
 
 
         Gdx.input.setInputProcessor(escenaMenu);
+    }
+
+    private void musicayEfectos(){
+        //AssetManager y musica
+        AssetManager manager = new AssetManager();
+        manager.load("sonidoboton.mp3", Sound.class);
+        manager.load("superMetroid.mp3", Music.class);
+        manager.finishLoading();
+
+        //audio
+        audioFondo = manager.get("superMetroid.mp3");
+        audioFondo.setLooping(true);
+        audioFondo.play();
+
+        //efecto
+        efectoBoton = manager.get("sonidoboton.mp3");
     }
 
     @Override

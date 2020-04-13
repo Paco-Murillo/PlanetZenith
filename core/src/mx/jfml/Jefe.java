@@ -1,24 +1,29 @@
 package mx.jfml;
 import com.badlogic.gdx.graphics.Texture;
 
-public class Jefe extends Objeto {
-    private float life = 400;
-    private float vx = 360;
+public class Jefe extends Enemigo {
 
-    public Jefe(Texture textura, float x, float y) {
-        super(textura, x, y);
+    public Jefe(Texture textura, float x, float y, float vx, float vy, float vida) {
+        super(textura, x, y, 360, vy, 400);
     }
 
-    public void mover(float dt) {
-        float dx = vx * dt;
-        sprite.setX(sprite.getX() + dx);
+    @Override
+    public void moverX(float delta) {
+        super.moverX(delta);
     }
 
-    public float getLifeJefe() {
-        return life;
+    @Override
+    public void moverY(float delta) {
+        super.moverY(delta);
     }
 
-    public void setLifeJefe(float dano) {
-        this.life = life - dano;
+    @Override
+    public float getVida() {
+        return super.getVida();
+    }
+
+    @Override
+    public void setVida(float danio) {
+        super.setVida(danio);
     }
 }
