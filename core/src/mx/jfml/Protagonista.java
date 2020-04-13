@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Protagonista extends Personaje {
     public Protagonista(Texture textura, float x, float y, float vx, float vy, float vida) {
-        super(textura, x, y, 300, vy, 500);
+        super(textura, x, y, vx, vy, 500);
     }
 
     @Override

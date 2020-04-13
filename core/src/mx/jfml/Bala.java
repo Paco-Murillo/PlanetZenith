@@ -9,12 +9,14 @@ public class Bala extends Objeto {
 	//velocidad
 	private float vx; //Pixeles por segundo
 	private  float vy; //Pixeles por segundi
+	private float daño;
 
-	public Bala(Texture textura, float x, float y, float vx, float vy)
+	public Bala(Texture textura, float x, float y, float vx, float vy, float daño)
 	{
 		super(textura, x, y);
 		this.vx=vx;
 		this.vy=vy;
+		this.daño = daño;
 
 	}
 	//Mover
