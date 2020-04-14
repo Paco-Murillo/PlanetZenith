@@ -72,10 +72,10 @@ public class PantallaJuegoNivelUno extends Pantalla {
 
 
     private void cargarTexturas() {
-        texturaEnemigoUno = new Texture("enemigo.jpg");
-        texturaEnemigoDos = new Texture("enemigo2.jpg");
-        texturaProtagonista =new Texture("principal.jpg");
-        texturaBala1 = new Texture("bala1.png");
+        texturaEnemigoUno = new Texture("Enemigos/enemigo.jpg");
+        texturaEnemigoDos = new Texture("Enemigos/enemigo2.jpg");
+        texturaProtagonista =new Texture("Principal/principal.jpg");
+        texturaBala1 = new Texture("Proyectiles/bala1.png");
     }
 
     @Override
