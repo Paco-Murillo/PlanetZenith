@@ -80,7 +80,18 @@ class PantallaMenu extends Pantalla {
             public void clicked(InputEvent event, float x, float y){
                 super.clicked(event, x, y);
                 efectoBoton.play();
+                audioFondo.pause();
                 juego.setScreen(new PantallaConfiguracion(juego));
+            }
+        });
+
+        botonCreditos.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                super.clicked(event, x, y);
+                efectoBoton.play();
+                audioFondo.stop();
+                juego.setScreen(new PantallaCreditos(juego));
             }
         });
 

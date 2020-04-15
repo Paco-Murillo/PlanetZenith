@@ -2,14 +2,25 @@ package mx.jfml;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
@@ -17,9 +28,12 @@ import com.badlogic.gdx.utils.Array;
 public class PantallaJuegoNivelUno extends Pantalla {
     private final Juego juego;
 
+    //Mapa
+    private TiledMap mapa;
+    private OrthogonalTiledMapRenderer mapRenderer;
+
     //Personaje
     private Protagonista protagonista;
-    private Texture texturaProtagonista;
     private Movimiento movimiento = Movimiento.QUIETO;
 
     //Pausa
@@ -27,134 +41,222 @@ public class PantallaJuegoNivelUno extends Pantalla {
     private EstadoJuego estadoJuego = EstadoJuego.JUGANDO; //Jugando, PAusado
 
     //Bala
-    private Bala bala1;
-    private Array<Bala> arrBalas1;
-    private Texture texturaBala1;
+    private Array<Bala> arrBalas;
+    private Texture texturaBala;
 
+    //HUD
+    private Stage HUD;
+    private OrthographicCamera orthographicCameraHUD;
+    private Viewport viewportHUD;
+    private Touchpad pad;
 
     //Enemigos
     private Array<Enemigo> arrEnemigos;
-    private Enemigo enemigoUno;
-    private Enemigo enemigoDos;
-    private Texture texturaEnemigoUno;
-    private Texture texturaEnemigoDos;
-    private int maxPasosPositivos = 30;
 
 
     public PantallaJuegoNivelUno(Juego juego){this.juego = juego;}
 
     @Override
     public void show() {
-        cargarTexturas();
+        cargaMapa();
         crearProtagonista();
         crearEnemigos();
-        crearArrBalas1();
+        crearArrBalas();
+        cargarTexturaBala();
+        crearHUD();
 
-        Gdx.input.setInputProcessor(new ProcesadorEntrada());
+        Gdx.input.setInputProcessor(HUD);
+    }
+
+    private void cargaMapa() {
+        AssetManager manager = new AssetManager();
+        manager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
+        manager.load("MapaJuego.tmx", TiledMap.class);
+        manager.finishLoading();
+
+        mapa = manager.get("MapaJuego.tmx");
+        mapRenderer = new OrthogonalTiledMapRenderer(mapa);
+    }
+
+    private void crearHUD() {
+        orthographicCameraHUD = new OrthographicCamera(ANCHO, ALTO);
+        orthographicCameraHUD.position.set(ANCHO/2,ALTO/2,0);
+        orthographicCameraHUD.update();
+        viewportHUD = new StretchViewport(ANCHO,ALTO,orthographicCameraHUD);
+        HUD = new Stage(viewportHUD);
+        crearBotones();
+        crearPad();
+    }
+
+    private void crearPad() {
+        Skin skin = new Skin();
+        skin.add("background", new Texture("BotonesHUD/padBack.png"));
+        skin.add("knob", new Texture("BotonesHUD/padKnob.png"));
+        Touchpad.TouchpadStyle touchpadStyle = new Touchpad.TouchpadStyle();
+        touchpadStyle.background = skin.getDrawable("background");
+        touchpadStyle.knob = skin.getDrawable("knob");
+
+        //Crear el pad
+        pad = new Touchpad(16, touchpadStyle);
+        pad.setBounds(16,16,256,256);
+        pad.setColor(1,1,1,0.7f);
+        //Eventos
+        /*
+        pad.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Touchpad pad = (Touchpad)actor;
+                if(pad.getKnobX()>0){
+                    movimiento = Movimiento.DERECHA;
+                }else if(pad.getKnobX()<0){
+                    movimiento = Movimiento.IZQUIERDA;
+                }else{
+                    movimiento = Movimiento.QUIETO;
+                }
+            }
+        });
+         */
+        HUD.addActor(pad);
+    }
+
+    private void crearBotones() {
+        ImageButton botonPausa = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/pausa.png")));
+        botonPausa.setPosition(0,ALTO-botonPausa.getHeight());
+        botonPausa.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                estadoJuego = EstadoJuego.PAUSADO;
+                escenaPausa = new EscenaPausa(vista,batch);
+            }
+        });
+        HUD.addActor(botonPausa);
+
+        ImageButton botonDisparar = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/botonDisparar.png")));
+        botonDisparar.setPosition(ANCHO-botonDisparar.getWidth(),0);
+        botonDisparar.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                float xBala = protagonista.sprite.getX() + protagonista.sprite.getWidth() - texturaBala.getWidth();
+                float yBala = protagonista.sprite.getY() + (2 * protagonista.sprite.getHeight() / 3) - texturaBala.getHeight() / 2f;
+                Bala bala = new Bala(texturaBala, xBala, yBala, 100f, 0f, 30f);
+                arrBalas.add(bala);
+                /*
+                if(arrBalas.contains(null, true)) {
+                    float xBala = protagonista.sprite.getX() + protagonista.sprite.getWidth() - texturaBala.getWidth();
+                    float yBala = protagonista.sprite.getY() + (2 * protagonista.sprite.getHeight() / 3) - texturaBala.getHeight() / 2f;
+                    Bala bala = new Bala(texturaBala, xBala, yBala, 25f, 0f, 30f);
+                    arrBalas.set(arrBalas.indexOf(null,true), bala);
+                }
+                 */
+
+            }
+        });
+        HUD.addActor(botonDisparar);
     }
 
     private void crearProtagonista(){
-        protagonista = new Protagonista(texturaProtagonista, 30f, 250f, 5f, 30f, 30f);
+        protagonista = new Protagonista(new Texture("Principal/PersonajeNormal.png"), 60f, 250f, 1f, 30f, 30f);
     }
 
     private void crearEnemigos(){
-        arrEnemigos = new Array<>(20);
-        enemigoUno = new Enemigo(texturaEnemigoUno,900f, 250f, 1f, 30f, 30f);
-        enemigoDos = new Enemigo(texturaEnemigoDos, 700f, 250f, 1f, 30f, 30f);
+        arrEnemigos = new Array<>(10);
+        Enemigo enemigoUno = new Enemigo(new Texture("Enemigos/Enemigo.png"), 900f, 250f, 1f, 30f, 30f);
+        //Enemigo enemigoDos = new Enemigo(new Texture("Enemigos/Enemigo.png"), 700f, 250f, 1f, 30f, 30f);
         enemigoUno.direccion=Enemigo.MovimientoEnemigos.IZQUIERDA;
-        enemigoDos.direccion=Enemigo.MovimientoEnemigos.IZQUIERDA;
+        //enemigoDos.direccion=Enemigo.MovimientoEnemigos.IZQUIERDA;
         arrEnemigos.add(enemigoUno);
-        arrEnemigos.add(enemigoDos);
-    }
-    private void crearArrBalas1(){
-        arrBalas1 = new Array<>(5);
+        //arrEnemigos.add(enemigoDos);
     }
 
+    private void crearArrBalas(){
+        arrBalas = new Array<>(3);
+    }
 
-    private void cargarTexturas() {
-        texturaEnemigoUno = new Texture("Enemigos/enemigo.jpg");
-        texturaEnemigoDos = new Texture("Enemigos/enemigo2.jpg");
-        texturaProtagonista =new Texture("Principal/principal.jpg");
-        texturaBala1 = new Texture("Proyectiles/bala1.png");
+    private void cargarTexturaBala() {
+        texturaBala = new Texture("Proyectiles/bala1.png");
     }
 
     @Override
     public void render(float delta) {
-        if(estadoJuego== EstadoJuego.JUGANDO){
-            actualizar(delta);
-        }
+
+        borrarPantalla();
 
         //Dibujar
-        borrarPantalla(0,0,0);
         batch.setProjectionMatrix(camara.combined);
+        mapRenderer.setView(camara);
+        mapRenderer.render();
         batch.begin();
         protagonista.render(batch);
         //render todos los enemigos
         for(Enemigo enemy: arrEnemigos){
             enemy.render(batch);
         }
+        for(Bala bala: arrBalas){
+            bala.render(batch);
+        }
         batch.end();
+
+        if(estadoJuego== EstadoJuego.JUGANDO){
+            batch.setProjectionMatrix(orthographicCameraHUD.combined);
+            HUD.draw();
+            actualizar(delta);
+            probarColisiones();
+        }
         if(estadoJuego == EstadoJuego.PAUSADO){
-            //escenaPausa.draw();
+            escenaPausa.draw();
+            Gdx.input.setInputProcessor(escenaPausa);
         }
     }
 
     private void actualizar(float delta) {
         //Actualizaciones
         moverProtagonista();
-        moverBala1(delta);
+        moverBala(delta);
         moverEnemigos();
     }
 
-
-
-
     private void moverProtagonista() {
-        switch(movimiento){
-            case DERECHA:
-                protagonista.moverX(protagonista.vx);
-                break;
-            case IZQUIERDA:
-                protagonista.moverX(-protagonista.vx);
-                break;
-            default:
-                break;
+
+        if(pad.isTouched()){
+            if (pad.getKnobPercentX()>0) {
+                if(/*(camara.-camara.viewportWidth/2)+*/protagonista.sprite.getX()<500) protagonista.moverX(protagonista.vx);
+                else {
+                    camara.translate(protagonista.vx,0);
+                    camara.update();
+                }
+            }
+            else if (pad.getKnobPercentX()<0) {
+                if (protagonista.sprite.getX()>50)protagonista.moverX(-protagonista.vx);
+                else {
+                    camara.translate(-protagonista.vx,0);
+                    camara.update();
+                }
+            }
         }
+        /*
+        if(movimiento == Movimiento.DERECHA) protagonista.moverX(protagonista.vx);
+        else if(movimiento== Movimiento.IZQUIERDA) protagonista.moverX(-protagonista.vx);
+        movimiento = Movimiento.QUIETO;
+        */
     }
+
     private void moverEnemigos(){
         for(Enemigo enemy: arrEnemigos){
-            if (protagonista.sprite.getX()-enemy.sprite.getX()<=0){
-                enemy.direccion=Enemigo.MovimientoEnemigos.IZQUIERDA;
-            }
-            else{
-                enemy.direccion=Enemigo.MovimientoEnemigos.DERECHA;
-            }
-        }
-
-        for(Enemigo enemy: arrEnemigos){
-            switch(enemy.direccion){
-                case DERECHA:
-                    enemy.moverX(enemy.vx);
-                    break;
-                case IZQUIERDA:
-                    enemy.moverX(-enemy.vx);
-                    break;
-                default:
-                    break;
-            }
+            if (protagonista.sprite.getX()<=enemy.sprite.getX()) enemy.direccion=Enemigo.MovimientoEnemigos.IZQUIERDA;
+            else enemy.direccion=Enemigo.MovimientoEnemigos.DERECHA;
         }
     }
 
-
-    private void moverBala1(float delta) {
-        for(Bala bala: arrBalas1){
-            if(bala != null){
-                bala.moverX(delta);
-                //Salio??
-                if(bala.sprite.getY() > ALTO){
-                    //Fuera de la pantalla
-                    bala = null;
-                }
+    private void moverBala(float delta) {
+        for(int indexBalas = 0; indexBalas < arrBalas.size; indexBalas++){
+            if(arrBalas.get(indexBalas) == null) continue;
+            Bala bala = arrBalas.get(indexBalas);
+            bala.moverX(delta);
+            //Salio??
+            if(bala.sprite.getX() > ANCHO){
+                arrBalas.removeIndex(indexBalas);
             }
         }
 
@@ -163,18 +265,36 @@ public class PantallaJuegoNivelUno extends Pantalla {
 
     //Pureba si la bala le pegó a un enemigo
     private void probarColisiones() {
-        for(int i=0; i<arrBalas1.size;i++) {
-            Bala bala = arrBalas1.get(i);
+        /*
+        for(int i=0; i<arrBalas.size;i++) {
+            Bala bala = arrBalas.get(i);
             if (bala != null) {
                 Rectangle rectBala = bala.sprite.getBoundingRectangle();
                 for(int j=0; j<arrEnemigos.size; j++){
                     Enemigo enemigo = arrEnemigos.get(j);
                     Rectangle rectEnemigo = enemigo.sprite.getBoundingRectangle();
-
                     if (rectEnemigo.overlaps(rectBala)) {
-                        arrEnemigos.removeIndex(j);
-                        arrBalas1.removeIndex(i);
+                        arrEnemigos.set(j,null);
+                        arrBalas.set(i, null);
+                        return;
                     }
+                }
+            }
+        }
+        */
+        for(int indexEnemigos = 0; indexEnemigos < arrEnemigos.size;indexEnemigos++) {
+            if (arrEnemigos.get(indexEnemigos)==null) continue;
+            Enemigo enemigo = arrEnemigos.get(indexEnemigos);
+            Rectangle rectEnemigo = enemigo.sprite.getBoundingRectangle();
+            for(int indexBala = 0; indexBala < arrBalas.size; indexBala++){
+                if(arrBalas.get(indexBala)== null) continue;
+                Bala bala = arrBalas.get(indexBala);
+                if(rectEnemigo.overlaps(bala.sprite.getBoundingRectangle())){
+                    //enemigo.setVida(bala.getDanio());
+                    //if(enemigo.getVida()<=0)
+                        arrEnemigos.removeIndex(indexEnemigos);
+                    arrBalas.removeIndex(indexBala);
+                    return;
                 }
             }
         }
@@ -196,9 +316,7 @@ public class PantallaJuegoNivelUno extends Pantalla {
 
     @Override
     public void dispose() {
-        texturaEnemigoDos.dispose();
-        texturaEnemigoUno.dispose();
-        texturaProtagonista.dispose();
+        texturaBala.dispose();
     }
 
     private class ProcesadorEntrada implements InputProcessor{
@@ -225,15 +343,10 @@ public class PantallaJuegoNivelUno extends Pantalla {
             //Disparo??
             if (v.y < ALTO / 2) {
                 //Disparo!!
-                for(int i=0; i<arrBalas1.size;i++) {
-                    Bala bala = arrBalas1.get(i);
-                    if (bala == null) {
-                        float xBala = protagonista.sprite.getX() + protagonista.sprite.getWidth() / 2 - texturaBala1.getWidth() / 2;
-                        float yBala = protagonista.sprite.getY() + protagonista.sprite.getHeight()/2;
-                        bala = new Bala(texturaBala1, xBala, yBala,  7f,0f,30f);
-                        arrBalas1.add(bala);
-                    }
-                }
+                float xBala = protagonista.sprite.getX() + protagonista.sprite.getWidth() - texturaBala.getWidth();
+                float yBala = protagonista.sprite.getY() + (2 * protagonista.sprite.getHeight()/3) - texturaBala.getHeight()/2f;
+                Bala bala = new Bala(texturaBala, xBala, yBala,  7f,0f,30f);
+                arrBalas.add(bala);
             } else {
                 if (v.x >= ANCHO / 2) {
                     //Derecha
@@ -274,17 +387,18 @@ public class PantallaJuegoNivelUno extends Pantalla {
     class EscenaPausa extends Stage{
         public EscenaPausa(Viewport vista, SpriteBatch batch){
             super(vista, batch);
-            Pixmap pixmap = new Pixmap((int)(ANCHO*0.7f), (int)(ALTO*0.8f),
-                    Pixmap.Format.RGBA8888);
-            pixmap.setColor(.3f,0,0,0.5f);
-            pixmap.fillCircle(300,300,300);
-            Texture texturaCirculo = new Texture(pixmap);
-
-
-            Image imgCirculo = new Image(texturaCirculo);
-            imgCirculo.setPosition(ANCHO/2 - pixmap.getWidth()/2, ALTO/2-pixmap.getHeight()/2);
-            this.addActor(imgCirculo);
-
+            ImageButton botonPlay = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/continuar.png")));
+            botonPlay.setPosition(0, ALTO-botonPlay.getHeight());
+            botonPlay.addListener(new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    estadoJuego = EstadoJuego.JUGANDO;
+                    escenaPausa = null;
+                    Gdx.input.setInputProcessor(HUD);
+                }
+            });
+            addActor(botonPlay);
         }
     }
 
@@ -293,7 +407,9 @@ public class PantallaJuegoNivelUno extends Pantalla {
     public enum Movimiento{
         DERECHA,
         IZQUIERDA,
-        ARRIBA,
+        SALTO,
+        SALTODERECHA,
+        SALTOIZQUIERDA,
         QUIETO
     }
     //Movimiento enemigos

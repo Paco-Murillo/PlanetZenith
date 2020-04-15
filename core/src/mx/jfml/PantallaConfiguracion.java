@@ -51,28 +51,28 @@ class PantallaConfiguracion extends Pantalla {
         TextureRegionDrawable trdVolUpMusica = new TextureRegionDrawable(new TextureRegion(texturaBtnVolUpMusica));
 
         ImageButton btnVolUpMusica = new ImageButton(trdVolUpMusica);
-        btnVolUpMusica.setPosition(ANCHO*.66f, ALTO/2+ 40f);
+        btnVolUpMusica.setPosition(ANCHO*.66f + btnVolUpMusica.getWidth()/2, ALTO*.66f - btnVolUpMusica.getHeight()/2);
 
         //Boton Bajar Volumen Musica
         Texture texturaBtnVolDownMusica = new Texture("BotonesConf/btnVolAbajo.png");
         TextureRegionDrawable trdVolDownMusica = new TextureRegionDrawable(new TextureRegion(texturaBtnVolDownMusica));
 
         ImageButton btnVolDownMusica = new ImageButton(trdVolDownMusica);
-        btnVolDownMusica.setPosition(btnVolUpMusica.getX() + btnVolUpMusica.getWidth() + 30f, ALTO/2+40f);
+        btnVolDownMusica.setPosition(btnVolUpMusica.getX() + btnVolUpMusica.getWidth() + 30f, ALTO*.66f - btnVolDownMusica.getHeight()/2);
 
         //Boton Subir Volumen Efectos
         Texture texturaBtnVolUpEfectos = new Texture("BotonesConf/btnVolArribaEf.png");
         TextureRegionDrawable trdVolUpEfectos = new TextureRegionDrawable(new TextureRegion(texturaBtnVolUpEfectos));
 
         ImageButton btnVolUpEfectos = new ImageButton(trdVolUpEfectos);
-        btnVolUpEfectos.setPosition(ANCHO*.66f, ALTO*66f);
+        btnVolUpEfectos.setPosition(ANCHO*.66f, ALTO/2 - btnVolUpEfectos.getHeight()/2);
 
         //Boton Bajar Volumen Efectos
         Texture texturaBtnVolDownEfectos = new Texture("BotonesConf/btnVolAbajoEf.png");
         TextureRegionDrawable trdVolDownEfectos = new TextureRegionDrawable(new TextureRegion(texturaBtnVolDownEfectos));
 
         ImageButton btnVolDownEfectos = new ImageButton(trdVolDownEfectos);
-        btnVolDownEfectos.setPosition(btnVolUpEfectos.getX() + btnVolUpEfectos.getWidth() + 30f, ALTO*66f);
+        btnVolDownEfectos.setPosition(btnVolUpEfectos.getX() + btnVolUpEfectos.getWidth() + 30f, ALTO/2 - btnVolUpEfectos.getHeight()/2);
 
         //Boton Mutear
         Texture texturaBtnMute= new Texture("BotonesConf/btnMute.png");
