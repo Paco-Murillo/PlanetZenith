@@ -142,6 +142,7 @@ public class PantallaJuegoNivelUno extends Pantalla {
                 float yBala = protagonista.sprite.getY() + (2 * protagonista.sprite.getHeight() / 3) - texturaBala.getHeight() / 2f;
                 Bala bala = new Bala(texturaBala, xBala, yBala, 100f, 0f, 30f);
                 arrBalas.add(bala);
+                arrBalas.contains(bala,false);
                 /*
                 if(arrBalas.contains(null, true)) {
                     float xBala = protagonista.sprite.getX() + protagonista.sprite.getWidth() - texturaBala.getWidth();
@@ -290,8 +291,8 @@ public class PantallaJuegoNivelUno extends Pantalla {
                 if(arrBalas.get(indexBala)== null) continue;
                 Bala bala = arrBalas.get(indexBala);
                 if(rectEnemigo.overlaps(bala.sprite.getBoundingRectangle())){
-                    //enemigo.setVida(bala.getDanio());
-                    //if(enemigo.getVida()<=0)
+                    enemigo.setVida(bala.getDanio());
+                    if(enemigo.getVida()<=0)
                         arrEnemigos.removeIndex(indexEnemigos);
                     arrBalas.removeIndex(indexBala);
                     return;

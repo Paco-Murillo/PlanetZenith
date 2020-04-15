@@ -12,6 +12,10 @@ public class Enemigo extends Personaje {
         direccion = MovimientoEnemigos.QUIETO;
     }
 
+    public boolean equals(Enemigo enemigo){
+        return enemigo.sprite.getX() == sprite.getX() && enemigo.sprite.getY() == sprite.getY();
+    }
+
     public enum MovimientoEnemigos{
         DERECHA,
         IZQUIERDA,
