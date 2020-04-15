@@ -22,8 +22,8 @@ class PantallaMenu extends Pantalla {
     private Stage escenaMenu;
 
     // Audio
-    private Music audioFondo;
-    private Sound efectoBoton;
+    protected Music audioFondo;
+    protected Sound efectoBoton;
 
     public PantallaMenu(Juego juego) {
         this.juego = juego;
@@ -75,7 +75,7 @@ class PantallaMenu extends Pantalla {
             }
         });
 
-        botonConfigurar.addListener(new ClickListener(){
+        botonConfigurar.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y){
                 super.clicked(event, x, y);
@@ -105,6 +105,7 @@ class PantallaMenu extends Pantalla {
         //audio
         audioFondo = manager.get("Audio/Musica/superMetroid.mp3");
         audioFondo.setLooping(true);
+        audioFondo.setVolume(.25f);
         audioFondo.play();
 
         //efecto
