@@ -221,7 +221,7 @@ public class PantallaJuegoNivelUno extends Pantalla {
 
         if(pad.isTouched()){
             if (pad.getKnobPercentX()>0) {
-                if(/*(camara.-camara.viewportWidth/2)+*/protagonista.sprite.getX()<500) protagonista.moverX(protagonista.vx);
+                if(protagonista.sprite.getX()<500) protagonista.moverX(protagonista.vx);
                 else {
                     camara.translate(protagonista.vx,0);
                     camara.update();
