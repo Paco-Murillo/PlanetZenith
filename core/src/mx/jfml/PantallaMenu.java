@@ -2,6 +2,9 @@ package mx.jfml;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -18,6 +21,10 @@ class PantallaMenu extends Pantalla {
     // Menu
     private Stage escenaMenu;
 
+    // Audio
+    protected Music audioFondo;
+    protected Sound efectoBoton;
+
     public PantallaMenu(Juego juego) {
         this.juego = juego;
     }
@@ -25,7 +32,7 @@ class PantallaMenu extends Pantalla {
 
     @Override
     public void show() {
-        texturaFondo = new Texture("fondo1.jpg");
+        texturaFondo = new Texture("Fondos/fondo1.jpg");
 
         crearMenu();
     }
@@ -33,32 +40,76 @@ class PantallaMenu extends Pantalla {
     private void crearMenu() {
         escenaMenu = new Stage(vista);
 
+        musicayEfectos();
+
         // Boton jugar
-        Texture texturaBotonJugar = new Texture("button_jugar.png");
+        Texture texturaBotonJugar = new Texture("BotonesMenu/button_jugar.png");
         TextureRegionDrawable trdJugar = new TextureRegionDrawable(new TextureRegion(texturaBotonJugar));
 
         ImageButton botonJugar = new ImageButton(trdJugar);
         botonJugar.setPosition(ANCHO/2-botonJugar.getWidth()/2, 2*ALTO/3);
 
         //Boton Creditos
-        Texture texturaBotonCreditos = new Texture("button_creditos.png");
+        Texture texturaBotonCreditos = new Texture("BotonesMenu/button_creditos.png");
         TextureRegionDrawable trdCreditos = new TextureRegionDrawable(new TextureRegion(texturaBotonCreditos));
 
         ImageButton botonCreditos = new ImageButton(trdCreditos);
         botonCreditos.setPosition(ANCHO/2-botonCreditos.getWidth()/2, 2*ALTO/3-2*botonCreditos.getHeight());
 
         //Boton Configuración
-        Texture texturaBotonConfigurar = new Texture("button_configurar.png");
+        Texture texturaBotonConfigurar = new Texture("BotonesMenu/button_configurar.png");
         TextureRegionDrawable trdConfigurar = new TextureRegionDrawable(new TextureRegion(texturaBotonConfigurar));
 
         ImageButton botonConfigurar = new ImageButton(trdConfigurar);
         botonConfigurar.setPosition(ANCHO/2-botonConfigurar.getWidth()/2, 2*ALTO/3-4*botonConfigurar.getHeight());
 
+
+        //Listener
+        botonJugar.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                efectoBoton.play();
+                audioFondo.stop();
+                juego.setScreen(new PantallaJuegoNivelUno(juego));
+            }
+        });
+
+        botonConfigurar.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                super.clicked(event, x, y);
+                efectoBoton.play();
+                juego.setScreen(new PantallaConfiguracion(juego));
+            }
+        });
+
+
+
         escenaMenu.addActor(botonJugar);
         escenaMenu.addActor(botonCreditos);
         escenaMenu.addActor(botonConfigurar);
 
+
+
         Gdx.input.setInputProcessor(escenaMenu);
+    }
+
+    private void musicayEfectos(){
+        //AssetManager y musica
+        AssetManager manager = new AssetManager();
+        manager.load("Audio/Efectos/sonidoboton.mp3", Sound.class);
+        manager.load("Audio/Musica/superMetroid.mp3", Music.class);
+        manager.finishLoading();
+
+        //audio
+        audioFondo = manager.get("Audio/Musica/superMetroid.mp3");
+        audioFondo.setLooping(true);
+        audioFondo.setVolume(.25f);
+        audioFondo.play();
+
+        //efecto
+        efectoBoton = manager.get("Audio/Efectos/sonidoboton.mp3");
     }
 
     @Override
@@ -67,6 +118,7 @@ class PantallaMenu extends Pantalla {
         batch.setProjectionMatrix(camara.combined);
 
         batch.begin();
+
         batch.draw(texturaFondo,0,0);
         batch.end();
 
