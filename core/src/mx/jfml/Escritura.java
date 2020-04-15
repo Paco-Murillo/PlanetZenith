@@ -21,6 +21,10 @@ class Escritura {
         this.enunciado = enunciado;
     }
 
+    public void setTexto(Texto texto){
+        this.texto = texto;
+    }
+
     public void render(SpriteBatch batch){
         texto.render(batch, enunciado, x, y);
     }
