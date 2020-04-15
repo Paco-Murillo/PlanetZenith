@@ -138,20 +138,18 @@ public class PantallaJuegoNivelUno extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                /*
                 float xBala = protagonista.sprite.getX() + protagonista.sprite.getWidth() - texturaBala.getWidth();
                 float yBala = protagonista.sprite.getY() + (2 * protagonista.sprite.getHeight() / 3) - texturaBala.getHeight() / 2f;
                 Bala bala = new Bala(texturaBala, xBala, yBala, 100f, 0f, 30f);
                 arrBalas.add(bala);
-                arrBalas.contains(bala,false);
-                /*
-                if(arrBalas.contains(null, true)) {
+                */
+                if(arrBalas.contains(null, false)) {
                     float xBala = protagonista.sprite.getX() + protagonista.sprite.getWidth() - texturaBala.getWidth();
                     float yBala = protagonista.sprite.getY() + (2 * protagonista.sprite.getHeight() / 3) - texturaBala.getHeight() / 2f;
                     Bala bala = new Bala(texturaBala, xBala, yBala, 25f, 0f, 30f);
-                    arrBalas.set(arrBalas.indexOf(null,true), bala);
+                    arrBalas.set(arrBalas.indexOf(null,false), bala);
                 }
-                 */
-
             }
         });
         HUD.addActor(botonDisparar);
@@ -236,11 +234,6 @@ public class PantallaJuegoNivelUno extends Pantalla {
                 }
             }
         }
-        /*
-        if(movimiento == Movimiento.DERECHA) protagonista.moverX(protagonista.vx);
-        else if(movimiento== Movimiento.IZQUIERDA) protagonista.moverX(-protagonista.vx);
-        movimiento = Movimiento.QUIETO;
-        */
     }
 
     private void moverEnemigos(){
@@ -266,23 +259,6 @@ public class PantallaJuegoNivelUno extends Pantalla {
 
     //Pureba si la bala le pegó a un enemigo
     private void probarColisiones() {
-        /*
-        for(int i=0; i<arrBalas.size;i++) {
-            Bala bala = arrBalas.get(i);
-            if (bala != null) {
-                Rectangle rectBala = bala.sprite.getBoundingRectangle();
-                for(int j=0; j<arrEnemigos.size; j++){
-                    Enemigo enemigo = arrEnemigos.get(j);
-                    Rectangle rectEnemigo = enemigo.sprite.getBoundingRectangle();
-                    if (rectEnemigo.overlaps(rectBala)) {
-                        arrEnemigos.set(j,null);
-                        arrBalas.set(i, null);
-                        return;
-                    }
-                }
-            }
-        }
-        */
         for(int indexEnemigos = 0; indexEnemigos < arrEnemigos.size;indexEnemigos++) {
             if (arrEnemigos.get(indexEnemigos)==null) continue;
             Enemigo enemigo = arrEnemigos.get(indexEnemigos);
@@ -318,69 +294,6 @@ public class PantallaJuegoNivelUno extends Pantalla {
     @Override
     public void dispose() {
         texturaBala.dispose();
-    }
-
-    private class ProcesadorEntrada implements InputProcessor{
-
-        @Override
-        public boolean keyDown(int keycode) {
-            return false;
-        }
-
-        @Override
-        public boolean keyUp(int keycode) {
-            return false;
-        }
-
-        @Override
-        public boolean keyTyped(char character) {
-            return false;
-        }
-
-        @Override
-        public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-            Vector3 v = new Vector3(screenX, screenY, 0);
-            camara.unproject(v);
-            //Disparo??
-            if (v.y < ALTO / 2) {
-                //Disparo!!
-                float xBala = protagonista.sprite.getX() + protagonista.sprite.getWidth() - texturaBala.getWidth();
-                float yBala = protagonista.sprite.getY() + (2 * protagonista.sprite.getHeight()/3) - texturaBala.getHeight()/2f;
-                Bala bala = new Bala(texturaBala, xBala, yBala,  7f,0f,30f);
-                arrBalas.add(bala);
-            } else {
-                if (v.x >= ANCHO / 2) {
-                    //Derecha
-                    movimiento = Movimiento.DERECHA;
-                } else {
-                    //Izquierda
-                    movimiento = Movimiento.IZQUIERDA;
-                }
-
-            }
-            return true;
-        }
-
-        @Override
-        public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-            movimiento = Movimiento.QUIETO;
-            return false;
-        }
-
-        @Override
-        public boolean touchDragged(int screenX, int screenY, int pointer) {
-            return false;
-        }
-
-        @Override
-        public boolean mouseMoved(int screenX, int screenY) {
-            return false;
-        }
-
-        @Override
-        public boolean scrolled(int amount) {
-            return false;
-        }
     }
 
 

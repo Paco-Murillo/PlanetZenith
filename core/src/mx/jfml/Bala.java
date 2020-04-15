@@ -29,7 +29,12 @@ public class Bala extends Objeto {
 
     public float getDanio(){ return danio;}
 
-	public boolean equals(Bala bala){
-        return bala.sprite.getX() == sprite.getX();
+    @Override
+	public boolean equals(Object o){
+		if(o instanceof Bala) {
+			Bala bala = (Bala)o;
+			return bala.sprite.getX() == sprite.getX();
+		}
+		return super.equals(o);
     }
 }

@@ -12,8 +12,13 @@ public class Enemigo extends Personaje {
         direccion = MovimientoEnemigos.QUIETO;
     }
 
-    public boolean equals(Enemigo enemigo){
-        return enemigo.sprite.getX() == sprite.getX() && enemigo.sprite.getY() == sprite.getY();
+    @Override
+    public boolean equals(Object o){
+        if(o instanceof Enemigo) {
+            Enemigo enemigo = (Enemigo)o;
+            return enemigo.sprite.getX() == sprite.getX() && enemigo.sprite.getY() == sprite.getY();
+        }
+        return super.equals(o);
     }
 
     public enum MovimientoEnemigos{
