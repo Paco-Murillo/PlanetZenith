@@ -43,6 +43,7 @@ public class PantallaJuegoNivelUno extends Pantalla {
     //Bala
     private Array<Bala> arrBalas;
     private Texture texturaBala;
+    private int contadorBalas;
 
     //HUD
     private Stage HUD;
@@ -138,18 +139,25 @@ public class PantallaJuegoNivelUno extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                /*
-                float xBala = protagonista.sprite.getX() + protagonista.sprite.getWidth() - texturaBala.getWidth();
-                float yBala = protagonista.sprite.getY() + (2 * protagonista.sprite.getHeight() / 3) - texturaBala.getHeight() / 2f;
-                Bala bala = new Bala(texturaBala, xBala, yBala, 100f, 0f, 30f);
-                arrBalas.add(bala);
-                */
-                if(arrBalas.contains(null, false)) {
+                if (contadorBalas<3) {
                     float xBala = protagonista.sprite.getX() + protagonista.sprite.getWidth() - texturaBala.getWidth();
                     float yBala = protagonista.sprite.getY() + (2 * protagonista.sprite.getHeight() / 3) - texturaBala.getHeight() / 2f;
-                    Bala bala = new Bala(texturaBala, xBala, yBala, 25f, 0f, 30f);
-                    arrBalas.set(arrBalas.indexOf(null,false), bala);
+                    Bala bala = new Bala(texturaBala, xBala, yBala, 100f, 0f, 30f);
+                    arrBalas.add(bala);
+                    contadorBalas++;
                 }
+                /*
+                if(contadorBalas < 3) {
+                    for(int indexBalas = 0; indexBalas<arrBalas.size; indexBalas++) {
+                        if(arrBalas.get(indexBalas)!=null) continue;
+                        float xBala = protagonista.sprite.getX() + protagonista.sprite.getWidth() - texturaBala.getWidth();
+                        float yBala = protagonista.sprite.getY() + (2 * protagonista.sprite.getHeight() / 3) - texturaBala.getHeight() / 2f;
+                        Bala bala = new Bala(texturaBala, xBala, yBala, 25f, 0f, 30f);
+                        arrBalas.set(indexBalas, bala);
+                        break;
+                    }
+                }
+                 */
             }
         });
         HUD.addActor(botonDisparar);
@@ -170,7 +178,9 @@ public class PantallaJuegoNivelUno extends Pantalla {
     }
 
     private void crearArrBalas(){
+        contadorBalas = 0;
         arrBalas = new Array<>(3);
+        System.out.println(arrBalas.toString());
     }
 
     private void cargarTexturaBala() {
@@ -222,6 +232,7 @@ public class PantallaJuegoNivelUno extends Pantalla {
             if (pad.getKnobPercentX()>0) {
                 if(protagonista.sprite.getX()<500) protagonista.moverX(protagonista.vx);
                 else {
+                    //vista.setScreenX((int)(vista.getScreenX()+protagonista.vx));
                     camara.translate(protagonista.vx,0);
                     camara.update();
                 }
@@ -251,6 +262,7 @@ public class PantallaJuegoNivelUno extends Pantalla {
             //Salio??
             if(bala.sprite.getX() > ANCHO){
                 arrBalas.removeIndex(indexBalas);
+                contadorBalas--;
             }
         }
 
@@ -271,6 +283,7 @@ public class PantallaJuegoNivelUno extends Pantalla {
                     if(enemigo.getVida()<=0)
                         arrEnemigos.removeIndex(indexEnemigos);
                     arrBalas.removeIndex(indexBala);
+                    contadorBalas--;
                     return;
                 }
             }
