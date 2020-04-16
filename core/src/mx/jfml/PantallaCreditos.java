@@ -33,7 +33,7 @@ class PantallaCreditos extends Pantalla {
 
     @Override
     public void show() {
-        texturaFondo = new Texture("Fondos/fondo1.jpg");
+        texturaFondo = new Texture("Fondos/fondoMenu.png");
 
         crearCreditos();
     }

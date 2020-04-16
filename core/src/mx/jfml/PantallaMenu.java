@@ -25,6 +25,9 @@ class PantallaMenu extends Pantalla {
     protected Music audioFondo;
     protected Sound efectoBoton;
 
+    //Texto
+    private Escritura txtZenith;
+
     public PantallaMenu(Juego juego) {
         this.juego = juego;
     }
@@ -32,7 +35,7 @@ class PantallaMenu extends Pantalla {
 
     @Override
     public void show() {
-        texturaFondo = new Texture("Fondos/fondo1.jpg");
+        texturaFondo = new Texture("Fondos/fondoMenu.png");
 
         crearMenu();
     }
@@ -42,26 +45,30 @@ class PantallaMenu extends Pantalla {
 
         musicayEfectos();
 
+        //Texto
+        txtZenith = new Escritura(ANCHO/2, ALTO - 120);
+        txtZenith.setEnunciado("Planet Zenith");
+
         // Boton jugar
-        Texture texturaBotonJugar = new Texture("BotonesMenu/button_jugar.png");
+        Texture texturaBotonJugar = new Texture("BotonesMenu/btnJugar.png");
         TextureRegionDrawable trdJugar = new TextureRegionDrawable(new TextureRegion(texturaBotonJugar));
 
         ImageButton botonJugar = new ImageButton(trdJugar);
-        botonJugar.setPosition(ANCHO/2-botonJugar.getWidth()/2, 2*ALTO/3);
+        botonJugar.setPosition(ANCHO/3 - botonJugar.getWidth()/2, ALTO/2 - botonJugar.getHeight()/2);
 
         //Boton Creditos
-        Texture texturaBotonCreditos = new Texture("BotonesMenu/button_creditos.png");
+        Texture texturaBotonCreditos = new Texture("BotonesMenu/btnCred.png");
         TextureRegionDrawable trdCreditos = new TextureRegionDrawable(new TextureRegion(texturaBotonCreditos));
 
         ImageButton botonCreditos = new ImageButton(trdCreditos);
-        botonCreditos.setPosition(ANCHO/2-botonCreditos.getWidth()/2, 2*ALTO/3-2*botonCreditos.getHeight());
+        botonCreditos.setPosition(botonJugar.getX() + botonJugar.getWidth() + 120 - botonCreditos.getWidth()/2, ALTO/2 - botonCreditos.getHeight()/2);
 
         //Boton Configuración
-        Texture texturaBotonConfigurar = new Texture("BotonesMenu/button_configurar.png");
+        Texture texturaBotonConfigurar = new Texture("BotonesMenu/btnConf.png");
         TextureRegionDrawable trdConfigurar = new TextureRegionDrawable(new TextureRegion(texturaBotonConfigurar));
 
         ImageButton botonConfigurar = new ImageButton(trdConfigurar);
-        botonConfigurar.setPosition(ANCHO/2-botonConfigurar.getWidth()/2, 2*ALTO/3-4*botonConfigurar.getHeight());
+        botonConfigurar.setPosition(botonCreditos.getX() + botonCreditos.getWidth() + 120 - botonConfigurar.getWidth()/2, ALTO/2 - botonConfigurar.getHeight()/2);
 
 
         //Listener
@@ -131,6 +138,9 @@ class PantallaMenu extends Pantalla {
         batch.begin();
 
         batch.draw(texturaFondo,0,0);
+
+        txtZenith.render(batch);
+
         batch.end();
 
         escenaMenu.draw();
