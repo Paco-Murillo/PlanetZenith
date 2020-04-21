@@ -123,7 +123,7 @@ class PantallaMenu extends Pantalla {
         //audio
         audioFondo = manager.get("Audio/Musica/superMetroid.mp3");
         audioFondo.setLooping(true);
-        audioFondo.setVolume(.25f);
+        audioFondo.setVolume(0f); //.25f
         audioFondo.play();
 
         //efecto

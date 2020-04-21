@@ -128,7 +128,8 @@ public class PantallaJuegoNivelUno extends Pantalla {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 estadoJuego = EstadoJuego.PAUSADO;
-                escenaPausa = new EscenaPausa(vista,batch);
+                escenaPausa = new EscenaPausa(viewportHUD,batch);
+                Gdx.input.setInputProcessor(escenaPausa);
             }
         });
         HUD.addActor(botonPausa);
@@ -214,8 +215,8 @@ public class PantallaJuegoNivelUno extends Pantalla {
             probarColisiones();
         }
         if(estadoJuego == EstadoJuego.PAUSADO){
+            batch.setProjectionMatrix(orthographicCameraHUD.combined);
             escenaPausa.draw();
-            Gdx.input.setInputProcessor(escenaPausa);
         }
     }
 
