@@ -22,8 +22,9 @@ class PantallaMenu extends Pantalla {
     private Stage escenaMenu;
 
     // Audio
-    protected Music audioFondo;
-    protected Sound efectoBoton;
+//    protected Music audioFondo;
+//    protected Sound efectoBoton;
+    private AudioManejador AudioManager;
 
     //Texto
     private Escritura txtZenith;
@@ -43,7 +44,9 @@ class PantallaMenu extends Pantalla {
     private void crearMenu() {
         escenaMenu = new Stage(vista);
 
-        musicayEfectos();
+        AudioManager = new AudioManejador(new AssetManager());
+        AudioManager.setLooping(true);
+        AudioManager.playMusica();
 
         //Texto
         txtZenith = new Escritura(ANCHO/2, ALTO - 120);
@@ -76,8 +79,7 @@ class PantallaMenu extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                efectoBoton.play();
-                audioFondo.stop();
+                AudioManager.efectoBtnMenu.play();
                 juego.setScreen(new PantallaJuegoNivelUno(juego));
             }
         });
@@ -86,8 +88,8 @@ class PantallaMenu extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y){
                 super.clicked(event, x, y);
-                efectoBoton.play();
-                audioFondo.pause();
+                AudioManager.efectoBtnMenu.play();
+                AudioManager.stopMusica();
                 juego.setScreen(new PantallaConfiguracion(juego));
             }
         });
@@ -96,8 +98,8 @@ class PantallaMenu extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y){
                 super.clicked(event, x, y);
-                efectoBoton.play();
-                audioFondo.stop();
+                AudioManager.efectoBtnMenu.play();
+                AudioManager.stopMusica();
                 juego.setScreen(new PantallaCreditos(juego));
             }
         });
@@ -113,7 +115,7 @@ class PantallaMenu extends Pantalla {
         Gdx.input.setInputProcessor(escenaMenu);
     }
 
-    private void musicayEfectos(){
+/*    private void musicayEfectos(){
         //AssetManager y musica
         AssetManager manager = new AssetManager();
         manager.load("Audio/Efectos/sonidoboton.mp3", Sound.class);
@@ -128,7 +130,7 @@ class PantallaMenu extends Pantalla {
 
         //efecto
         efectoBoton = manager.get("Audio/Efectos/sonidoboton.mp3");
-    }
+    }*/
 
     @Override
     public void render(float delta) {

@@ -19,6 +19,7 @@ public class AudioManejador {
         this.manager = manager;
         musicaFondo = manager.get("Audio/Musica/superMetroid.mp3", Music.class);
         efectoBtnMenu = manager.get("Audio/Efectos/sonidoboton.mp3", Sound.class);
+        manager.finishLoading();
     }
 
     public void setMusicaFondo(String musica) {
@@ -41,4 +42,11 @@ public class AudioManejador {
         return musicaFondo.getVolume();
     }
 
+    public void setVolMusica(float volumen){
+        musicaFondo.setVolume(volumen);
+    }
+
+    public void setVolEfectos(float volumen){
+        efectoBtnMenu.setVolume(efectoBtnMenu.play(), volumen);
+    }
 }
