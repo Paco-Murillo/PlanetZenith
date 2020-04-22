@@ -1,14 +1,12 @@
 package mx.jfml;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Bala extends Objeto {
 
 	//velocidad
 	private float vx; //Pixeles por segundo
-	private  float vy; //Pixeles por segundi
+	private float vy; //Pixeles por segundi
 	private float danio;
 
 	public Bala(Texture textura, float x, float y, float vx, float vy, float danio)
@@ -27,5 +25,16 @@ public class Bala extends Objeto {
     public void moverY(float dt){
         float dy = vy*dt;
         sprite.setY(sprite.getY()+dy);
+    }
+
+    public float getDanio(){ return danio;}
+
+    @Override
+	public boolean equals(Object o){
+		if(o instanceof Bala) {
+			Bala bala = (Bala)o;
+			return bala.sprite.getX() == sprite.getX();
+		}
+		return super.equals(o);
     }
 }
