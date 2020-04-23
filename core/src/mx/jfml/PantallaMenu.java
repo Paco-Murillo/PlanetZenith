@@ -24,7 +24,7 @@ class PantallaMenu extends Pantalla {
     // Audio
 //    protected Music audioFondo;
 //    protected Sound efectoBoton;
-    private AudioManejador AudioManager;
+    public static AudioManejador audioManager;
 
     //Texto
     private Escritura txtZenith;
@@ -44,9 +44,12 @@ class PantallaMenu extends Pantalla {
     private void crearMenu() {
         escenaMenu = new Stage(vista);
 
-        AudioManager = new AudioManejador(new AssetManager());
-        AudioManager.setLooping(true);
-        AudioManager.playMusica();
+        audioManager = new AudioManejador(new AssetManager());
+
+        audioManager.setLooping(true);
+        if(!audioManager.tocando){
+            audioManager.playMusica();
+        }
 
         //Texto
         txtZenith = new Escritura(ANCHO/2, ALTO - 120);
@@ -79,7 +82,7 @@ class PantallaMenu extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                AudioManager.efectoBtnMenu.play();
+                audioManager.efectoBtnMenu.play();
                 juego.setScreen(new PantallaJuegoNivelUno(juego));
             }
         });
@@ -88,8 +91,9 @@ class PantallaMenu extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y){
                 super.clicked(event, x, y);
-                AudioManager.efectoBtnMenu.play();
-                AudioManager.stopMusica();
+                audioManager.efectoBtnMenu.play();
+                audioManager.stopMusica();
+                audioManager.setTocando(true);
                 juego.setScreen(new PantallaConfiguracion(juego));
             }
         });
@@ -98,8 +102,9 @@ class PantallaMenu extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y){
                 super.clicked(event, x, y);
-                AudioManager.efectoBtnMenu.play();
-                AudioManager.stopMusica();
+                audioManager.efectoBtnMenu.play();
+                audioManager.stopMusica();
+                audioManager.setTocando(true);
                 juego.setScreen(new PantallaCreditos(juego));
             }
         });
