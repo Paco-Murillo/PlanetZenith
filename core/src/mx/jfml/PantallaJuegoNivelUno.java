@@ -17,11 +17,12 @@ public class PantallaJuegoNivelUno extends Nivel {
         crearEnemigos();
         cargarTexturaBala("Proyectiles/bala1.png");
         Gdx.input.setInputProcessor(HUD);
+
     }
 
     private void crearEnemigos(){
         arrEnemigos = new Array<>(10);
-        Enemigo enemigoUno = new Enemigo(new Texture("Enemigos/Enemigo.png"), 900f, 250f, 1f, 30f, 30f);
+        Enemigo enemigoUno = new Enemigo(new Texture("Enemigos/Enemigo.png"), 900f, 250f, 1f, 30f, 30f, mundo);
         enemigoUno.direccion=Enemigo.MovimientoEnemigos.IZQUIERDA;
         arrEnemigos.add(enemigoUno);
     }

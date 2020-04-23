@@ -10,6 +10,10 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2D;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -23,6 +27,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public abstract class Nivel extends Pantalla {
     protected final Juego juego;
+
+    //Mundo
+    protected World mundo; //Simulacion
+    private Box2DDebugRenderer debugRenderer;
 
     //Mapa
     private TiledMap mapa;
@@ -56,15 +64,22 @@ public abstract class Nivel extends Pantalla {
 
     @Override
     public void show(){
+        crearMundo();
         crearProtagonista("Principal/PersonajeNormal.png");
         crearArrBalas();
         crearHUD();
+
     }
 
     @Override
     public void render(float delta) {
 
         borrarPantalla();
+
+
+        float x = protagonista.body.getPosition().x - protagonista.sprite.getWidth();
+        float y = protagonista.body.getPosition().y - protagonista.sprite.getHeight();
+        //protagonista.sprite.setPosition(x,y);                  Debe primero estar el mapa instalado para ver si funciona bien
 
         //Dibujar
         batch.setProjectionMatrix(camara.combined);
@@ -104,7 +119,7 @@ public abstract class Nivel extends Pantalla {
     }
 
     private void crearProtagonista(String imgPath){
-        protagonista = new Protagonista(new Texture(imgPath), 60f, 250f, 1f, 30f, 30f);
+        protagonista = new Protagonista(new Texture(imgPath), 60f, 250f, 1f, 30f, 30f, mundo);
     }
 
     private void crearArrBalas(){
@@ -127,6 +142,16 @@ public abstract class Nivel extends Pantalla {
         crearPad();
     }
 
+
+
+    private void crearMundo() {
+        Box2D.init();
+        Vector2 gravedad = new Vector2(0, -100);
+        mundo = new World(gravedad, true);
+        debugRenderer = new Box2DDebugRenderer();
+    }
+
+
     private void crearBotones() {
         ImageButton botonPausa = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/pausa.png")));
         botonPausa.setPosition(0,ALTO-botonPausa.getHeight());
@@ -142,7 +167,7 @@ public abstract class Nivel extends Pantalla {
         HUD.addActor(botonPausa);
 
         ImageButton botonDisparar = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/botonDisparar.png")));
-        botonDisparar.setPosition(ANCHO-botonDisparar.getWidth(),0);
+        botonDisparar.setPosition(ANCHO-botonDisparar.getWidth()-30,30);
         botonDisparar.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
