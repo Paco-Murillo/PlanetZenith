@@ -68,7 +68,13 @@ public abstract class Nivel extends Pantalla {
         crearProtagonista("Principal/PersonajeNormal.png");
         crearArrBalas();
         crearHUD();
+        //definirParedes();
 
+
+    }
+
+    private void definirParedes(){
+        //cargarMapa.crearCuerpos(mapa,mundo);
     }
 
     @Override
@@ -77,14 +83,26 @@ public abstract class Nivel extends Pantalla {
         borrarPantalla();
 
 
-        float x = protagonista.body.getPosition().x - protagonista.sprite.getWidth();
-        float y = protagonista.body.getPosition().y - protagonista.sprite.getHeight();
-        //protagonista.sprite.setPosition(x,y);                  Debe primero estar el mapa instalado para ver si funciona bien
+        float x = protagonista.body.getPosition().x - protagonista.sprite.getWidth()/2;
+        float y = protagonista.body.getPosition().y - protagonista.sprite.getHeight()/2;
+        protagonista.sprite.setPosition(x,y);
+
+
+
+
+        System.out.println(protagonista.sprite.getWidth());
+        System.out.println(protagonista.sprite.getHeight());
+        System.out.println("x body" + protagonista.body.getPosition().x);
+        System.out.println("y body" + protagonista.body.getPosition().y);
+        protagonista.sprite.setPosition(x,y);
 
         //Dibujar
         batch.setProjectionMatrix(camara.combined);
         mapRenderer.setView(camara);
         mapRenderer.render();
+
+        debugRenderer.render(mundo, camara.combined);
+
         batch.begin();
         protagonista.render(batch);
         //render todos los enemigos
@@ -106,6 +124,7 @@ public abstract class Nivel extends Pantalla {
             batch.setProjectionMatrix(orthographicCameraHUD.combined); //Probar sin esto
             escenaPausa.draw();
         }
+        mundo.step(1/60f, 6, 2);
     }
 
     protected void cargaMapa(String mapPath) {
@@ -119,7 +138,7 @@ public abstract class Nivel extends Pantalla {
     }
 
     private void crearProtagonista(String imgPath){
-        protagonista = new Protagonista(new Texture(imgPath), 60f, 250f, 1f, 30f, 30f, mundo);
+        protagonista = new Protagonista(new Texture(imgPath), 60f, 250f, 1f, 30f, 30f,mundo);
     }
 
     private void crearArrBalas(){
