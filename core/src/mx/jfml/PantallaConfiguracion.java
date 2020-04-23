@@ -3,6 +3,7 @@ package mx.jfml;
 import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -26,9 +27,9 @@ class PantallaConfiguracion extends Pantalla {
     private Escritura txtVolMusica;
     private Escritura txtVolEfectos;
 
-    //Musica Y Efectos
-    protected Music musicaFondo;
-    protected Audio efectoBoton;
+    //El manager de audio
+    public  AudioManejador audioManager;
+
 
     public PantallaConfiguracion(Juego juego) {
         this.juego = juego;
@@ -44,6 +45,7 @@ class PantallaConfiguracion extends Pantalla {
     private void crearAjustes() {
         escenaConfig = new Stage(vista);
 
+        audioManager = PantallaMenu.audioManager;
         cargarEscritura();
 
         //Boton Subir Volumen Musica
@@ -94,6 +96,7 @@ class PantallaConfiguracion extends Pantalla {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 juego.setScreen(new PantallaMenu(juego));
+                audioManager.setTocando(true);
             }
         });
 

@@ -15,7 +15,12 @@ public class AudioManejador {
     //Efectos
     protected Sound efectoBtnMenu;
 
+    //Variable que dice si la musica se esta reproduciendo actualmente
+    public static boolean tocando;
+
     public AudioManejador(AssetManager manager){
+        this.tocando = false;
+
         this.manager = manager;
         manager.load("Audio/Musica/superMetroid.mp3", Music.class);
         manager.load("Audio/Efectos/sonidoboton.mp3", Sound.class);
@@ -52,5 +57,9 @@ public class AudioManejador {
 
     public void setVolEfectos(float volumen){
         efectoBtnMenu.setVolume(efectoBtnMenu.play(), volumen);
+    }
+
+    public void setTocando(boolean tocando){
+        this.tocando = tocando;
     }
 }
