@@ -28,7 +28,7 @@ public abstract class Personaje extends Objeto{
 
         BodyDef bodydef = new BodyDef();
         bodydef.type = BodyDef.BodyType.DynamicBody; //StaticBody
-        bodydef.position.set(64, 720);
+        bodydef.position.set(x, y);
         body = mundo.createBody(bodydef);   // objeto simulado
 
 
