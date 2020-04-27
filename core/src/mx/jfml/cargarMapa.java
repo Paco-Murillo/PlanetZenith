@@ -19,7 +19,7 @@ public class cargarMapa {
         //Obtener los objetos con el nombre piso del tiled map
         MapObjects objetos = mapa.getLayers().get("Piso").getObjects();
         for(MapObject objeto: objetos){
-            Shape recatangulo = getRectangle((RectangleMapObject)objeto); //cargar la forma del rectangulo, para cada objeto generado
+            Shape rectangulo = getRectangle((RectangleMapObject)objeto); //cargar la forma del rectangulo, para cada objeto generado
 
             //Contructor de body def
             //Los body def almacenan la infomracion de un cuerpo rigifo
@@ -28,9 +28,9 @@ public class cargarMapa {
             //Agregar el cuerpo al mundo
             Body body = mundo.createBody(bd);
             //Seleccionar forma de rectangulo para el cuerpo
-            body.createFixture(recatangulo,1);
+            body.createFixture(rectangulo,1);
             //desaparecer el objeto al terminar
-            recatangulo.dispose();
+            rectangulo.dispose();
         }
     }
 

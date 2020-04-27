@@ -33,7 +33,7 @@ public abstract class Nivel extends Pantalla {
     private Box2DDebugRenderer debugRenderer;
 
     //Mapa
-    private TiledMap mapa;
+    protected TiledMap mapa;
     private OrthogonalTiledMapRenderer mapRenderer;
 
     //Personaje
@@ -68,14 +68,12 @@ public abstract class Nivel extends Pantalla {
         crearProtagonista("Principal/PersonajeNormal.png");
         crearArrBalas();
         crearHUD();
-        //definirParedes();
+
 
 
     }
 
-    private void definirParedes(){
-        cargarMapa.crearCuerpos(mapa,mundo);
-    }
+
 
     @Override
     public void render(float delta) {
@@ -226,6 +224,10 @@ public abstract class Nivel extends Pantalla {
         moverProtagonista();
         moverBala(delta);
         moverEnemigos();
+    }
+
+    protected void definirParedes(){
+        cargarMapa.crearCuerpos(mapa,mundo);
     }
 
     private void moverProtagonista() {
