@@ -17,8 +17,12 @@ public class PantallaJuegoNivelUno extends Nivel {
         crearEnemigos();
         cargarTexturaBala("Proyectiles/bala1.png");
         Gdx.input.setInputProcessor(HUD);
+        definirParedes();
 
     }
+
+
+
 
     private void crearEnemigos(){
         arrEnemigos = new Array<>(10);
@@ -32,9 +36,7 @@ public class PantallaJuegoNivelUno extends Nivel {
 
         super.render(delta);
         for(Enemigo enemy: arrEnemigos){
-            float x = enemy.body.getPosition().x - enemy.sprite.getWidth()/2;
-            float y = enemy.body.getPosition().y - enemy.sprite.getHeight()/2;
-            enemy.sprite.setPosition(x,y);
+
         }
 
     }

@@ -33,7 +33,7 @@ public abstract class Nivel extends Pantalla {
     private Box2DDebugRenderer debugRenderer;
 
     //Mapa
-    private TiledMap mapa;
+    protected TiledMap mapa;
     private OrthogonalTiledMapRenderer mapRenderer;
 
     //Personaje
@@ -68,14 +68,12 @@ public abstract class Nivel extends Pantalla {
         crearProtagonista("Principal/PersonajeNormal.png");
         crearArrBalas();
         crearHUD();
-        //definirParedes();
+
 
 
     }
 
-    private void definirParedes(){
-        //cargarMapa.crearCuerpos(mapa,mundo);
-    }
+
 
     @Override
     public void render(float delta) {
@@ -108,6 +106,9 @@ public abstract class Nivel extends Pantalla {
         //render todos los enemigos
         for(Enemigo enemy: arrEnemigos){
             enemy.render(batch);
+            float enemyX = enemy.body.getPosition().x - enemy.sprite.getWidth()/2;
+            float enemyY = enemy.body.getPosition().y - enemy.sprite.getHeight()/2;
+            enemy.sprite.setPosition(enemyX,enemyY);
         }
         for(Bala bala: arrBalas){
             bala.render(batch);
@@ -221,6 +222,10 @@ public abstract class Nivel extends Pantalla {
         moverProtagonista();
         moverBala(delta);
         moverEnemigos();
+    }
+
+    protected void definirParedes(){
+        cargarMapa.crearCuerpos(mapa,mundo);
     }
 
     private void moverProtagonista() {
