@@ -6,6 +6,8 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -19,6 +21,16 @@ public class cargarMapa {
         for(MapObject objeto: objetos){
             Shape recatangulo = getRectangle((RectangleMapObject)objeto); //cargar la forma del rectangulo, para cada objeto generado
 
+            //Contructor de body def
+            //Los body def almacenan la infomracion de un cuerpo rigifo
+            BodyDef bd = new BodyDef();
+            bd.type  = BodyDef.BodyType.StaticBody;
+            //Agregar el cuerpo al mundo
+            Body body = mundo.createBody(bd);
+            //Seleccionar forma de rectangulo para el cuerpo
+            body.createFixture(recatangulo,1);
+            //desaparecer el objeto al terminar
+            recatangulo.dispose();
         }
     }
 
