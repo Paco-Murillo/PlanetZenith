@@ -37,4 +37,12 @@ public class Bala extends Objeto {
 		}
 		return super.equals(o);
     }
+
+	public float getVx() {
+		return vx;
+	}
+
+	public float getVy() {
+		return vy;
+	}
 }

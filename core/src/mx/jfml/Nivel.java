@@ -80,18 +80,8 @@ public abstract class Nivel extends Pantalla {
 
         borrarPantalla();
 
-
         float x = protagonista.body.getPosition().x - protagonista.sprite.getWidth()/2;
         float y = protagonista.body.getPosition().y - protagonista.sprite.getHeight()/2;
-        protagonista.sprite.setPosition(x,y);
-
-
-
-
-        System.out.println(protagonista.sprite.getWidth());
-        System.out.println(protagonista.sprite.getHeight());
-        System.out.println("x body" + protagonista.body.getPosition().x);
-        System.out.println("y body" + protagonista.body.getPosition().y);
         protagonista.sprite.setPosition(x,y);
 
         //Dibujar
@@ -232,21 +222,23 @@ public abstract class Nivel extends Pantalla {
 
     private void moverProtagonista() {
 
+        float x = protagonista.body.getPosition().x;
+        float y = protagonista.body.getPosition().y;
+
         if(pad.isTouched()){
-            if (pad.getKnobPercentX()>0) {
-                if(protagonista.sprite.getX()<500) protagonista.moverX(protagonista.vx);
-                else {
-                    camara.translate(protagonista.vx,0);
-                    camara.update();
-                }
+            float percentX = pad.getKnobPercentX();
+            if (percentX>0) {
+                //if(protagonista.sprite.getX()<500) protagonista.moverX(protagonista.vx);
+                //else {
+                //    camara.translate(protagonista.vx,0);
+                //    camara.update();
+                //}
+                protagonista.body.applyLinearImpulse(999000000*percentX, 0, x, y, true);
             }
-            else if (pad.getKnobPercentX()<0) {
-                if (protagonista.sprite.getX()>50)protagonista.moverX(-protagonista.vx);
-                else {
-                    camara.translate(-protagonista.vx,0);
-                    camara.update();
+            else if (percentX<0) {
+                protagonista.body.applyLinearImpulse(999000000*percentX,0,x,y,true);
                 }
-            }
+
         }
     }
 
@@ -254,7 +246,7 @@ public abstract class Nivel extends Pantalla {
         for(int indexBalas = 0; indexBalas < arrBalas.size; indexBalas++){
             if(arrBalas.get(indexBalas) == null) continue;
             Bala bala = arrBalas.get(indexBalas);
-            bala.moverX(delta);
+            bala.moverX(.1f);
             //Salio??
             if(bala.sprite.getX() > ANCHO){
                 arrBalas.removeIndex(indexBalas);
@@ -285,8 +277,11 @@ public abstract class Nivel extends Pantalla {
                 Bala bala = arrBalas.get(indexBala);
                 if(rectEnemigo.overlaps(bala.sprite.getBoundingRectangle())){
                     enemigo.setVida(bala.getDanio());
-                    if(enemigo.getVida()<=0)
+                    if(enemigo.getVida()<=0) {
+                        mundo.destroyBody(enemigo.body);
                         arrEnemigos.removeIndex(indexEnemigos);
+                    }
+
                     arrBalas.removeIndex(indexBala);
                     contadorBalas--;
                     return;
