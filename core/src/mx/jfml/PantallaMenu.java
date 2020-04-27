@@ -22,8 +22,6 @@ class PantallaMenu extends Pantalla {
     private Stage escenaMenu;
 
     // Audio
-//    protected Music audioFondo;
-//    protected Sound efectoBoton;
     public static AudioManejador audioManager;
 
     //Texto
@@ -36,7 +34,7 @@ class PantallaMenu extends Pantalla {
 
     @Override
     public void show() {
-        texturaFondo = new Texture("Fondos/fondoMenu.png");
+        texturaFondo = new Texture("Fondos/fondoPantalla.png");
 
         crearMenu();
     }
@@ -47,7 +45,7 @@ class PantallaMenu extends Pantalla {
         audioManager = new AudioManejador(new AssetManager());
 
         audioManager.setLooping(true);
-        if(!audioManager.tocando){
+        if(!audioManager.tocando) {
             audioManager.playMusica();
         }
 
@@ -120,22 +118,6 @@ class PantallaMenu extends Pantalla {
         Gdx.input.setInputProcessor(escenaMenu);
     }
 
-/*    private void musicayEfectos(){
-        //AssetManager y musica
-        AssetManager manager = new AssetManager();
-        manager.load("Audio/Efectos/sonidoboton.mp3", Sound.class);
-        manager.load("Audio/Musica/superMetroid.mp3", Music.class);
-        manager.finishLoading();
-
-        //audio
-        audioFondo = manager.get("Audio/Musica/superMetroid.mp3");
-        audioFondo.setLooping(true);
-        audioFondo.setVolume(0f); //.25f
-        audioFondo.play();
-
-        //efecto
-        efectoBoton = manager.get("Audio/Efectos/sonidoboton.mp3");
-    }*/
 
     @Override
     public void render(float delta) {
