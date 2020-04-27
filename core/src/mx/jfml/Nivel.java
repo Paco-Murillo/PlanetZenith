@@ -161,8 +161,6 @@ public abstract class Nivel extends Pantalla {
         crearPad();
     }
 
-
-
     private void crearMundo() {
         Box2D.init();
         Vector2 gravedad = new Vector2(0, -100);

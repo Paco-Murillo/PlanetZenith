@@ -10,11 +10,11 @@ import com.badlogic.gdx.physics.box2d.World;
 public abstract class Personaje extends Objeto{
 
     //Velocidades
-    protected float vy;
     protected float vx;
-
     protected Body body;
-    FixtureDef fixtureDef;
+
+
+    protected float vy;
 
     protected float vida;
 
@@ -23,33 +23,26 @@ public abstract class Personaje extends Objeto{
         this.vida = vida;
         this.vx = vx;
         this.vy = vy;
-        sprite.setPosition(x, y);
 
+        BodyDef bodydef = new BodyDef();
+        bodydef.type = BodyDef.BodyType.DynamicBody; //StaticBody
+        bodydef.position.set(x, y);
+        body = mundo.createBody(bodydef);   // objeto simulado
 
-
-
-
-
-
-
-
-        body = crearBody(x,y,mundo);
-        fixtureDef = crearFixtureDef(textura);
-        body.createFixture(fixtureDef);
-        body.setFixedRotation(true);
-    }
-
-
-    public FixtureDef crearFixtureDef(Texture textura){
         PolygonShape rectangulo = new PolygonShape();
-        rectangulo.setAsBox(textura.getWidth()/2, textura.getHeight()/2);
+        rectangulo.setAsBox(textura.getWidth(), textura.getHeight());
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = rectangulo;
         fixtureDef.density = 0.3f;
         fixtureDef.friction = 0.1f;
         fixtureDef.restitution = 0f;
-        return fixtureDef;
+        body.createFixture(fixtureDef);
+        rectangulo.dispose();
+        body.setFixedRotation(true);
+
+
+
 
     }
 
@@ -62,16 +55,6 @@ public abstract class Personaje extends Objeto{
         float dy = vy*delta;
         sprite.setY(sprite.getY()+dy);
     }
-
-    public Body crearBody(float x, float y, World mundo){
-        BodyDef bodydef = new BodyDef();
-        bodydef.type = BodyDef.BodyType.DynamicBody;
-        bodydef.position.set(x, y);
-        body = mundo.createBody(bodydef);
-        return body;
-
-    }
-
 
     public float getVida(){
         return vida;
