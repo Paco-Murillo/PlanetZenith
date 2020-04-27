@@ -32,9 +32,7 @@ public class PantallaJuegoNivelUno extends Nivel {
 
         super.render(delta);
         for(Enemigo enemy: arrEnemigos){
-            float x = enemy.body.getPosition().x - enemy.sprite.getWidth()/2;
-            float y = enemy.body.getPosition().y - enemy.sprite.getHeight()/2;
-            enemy.sprite.setPosition(x,y);
+
         }
 
     }

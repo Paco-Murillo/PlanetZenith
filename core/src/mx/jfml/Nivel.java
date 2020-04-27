@@ -74,7 +74,7 @@ public abstract class Nivel extends Pantalla {
     }
 
     private void definirParedes(){
-        //cargarMapa.crearCuerpos(mapa,mundo);
+        cargarMapa.crearCuerpos(mapa,mundo);
     }
 
     @Override
@@ -108,6 +108,9 @@ public abstract class Nivel extends Pantalla {
         //render todos los enemigos
         for(Enemigo enemy: arrEnemigos){
             enemy.render(batch);
+            float enemyX = enemy.body.getPosition().x - enemy.sprite.getWidth()/2;
+            float enemyY = enemy.body.getPosition().y - enemy.sprite.getHeight()/2;
+            enemy.sprite.setPosition(enemyX,enemyY);
         }
         for(Bala bala: arrBalas){
             bala.render(batch);
