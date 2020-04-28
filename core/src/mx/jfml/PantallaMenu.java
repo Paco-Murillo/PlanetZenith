@@ -21,8 +21,6 @@ class PantallaMenu extends Pantalla {
     // Menu
     private Stage escenaMenu;
 
-    // Audio
-    public static AudioManejador audioManager;
 
     //Texto
     private Escritura txtZenith;
@@ -41,8 +39,6 @@ class PantallaMenu extends Pantalla {
 
     private void crearMenu() {
         escenaMenu = new Stage(vista);
-
-        audioManager = new AudioManejador(new AssetManager());
 
         audioManager.setLooping(true);
         if(!audioManager.tocando) {
@@ -80,7 +76,7 @@ class PantallaMenu extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                audioManager.efectoBtnMenu.play();
+                audioManager.efectoBtnMenu.play(audioManager.getVolEfectos());
                 juego.setScreen(new PantallaJuegoNivelUno(juego));
             }
         });
@@ -89,7 +85,7 @@ class PantallaMenu extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y){
                 super.clicked(event, x, y);
-                audioManager.efectoBtnMenu.play();
+                audioManager.efectoBtnMenu.play(audioManager.getVolEfectos());
                 audioManager.stopMusica();
                 audioManager.setTocando(true);
                 juego.setScreen(new PantallaConfiguracion(juego));
@@ -100,7 +96,7 @@ class PantallaMenu extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y){
                 super.clicked(event, x, y);
-                audioManager.efectoBtnMenu.play();
+                audioManager.efectoBtnMenu.play(audioManager.getVolEfectos());
                 audioManager.stopMusica();
                 audioManager.setTocando(true);
                 juego.setScreen(new PantallaCreditos(juego));
@@ -156,5 +152,7 @@ class PantallaMenu extends Pantalla {
     }
 
     @Override
-    public void dispose() { texturaFondo.dispose(); }
+    public void dispose() {
+        texturaFondo.dispose();
+    }
 }

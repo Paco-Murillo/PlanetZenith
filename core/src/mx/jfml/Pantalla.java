@@ -26,6 +26,9 @@ public abstract class Pantalla implements Screen
     // Todas las pantallas dibujan algo :)
     protected SpriteBatch batch;
 
+    //Manejador de Audio
+    protected AudioManejador audioManager;
+
     // Constructor, inicializa los objetos camara, vista, batch
     public Pantalla() {
         // Crea la cámara con las dimensiones del mundo
@@ -37,6 +40,7 @@ public abstract class Pantalla implements Screen
         vista = new StretchViewport(ANCHO, ALTO, camara);
         // El objeto que administra los trazos gráficos
         batch = new SpriteBatch();
+        audioManager = new AudioManejador(new AssetManager());
     }
 
     // Borra la pantalla con fondo negro
