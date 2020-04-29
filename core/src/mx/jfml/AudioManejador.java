@@ -14,6 +14,7 @@ public class AudioManejador {
 
     //Efectos
     protected Sound efectoBtnMenu;
+    public  float volEfectos = 1f;
 
     //Variable que dice si la musica se esta reproduciendo actualmente
     public static boolean tocando;
@@ -56,10 +57,15 @@ public class AudioManejador {
     }
 
     public void setVolEfectos(float volumen){
-        efectoBtnMenu.setVolume(efectoBtnMenu.play(), volumen);
+        volEfectos =  volumen;
+    }
+
+    public float getVolEfectos() {
+        return volEfectos;
     }
 
     public void setTocando(boolean tocando){
         this.tocando = tocando;
     }
+
 }

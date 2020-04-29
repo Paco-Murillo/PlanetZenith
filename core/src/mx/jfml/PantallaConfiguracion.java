@@ -27,8 +27,6 @@ class PantallaConfiguracion extends Pantalla {
     private Escritura txtVolMusica;
     private Escritura txtVolEfectos;
 
-    //El manager de audio
-    public  AudioManejador audioManager;
 
 
     public PantallaConfiguracion(Juego juego) {
@@ -45,7 +43,9 @@ class PantallaConfiguracion extends Pantalla {
     private void crearAjustes() {
         escenaConfig = new Stage(vista);
 
-        audioManager = PantallaMenu.audioManager;
+        audioManager.setLooping(true);
+        audioManager.playMusica();
+
         cargarEscritura();
 
         //Boton Subir Volumen Musica
@@ -91,15 +91,78 @@ class PantallaConfiguracion extends Pantalla {
         btnRegresar.setPosition(64, 64);
 
         //Listener
+        btnVolUpMusica.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                audioManager.efectoBtnMenu.play(audioManager.getVolEfectos());
+                if(audioManager.getVolMusica() < 1f){
+                    audioManager.setVolMusica(audioManager.getVolMusica() + .15f);
+                } else if(audioManager.getVolMusica() >= 1f){
+                    audioManager.setVolMusica(1f);
+                }
+            }
+        });
+
+        btnVolDownMusica.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                audioManager.efectoBtnMenu.play(audioManager.getVolEfectos());
+                if(audioManager.getVolMusica() > 0){
+                    audioManager.setVolMusica(audioManager.getVolMusica() - .15f);
+                } else if(audioManager.getVolMusica() <= 0){
+                    audioManager.setVolMusica(0);
+                }
+            }
+        });
+
+        btnVolUpEfectos.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                audioManager.efectoBtnMenu.play(audioManager.getVolEfectos());
+                if(audioManager.getVolEfectos() < 1f){
+                    audioManager.setVolEfectos(audioManager.getVolEfectos() + .15f);
+                } else if(audioManager.getVolEfectos() >= 1f){
+                    audioManager.setVolEfectos(1f);
+                }
+            }
+        });
+
+        btnVolDownEfectos.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                audioManager.efectoBtnMenu.play(audioManager.getVolEfectos());
+                if(audioManager.getVolEfectos() > 0){
+                    audioManager.setVolEfectos(audioManager.getVolEfectos()-.15f);
+                } else if(audioManager.getVolMusica() <= 0){
+                    audioManager.setVolEfectos(0);
+                }
+            }
+        });
+
+        btnMute.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                audioManager.efectoBtnMenu.play(audioManager.getVolEfectos());
+                audioManager.setVolMusica(0);
+                audioManager.setVolEfectos(-1f);
+            }
+        });
+
         btnRegresar.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                juego.setScreen(new PantallaMenu(juego));
+                audioManager.stopMusica();
                 audioManager.setTocando(true);
+                audioManager.efectoBtnMenu.play(audioManager.getVolEfectos());
+                juego.setScreen(new PantallaMenu(juego));
             }
         });
-
 
         escenaConfig.addActor(btnVolUpMusica);
         escenaConfig.addActor(btnVolDownMusica);
@@ -153,5 +216,6 @@ class PantallaConfiguracion extends Pantalla {
     @Override
     public void dispose() {
      texturaFondo.dispose();
+
     }
 }
