@@ -68,16 +68,10 @@ public abstract class Nivel extends Pantalla {
         crearProtagonista("Principal/PersonajeNormal.png");
         crearArrBalas();
         crearHUD();
-
-
-
     }
-
-
 
     @Override
     public void render(float delta) {
-
         borrarPantalla();
 
         float x = protagonista.body.getPosition().x - protagonista.sprite.getWidth()/2;
@@ -152,15 +146,12 @@ public abstract class Nivel extends Pantalla {
         crearPad();
     }
 
-
-
     private void crearMundo() {
         Box2D.init();
-        Vector2 gravedad = new Vector2(0, -100);
+        Vector2 gravedad = new Vector2(0, -150);
         mundo = new World(gravedad, true);
         debugRenderer = new Box2DDebugRenderer();
     }
-
 
     private void crearBotones() {
         ImageButton botonPausa = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/pausa.png")));
@@ -177,7 +168,7 @@ public abstract class Nivel extends Pantalla {
         HUD.addActor(botonPausa);
 
         ImageButton botonDisparar = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/botonDisparar.png")));
-        botonDisparar.setPosition(ANCHO-botonDisparar.getWidth()-30,30);
+        botonDisparar.setPosition(ANCHO-botonDisparar.getWidth()-30,140);
         botonDisparar.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -191,7 +182,20 @@ public abstract class Nivel extends Pantalla {
                 }
             }
         });
+
         HUD.addActor(botonDisparar);
+
+        ImageButton botonSaltar = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/botonSaltar.png")));
+        botonSaltar.setPosition(ANCHO-botonDisparar.getWidth()-140,30);
+        botonSaltar.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                protagonista.body.applyForceToCenter(0,9999,true);
+            }
+        });
+
+        HUD.addActor(botonSaltar);
     }
 
     private void crearPad() {
@@ -221,24 +225,9 @@ public abstract class Nivel extends Pantalla {
     }
 
     private void moverProtagonista() {
-
-        float x = protagonista.body.getPosition().x;
-        float y = protagonista.body.getPosition().y;
-
         if(pad.isTouched()){
             float percentX = pad.getKnobPercentX();
-            if (percentX>0) {
-                //if(protagonista.sprite.getX()<500) protagonista.moverX(protagonista.vx);
-                //else {
-                //    camara.translate(protagonista.vx,0);
-                //    camara.update();
-                //}
-                protagonista.body.applyLinearImpulse(999000000*percentX, 0, x, y, true);
-            }
-            else if (percentX<0) {
-                protagonista.body.applyLinearImpulse(999000000*percentX,0,x,y,true);
-                }
-
+            protagonista.body.applyForceToCenter(percentX*600,mundo.getGravity().y,true);
         }
     }
 
@@ -258,8 +247,8 @@ public abstract class Nivel extends Pantalla {
 
     private void moverEnemigos(){
         for(Enemigo enemy: arrEnemigos){
-            if (protagonista.sprite.getX()<=enemy.sprite.getX()) enemy.direccion=Enemigo.MovimientoEnemigos.IZQUIERDA;
-            else enemy.direccion=Enemigo.MovimientoEnemigos.DERECHA;
+            if (protagonista.sprite.getX()<=enemy.sprite.getX()) enemy.direccion= Personaje.Movimientos.IZQUIERDA;
+            else enemy.direccion= Personaje.Movimientos.DERECHA;
         }
     }
 

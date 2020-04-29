@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -23,22 +24,20 @@ public abstract class Personaje extends Objeto{
         this.vida = vida;
         this.vx = vx;
         this.vy = vy;
-        sprite.setPosition(x, y);
-
-
-
-
-
-
-
-
 
         body = crearBody(x,y,mundo);
         fixtureDef = crearFixtureDef(textura);
         body.createFixture(fixtureDef);
-        body.setFixedRotation(true);
     }
 
+    public Body crearBody(float x, float y, World mundo){
+        BodyDef bodydef = new BodyDef();
+        bodydef.type = BodyDef.BodyType.DynamicBody;
+        bodydef.position.set(x, y);
+        bodydef.fixedRotation = true;
+        body = mundo.createBody(bodydef);
+        return body;
+    }
 
     public FixtureDef crearFixtureDef(Texture textura){
         PolygonShape rectangulo = new PolygonShape();
@@ -46,11 +45,9 @@ public abstract class Personaje extends Objeto{
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = rectangulo;
-        fixtureDef.density = 0.3f;
-        fixtureDef.friction = 0.1f;
+        fixtureDef.friction = 1f;
         fixtureDef.restitution = 0f;
         return fixtureDef;
-
     }
 
     public void moverX(float delta){
@@ -63,22 +60,18 @@ public abstract class Personaje extends Objeto{
         sprite.setY(sprite.getY()+dy);
     }
 
-    public Body crearBody(float x, float y, World mundo){
-        BodyDef bodydef = new BodyDef();
-        bodydef.type = BodyDef.BodyType.DynamicBody;
-        bodydef.position.set(x, y);
-        body = mundo.createBody(bodydef);
-        return body;
-
-    }
-
-
     public float getVida(){
         return vida;
     }
 
     public void setVida(float danio){
         this.vida = vida-danio;
+    }
+
+    public enum Movimientos {
+        DERECHA,
+        IZQUIERDA,
+        QUIETO
     }
 
 }
