@@ -24,7 +24,7 @@ public class PantallaJuegoNivelUno extends Nivel {
 
     private void crearEnemigos(){
         arrEnemigos = new Array<>(10);
-        Texture enemigoTexture = new Texture("Enemigos/Enemigo.png");
+        Texture enemigoTexture = new Texture("Enemigos/EnemigoGeneralVerde.png");
         Enemigo enemigo = new Enemigo(enemigoTexture, 792, 72, 1f, 30f, 30f, mundo);
         //enemigo.direccion= Personaje.Movimientos.IZQUIERDA;
         arrEnemigos.add(enemigo);
@@ -59,6 +59,20 @@ public class PantallaJuegoNivelUno extends Nivel {
         if(protagonista.sprite.getX() > ANCHO/2 && protagonista.sprite.getX() < ANCHO_MAPA-ANCHO/2) { // 6400 = Ancho en
             camara.position.set(protagonista.sprite.getX(), camara.position.y, 0);
             camara.update();
+        }
+    }
+
+    @Override
+    protected void moverBala() {
+        for(int indexBalas = 0; indexBalas < arrBalas.size; indexBalas++){
+            if(arrBalas.get(indexBalas) == null) continue;
+            Bala bala = arrBalas.get(indexBalas);
+            bala.moverX(.1f);
+            //Salio??
+            if(bala.sprite.getX() > ANCHO_MAPA){
+                arrBalas.removeIndex(indexBalas);
+                contadorBalas--;
+            }
         }
     }
 

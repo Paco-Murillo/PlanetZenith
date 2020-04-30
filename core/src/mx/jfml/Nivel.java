@@ -52,9 +52,9 @@ public abstract class Nivel extends Pantalla {
      */
 
     //Bala
-    private Array<Bala> arrBalas;
+    protected Array<Bala> arrBalas;
     protected Texture texturaBala;
-    private int contadorBalas;
+    protected int contadorBalas;
 
     //HUD
     protected Stage HUD;
@@ -72,7 +72,7 @@ public abstract class Nivel extends Pantalla {
     @Override
     public void show(){
         crearMundo();
-        crearProtagonista("Principal/PersonajeNormal.png");
+        crearProtagonista("Principal/PersonajeNormalFinal.png");
         crearArrBalas();
         crearHUD();
     }
@@ -255,19 +255,7 @@ public abstract class Nivel extends Pantalla {
         }
     }
 
-    private void moverBala() {
-        for(int indexBalas = 0; indexBalas < arrBalas.size; indexBalas++){
-            if(arrBalas.get(indexBalas) == null) continue;
-            Bala bala = arrBalas.get(indexBalas);
-            bala.moverX(.1f);
-            //Salio??
-            if(bala.sprite.getX() > ANCHO){
-                arrBalas.removeIndex(indexBalas);
-                contadorBalas--;
-            }
-        }
-
-    }
+    protected abstract void moverBala();
 
     private void moverEnemigos(){
         for(Enemigo enemy: arrEnemigos){
