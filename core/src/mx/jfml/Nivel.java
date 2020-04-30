@@ -33,11 +33,11 @@ public abstract class Nivel extends Pantalla {
     private Box2DDebugRenderer debugRenderer;
 
     //Mapa
-    protected TiledMap mapa;
+    private TiledMap mapa;
     private OrthogonalTiledMapRenderer mapRenderer;
 
     //Personaje
-    private Protagonista protagonista;
+    protected Protagonista protagonista;
     protected Movimiento movimiento = Movimiento.QUIETO;
 
     //Pausa
@@ -68,30 +68,15 @@ public abstract class Nivel extends Pantalla {
         crearProtagonista("Principal/PersonajeNormal.png");
         crearArrBalas();
         crearHUD();
-
-
-
     }
-
-
 
     @Override
     public void render(float delta) {
-
         borrarPantalla();
-
+        actualizarCamara();
 
         float x = protagonista.body.getPosition().x - protagonista.sprite.getWidth()/2;
         float y = protagonista.body.getPosition().y - protagonista.sprite.getHeight()/2;
-        protagonista.sprite.setPosition(x,y);
-
-
-
-
-        System.out.println(protagonista.sprite.getWidth());
-        System.out.println(protagonista.sprite.getHeight());
-        System.out.println("x body" + protagonista.body.getPosition().x);
-        System.out.println("y body" + protagonista.body.getPosition().y);
         protagonista.sprite.setPosition(x,y);
 
         //Dibujar
@@ -127,6 +112,8 @@ public abstract class Nivel extends Pantalla {
         }
         mundo.step(1/60f, 6, 2);
     }
+
+    protected abstract void actualizarCamara();
 
     protected void cargaMapa(String mapPath) {
         AssetManager manager = new AssetManager();
@@ -164,11 +151,10 @@ public abstract class Nivel extends Pantalla {
 
     private void crearMundo() {
         Box2D.init();
-        Vector2 gravedad = new Vector2(0, -100);
+        Vector2 gravedad = new Vector2(0, -165);
         mundo = new World(gravedad, true);
         debugRenderer = new Box2DDebugRenderer();
     }
-
 
     private void crearBotones() {
         ImageButton botonPausa = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/pausa.png")));
@@ -185,7 +171,7 @@ public abstract class Nivel extends Pantalla {
         HUD.addActor(botonPausa);
 
         ImageButton botonDisparar = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/botonDisparar.png")));
-        botonDisparar.setPosition(ANCHO-botonDisparar.getWidth()-30,30);
+        botonDisparar.setPosition(ANCHO-botonDisparar.getWidth()-30,140);
         botonDisparar.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -200,6 +186,17 @@ public abstract class Nivel extends Pantalla {
             }
         });
         HUD.addActor(botonDisparar);
+
+        ImageButton botonSaltar = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/botonSaltar.png")));
+        botonSaltar.setPosition(ANCHO-botonDisparar.getWidth()-140,30);
+        botonSaltar.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                protagonista.body.applyForceToCenter(0,9999,true);
+            }
+        });
+        HUD.addActor(botonSaltar);
     }
 
     private void crearPad() {
@@ -220,7 +217,7 @@ public abstract class Nivel extends Pantalla {
     private void actualizar(float delta) {
         //Actualizaciones
         moverProtagonista();
-        moverBala(delta);
+        moverBala();
         moverEnemigos();
     }
 
@@ -229,30 +226,20 @@ public abstract class Nivel extends Pantalla {
     }
 
     private void moverProtagonista() {
-
         if(pad.isTouched()){
-            if (pad.getKnobPercentX()>0) {
-                if(protagonista.sprite.getX()<500) protagonista.moverX(protagonista.vx);
-                else {
-                    camara.translate(protagonista.vx,0);
-                    camara.update();
-                }
-            }
-            else if (pad.getKnobPercentX()<0) {
-                if (protagonista.sprite.getX()>50)protagonista.moverX(-protagonista.vx);
-                else {
-                    camara.translate(-protagonista.vx,0);
-                    camara.update();
-                }
-            }
+            float xBody = protagonista.body.getPosition().x;
+            float yBody = protagonista.body.getPosition().y;
+
+            float percentX = pad.getKnobPercentX();
+            protagonista.body.setLinearVelocity(percentX*4000,protagonista.body.getLinearVelocity().y);
         }
     }
 
-    private void moverBala(float delta) {
+    private void moverBala() {
         for(int indexBalas = 0; indexBalas < arrBalas.size; indexBalas++){
             if(arrBalas.get(indexBalas) == null) continue;
             Bala bala = arrBalas.get(indexBalas);
-            bala.moverX(delta);
+            bala.moverX(.1f);
             //Salio??
             if(bala.sprite.getX() > ANCHO){
                 arrBalas.removeIndex(indexBalas);
@@ -264,11 +251,10 @@ public abstract class Nivel extends Pantalla {
 
     private void moverEnemigos(){
         for(Enemigo enemy: arrEnemigos){
-            if (protagonista.sprite.getX()<=enemy.sprite.getX()) enemy.direccion=Enemigo.MovimientoEnemigos.IZQUIERDA;
-            else enemy.direccion=Enemigo.MovimientoEnemigos.DERECHA;
+            if (protagonista.sprite.getX()<=enemy.sprite.getX()) enemy.direccion= Personaje.Movimientos.IZQUIERDA;
+            else enemy.direccion= Personaje.Movimientos.DERECHA;
         }
     }
-
 
     //Pureba si la bala le pegó a un enemigo
 
@@ -283,8 +269,11 @@ public abstract class Nivel extends Pantalla {
                 Bala bala = arrBalas.get(indexBala);
                 if(rectEnemigo.overlaps(bala.sprite.getBoundingRectangle())){
                     enemigo.setVida(bala.getDanio());
-                    if(enemigo.getVida()<=0)
+                    if(enemigo.getVida()<=0) {
+                        mundo.destroyBody(enemigo.body);
                         arrEnemigos.removeIndex(indexEnemigos);
+                    }
+
                     arrBalas.removeIndex(indexBala);
                     contadorBalas--;
                     return;

@@ -4,17 +4,18 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public abstract class Personaje extends Objeto{
 
     //Velocidades
-    protected float vx;
-    protected Body body;
-
-
     protected float vy;
+    protected float vx;
+
+    protected Body body;
+    FixtureDef fixtureDef;
 
     protected float vida;
 
@@ -24,26 +25,29 @@ public abstract class Personaje extends Objeto{
         this.vx = vx;
         this.vy = vy;
 
-        BodyDef bodydef = new BodyDef();
-        bodydef.type = BodyDef.BodyType.DynamicBody; //StaticBody
-        bodydef.position.set(x, y);
-        body = mundo.createBody(bodydef);   // objeto simulado
+        body = crearBody(x,y,mundo);
+        fixtureDef = crearFixtureDef(textura);
+        body.createFixture(fixtureDef);
+    }
 
+    public Body crearBody(float x, float y, World mundo){
+        BodyDef bodydef = new BodyDef();
+        bodydef.type = BodyDef.BodyType.DynamicBody;
+        bodydef.position.set(x, y);
+        bodydef.fixedRotation = true;
+        body = mundo.createBody(bodydef);
+        return body;
+    }
+
+    public FixtureDef crearFixtureDef(Texture textura){
         PolygonShape rectangulo = new PolygonShape();
-        rectangulo.setAsBox(textura.getWidth(), textura.getHeight());
+        rectangulo.setAsBox(textura.getWidth()/2, textura.getHeight()/2);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = rectangulo;
-        fixtureDef.density = 0.3f;
-        fixtureDef.friction = 0.1f;
+        fixtureDef.friction = 1f;
         fixtureDef.restitution = 0f;
-        body.createFixture(fixtureDef);
-        rectangulo.dispose();
-        body.setFixedRotation(true);
-
-
-
-
+        return fixtureDef;
     }
 
     public void moverX(float delta){
@@ -62,6 +66,12 @@ public abstract class Personaje extends Objeto{
 
     public void setVida(float danio){
         this.vida = vida-danio;
+    }
+
+    public enum Movimientos {
+        DERECHA,
+        IZQUIERDA,
+        QUIETO
     }
 
 }

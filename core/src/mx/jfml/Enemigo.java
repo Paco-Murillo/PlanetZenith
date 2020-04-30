@@ -4,13 +4,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Enemigo extends Personaje {
-    protected MovimientoEnemigos direccion;
+    protected Movimientos direccion;
 
 
 
     public Enemigo(Texture textura, float x, float y, float vx, float vy, float vida, World mundo) {
         super(textura, x, y, vx, vy, vida, mundo);
-        direccion = MovimientoEnemigos.QUIETO;
+        direccion = Movimientos.QUIETO;
     }
 
     @Override
@@ -22,10 +22,6 @@ public class Enemigo extends Personaje {
         return super.equals(o);
     }
 
-    public enum MovimientoEnemigos{
-        DERECHA,
-        IZQUIERDA,
-        QUIETO
-    }
+
 
 }
