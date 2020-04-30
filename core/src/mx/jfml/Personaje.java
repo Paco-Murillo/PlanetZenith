@@ -11,13 +11,13 @@ import com.badlogic.gdx.physics.box2d.World;
 public abstract class Personaje extends Objeto{
 
     //Velocidades
-    protected float vy;
-    protected float vx;
+    private float vy;
+    private float vx;
 
     protected Body body;
-    FixtureDef fixtureDef;
+    private FixtureDef fixtureDef;
 
-    protected float vida;
+    private float vida;
 
     public Personaje(Texture textura, float x, float y, float vx, float vy, float vida, World mundo) {
         super(textura, x, y);
@@ -30,18 +30,18 @@ public abstract class Personaje extends Objeto{
         body.createFixture(fixtureDef);
     }
 
-    public Body crearBody(float x, float y, World mundo){
+    private Body crearBody(float x, float y, World mundo){
         BodyDef bodydef = new BodyDef();
         bodydef.type = BodyDef.BodyType.DynamicBody;
-        bodydef.position.set(x, y);
+        bodydef.position.set(x+sprite.getWidth()/2, y+sprite.getHeight()/2);
         bodydef.fixedRotation = true;
         body = mundo.createBody(bodydef);
         return body;
     }
 
-    public FixtureDef crearFixtureDef(Texture textura){
+    private FixtureDef crearFixtureDef(Texture textura){
         PolygonShape rectangulo = new PolygonShape();
-        rectangulo.setAsBox(textura.getWidth()/2, textura.getHeight()/2);
+        rectangulo.setAsBox(textura.getWidth()/2f, textura.getHeight()/2f);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = rectangulo;
