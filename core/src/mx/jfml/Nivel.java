@@ -42,7 +42,14 @@ public abstract class Nivel extends Pantalla {
 
     //Pausa
     private EscenaPausa escenaPausa;
-    private EstadoJuego estadoJuego = EstadoJuego.JUGANDO; //Jugando, PAusado
+    private EstadoJuego estadoJuego = EstadoJuego.JUGANDO; //Jugando, PAusado, Poner DEBUG en caso de checar nivel sin actualizaciones
+
+    /*
+    EstadoJuego.DEBUG les permite moverse rapidamente a traves del mapa para checar cosas,
+    No actualiza posiciones de animacion (gravedad)
+    ---- Importante ----
+    Para no salirse de EstadoJuego.DEBUG, NO presionar el boton de pausa
+     */
 
     //Bala
     private Array<Bala> arrBalas;
@@ -73,7 +80,6 @@ public abstract class Nivel extends Pantalla {
     @Override
     public void render(float delta) {
         borrarPantalla();
-        actualizarCamara();
 
         float x = protagonista.body.getPosition().x - protagonista.sprite.getWidth()/2;
         float y = protagonista.body.getPosition().y - protagonista.sprite.getHeight()/2;
@@ -105,12 +111,25 @@ public abstract class Nivel extends Pantalla {
             HUD.draw();
             actualizar(delta);
             probarColisiones();
+            mundo.step(1/60f, 6, 2);
         }
-        if(estadoJuego == EstadoJuego.PAUSADO){
+        else if(estadoJuego == EstadoJuego.PAUSADO){
             batch.setProjectionMatrix(orthographicCameraHUD.combined); //Probar sin esto
             escenaPausa.draw();
         }
-        mundo.step(1/60f, 6, 2);
+        else if (estadoJuego == EstadoJuego.DEBUG){
+            //Solo para debugging, se quitará al final
+            batch.setProjectionMatrix(orthographicCameraHUD.combined);
+            HUD.draw();
+            debugMoverCamara();
+        }
+    }
+
+    private void debugMoverCamara() {
+        if (pad.isTouched()){
+            camara.position.set(camara.position.x+pad.getKnobPercentX()*50,camara.position.y,0);
+            camara.update();
+        }
     }
 
     protected abstract void actualizarCamara();
@@ -216,6 +235,7 @@ public abstract class Nivel extends Pantalla {
 
     private void actualizar(float delta) {
         //Actualizaciones
+        actualizarCamara();
         moverProtagonista();
         moverBala();
         moverEnemigos();
@@ -305,7 +325,8 @@ public abstract class Nivel extends Pantalla {
         JUGANDO,
         PAUSADO,
         GANO,
-        PERDIO
+        PERDIO,
+        DEBUG
     }
 
 }

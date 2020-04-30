@@ -24,6 +24,7 @@ public class cargarMapa {
             //Contructor de body def
             //Los body def almacenan la infomracion de un cuerpo rigifo
             BodyDef bd = new BodyDef();
+            bd.position.set(((RectangleMapObject) objeto).getRectangle().x, ((RectangleMapObject) objeto).getRectangle().y);
             bd.type  = BodyDef.BodyType.StaticBody;
             //Agregar el cuerpo al mundo
             Body body = mundo.createBody(bd);
