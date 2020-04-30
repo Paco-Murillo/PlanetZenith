@@ -148,7 +148,7 @@ public abstract class Nivel extends Pantalla {
 
     private void crearMundo() {
         Box2D.init();
-        Vector2 gravedad = new Vector2(0, -150);
+        Vector2 gravedad = new Vector2(0, -165);
         mundo = new World(gravedad, true);
         debugRenderer = new Box2DDebugRenderer();
     }
@@ -182,7 +182,6 @@ public abstract class Nivel extends Pantalla {
                 }
             }
         });
-
         HUD.addActor(botonDisparar);
 
         ImageButton botonSaltar = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/botonSaltar.png")));
@@ -194,7 +193,6 @@ public abstract class Nivel extends Pantalla {
                 protagonista.body.applyForceToCenter(0,9999,true);
             }
         });
-
         HUD.addActor(botonSaltar);
     }
 
@@ -216,7 +214,7 @@ public abstract class Nivel extends Pantalla {
     private void actualizar(float delta) {
         //Actualizaciones
         moverProtagonista();
-        moverBala(delta);
+        moverBala();
         moverEnemigos();
     }
 
@@ -226,12 +224,15 @@ public abstract class Nivel extends Pantalla {
 
     private void moverProtagonista() {
         if(pad.isTouched()){
+            float xBody = protagonista.body.getPosition().x;
+            float yBody = protagonista.body.getPosition().y;
+
             float percentX = pad.getKnobPercentX();
-            protagonista.body.applyForceToCenter(percentX*600,mundo.getGravity().y,true);
+            protagonista.body.setLinearVelocity(percentX*4000,protagonista.body.getLinearVelocity().y);
         }
     }
 
-    private void moverBala(float delta) {
+    private void moverBala() {
         for(int indexBalas = 0; indexBalas < arrBalas.size; indexBalas++){
             if(arrBalas.get(indexBalas) == null) continue;
             Bala bala = arrBalas.get(indexBalas);
@@ -251,7 +252,6 @@ public abstract class Nivel extends Pantalla {
             else enemy.direccion= Personaje.Movimientos.DERECHA;
         }
     }
-
 
     //Pureba si la bala le pegó a un enemigo
 
