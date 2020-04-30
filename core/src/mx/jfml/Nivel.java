@@ -33,11 +33,11 @@ public abstract class Nivel extends Pantalla {
     private Box2DDebugRenderer debugRenderer;
 
     //Mapa
-    protected TiledMap mapa;
+    private TiledMap mapa;
     private OrthogonalTiledMapRenderer mapRenderer;
 
     //Personaje
-    private Protagonista protagonista;
+    protected Protagonista protagonista;
     protected Movimiento movimiento = Movimiento.QUIETO;
 
     //Pausa
@@ -73,6 +73,7 @@ public abstract class Nivel extends Pantalla {
     @Override
     public void render(float delta) {
         borrarPantalla();
+        actualizarCamara();
 
         float x = protagonista.body.getPosition().x - protagonista.sprite.getWidth()/2;
         float y = protagonista.body.getPosition().y - protagonista.sprite.getHeight()/2;
@@ -111,6 +112,8 @@ public abstract class Nivel extends Pantalla {
         }
         mundo.step(1/60f, 6, 2);
     }
+
+    protected abstract void actualizarCamara();
 
     protected void cargaMapa(String mapPath) {
         AssetManager manager = new AssetManager();
