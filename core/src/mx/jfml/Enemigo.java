@@ -4,12 +4,22 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Enemigo extends Personaje {
-    private float acum;
+    //Para usarlo en disparando después
+
+    private boolean disparando;
 
     public Enemigo(Texture textura, float x, float y, float vx, float vy, float vida, World mundo) {
         super(textura, x, y, vx, vy, vida, mundo);
         movimiento = Movimientos.IZQUIERDA;
-        acum = 0;
+        disparando = false;
+    }
+
+    public boolean isDisparando() {
+        return disparando;
+    }
+
+    public void setDisparando(boolean disparando) {
+        this.disparando = disparando;
     }
 
     @Override
