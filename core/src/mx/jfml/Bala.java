@@ -6,7 +6,7 @@ public class Bala extends Objeto {
 
 	//velocidad
 	private float vx; //Pixeles por segundo
-	private float vy; //Pixeles por segundi
+	private float vy; //Pixeles por segundo
 	private float danio;
 
 	public Bala(Texture textura, float x, float y, float vx, float vy, float danio)
@@ -17,6 +17,7 @@ public class Bala extends Objeto {
 		this.danio = danio;
 
 	}
+
 	//Mover
 	public void moverX(float dt){
 		float dx = vx*dt;

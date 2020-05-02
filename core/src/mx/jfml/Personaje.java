@@ -17,6 +17,17 @@ public abstract class Personaje extends Objeto{
     protected Body body;
     private FixtureDef fixtureDef;
 
+    //Movimientos
+    protected Movimientos movimiento = Movimientos.DERECHA;
+
+    public Movimientos getMovimiento() {
+        return movimiento;
+    }
+
+    public void setMovimiento(Movimientos movimiento) {
+        this.movimiento = movimiento;
+    }
+
     private float vida;
 
     public Personaje(Texture textura, float x, float y, float vx, float vy, float vida, World mundo) {

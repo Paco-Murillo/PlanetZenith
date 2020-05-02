@@ -38,7 +38,6 @@ public abstract class Nivel extends Pantalla {
 
     //Personaje
     protected Protagonista protagonista;
-    protected Movimiento movimiento = Movimiento.QUIETO;
 
     //Pausa
     private EscenaPausa escenaPausa;
@@ -64,6 +63,9 @@ public abstract class Nivel extends Pantalla {
 
     //Enemigos
     protected Array<Enemigo> arrEnemigos;
+    private Array<Bala> arrBalasEnemigos;
+    private Texture texturaBalaEnemigos;
+    private float timeAcumForEnemyShots;
 
     public Nivel(Juego juego) {
         this.juego = juego;
@@ -71,10 +73,16 @@ public abstract class Nivel extends Pantalla {
 
     @Override
     public void show(){
+        timeAcumForEnemyShots = 0;
         crearMundo();
         crearProtagonista("Principal/PersonajeNormalFinal.png");
+        cargarTexturaBalaEnemigos("Proyectiles/balaenemigo.png");
         crearArrBalas();
         crearHUD();
+    }
+
+    private void cargarTexturaBalaEnemigos(String imgPath) {
+        texturaBalaEnemigos = new Texture(imgPath);
     }
 
     @Override
@@ -110,12 +118,17 @@ public abstract class Nivel extends Pantalla {
         for(Bala bala: arrBalas){
             bala.render(batch);
         }
+        for (Bala bala :
+                arrBalasEnemigos){
+            bala.render(batch);
+        }
         batch.end();
 
         if(estadoJuego== EstadoJuego.JUGANDO){
             batch.setProjectionMatrix(orthographicCameraHUD.combined);
             HUD.draw();
             actualizar(delta);
+            dispararEnemigos(delta);
             probarColisiones();
             mundo.step(1/60f, 6, 2);
         }
@@ -128,6 +141,29 @@ public abstract class Nivel extends Pantalla {
             batch.setProjectionMatrix(orthographicCameraHUD.combined);
             HUD.draw();
             debugMoverCamara();
+        }
+    }
+
+    private void dispararEnemigos(float delta) {
+        for (Enemigo enemigo :
+                arrEnemigos) {
+            if (camara.position.x-ANCHO/2 < enemigo.sprite.getX() && enemigo.sprite.getX() <camara.position.x+ANCHO){
+                timeAcumForEnemyShots += delta;
+                if(timeAcumForEnemyShots > 3){
+                    if(enemigo.getMovimiento() == Personaje.Movimientos.DERECHA) {
+                        float xBala = enemigo.sprite.getX() + enemigo.sprite.getWidth() - texturaBalaEnemigos.getWidth();
+                        float yBala = enemigo.sprite.getY() + (2 * enemigo.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f;
+                        Bala bala = new Bala(texturaBalaEnemigos, xBala, yBala, 100f, 0f, 30f);
+                        arrBalasEnemigos.add(bala);
+                    }else if(enemigo.getMovimiento() == Personaje.Movimientos.IZQUIERDA){
+                        float xBala = enemigo.sprite.getX();
+                        float yBala = enemigo.sprite.getY() + (2 * enemigo.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f;
+                        Bala bala = new Bala(texturaBalaEnemigos, xBala, yBala, -100f, 0f, 30f);
+                        arrBalasEnemigos.add(bala);
+                    }
+                    timeAcumForEnemyShots = 0;
+                }
+            }
         }
     }
 
@@ -157,6 +193,7 @@ public abstract class Nivel extends Pantalla {
     private void crearArrBalas(){
         contadorBalas = 0;
         arrBalas = new Array<>(3);
+        arrBalasEnemigos = new Array<>();
         System.out.println(arrBalas.toString());
     }
 
@@ -202,10 +239,17 @@ public abstract class Nivel extends Pantalla {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 if (contadorBalas<3) {
-                    float xBala = protagonista.sprite.getX() + protagonista.sprite.getWidth() - texturaBala.getWidth();
-                    float yBala = protagonista.sprite.getY() + (2 * protagonista.sprite.getHeight() / 3) - texturaBala.getHeight() / 2f;
-                    Bala bala = new Bala(texturaBala, xBala, yBala, 100f, 0f, 30f);
-                    arrBalas.add(bala);
+                    if(protagonista.getMovimiento() == Personaje.Movimientos.DERECHA) {
+                        float xBala = protagonista.sprite.getX() + protagonista.sprite.getWidth() - texturaBala.getWidth();
+                        float yBala = protagonista.sprite.getY() + (2 * protagonista.sprite.getHeight() / 3) - texturaBala.getHeight() / 2f;
+                        Bala bala = new Bala(texturaBala, xBala, yBala, 100f, 0f, 30f);
+                        arrBalas.add(bala);
+                    }else if(protagonista.getMovimiento() == Personaje.Movimientos.IZQUIERDA){
+                        float xBala = protagonista.sprite.getX();
+                        float yBala = protagonista.sprite.getY() + (2 * protagonista.sprite.getHeight() / 3) - texturaBala.getHeight() / 2f;
+                        Bala bala = new Bala(texturaBala, xBala, yBala, -100f, 0f, 30f);
+                        arrBalas.add(bala);
+                    }
                     contadorBalas++;
                 }
             }
@@ -244,7 +288,15 @@ public abstract class Nivel extends Pantalla {
         actualizarCamara();
         moverProtagonista();
         moverBala();
+        moverBalasEnemigos(delta);
         moverEnemigos();
+    }
+
+    private void moverBalasEnemigos(float delta) {
+        for (Bala bala :
+                arrBalasEnemigos) {
+            bala.moverX(delta);
+        }
     }
 
     protected void definirParedes(){
@@ -254,6 +306,13 @@ public abstract class Nivel extends Pantalla {
     private void moverProtagonista() {
         if(pad.isTouched()){
             float percentX = pad.getKnobPercentX();
+            if(percentX >= 0){
+                protagonista.setMovimiento(Personaje.Movimientos.DERECHA);
+                protagonista.sprite.setFlip(false,false);
+            }else{
+                protagonista.setMovimiento(Personaje.Movimientos.IZQUIERDA);
+                protagonista.sprite.setFlip(true,false);
+            }
             protagonista.body.applyForceToCenter(percentX*4000,0, true);
         }
     }
@@ -262,8 +321,8 @@ public abstract class Nivel extends Pantalla {
 
     private void moverEnemigos(){
         for(Enemigo enemy: arrEnemigos){
-            if (protagonista.sprite.getX()<=enemy.sprite.getX()) enemy.direccion= Personaje.Movimientos.IZQUIERDA;
-            else enemy.direccion= Personaje.Movimientos.DERECHA;
+            if (protagonista.sprite.getX()<=enemy.sprite.getX()) enemy.setMovimiento(Personaje.Movimientos.IZQUIERDA);
+            else enemy.setMovimiento(Personaje.Movimientos.DERECHA);
         }
     }
 
