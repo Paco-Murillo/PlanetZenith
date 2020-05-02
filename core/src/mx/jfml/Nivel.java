@@ -44,6 +44,11 @@ public abstract class Nivel extends Pantalla {
     private EscenaPausa escenaPausa;
     private EstadoJuego estadoJuego = EstadoJuego.JUGANDO; //Jugando, PAusado, Poner DEBUG en caso de checar nivel sin actualizaciones
 
+    //Texto para marcador del juego
+    private int puntosJugador = 0;
+    private Texto textoMarcador;
+
+
     /*
     EstadoJuego.DEBUG les permite moverse rapidamente a traves del mapa para checar cosas,
     No actualiza posiciones de animacion (gravedad)
@@ -68,6 +73,7 @@ public abstract class Nivel extends Pantalla {
     private Texture texturaBalaEnemigos;
     private float timeAcumForEnemyShots;
 
+
     public Nivel(Juego juego) {
         this.juego = juego;
     }
@@ -78,10 +84,14 @@ public abstract class Nivel extends Pantalla {
         crearMundo();
         crearProtagonista("Principal/PersonajeNormalFinal.png");
         cargarTexturaBalaEnemigos("Proyectiles/balaenemigo.png");
+        crearTextoMarcador();
         crearArrBalas();
         crearHUD();
         crearContacto();
 
+    }
+    private void crearTextoMarcador(){
+        textoMarcador = new Texto("Texto/FuenteCuadro.fnt");
     }
 
     private void crearContacto() {
@@ -130,6 +140,12 @@ public abstract class Nivel extends Pantalla {
                 arrBalasEnemigos){
             bala.render(batch);
         }
+        //Texto para el marcador, por ahora muestra los enemigos asesinados *100
+        textoMarcador.render(batch, Integer.toString(puntosJugador), protagonista.body.getPosition().x + 400, 700);
+        textoMarcador.render(batch, " Puntos: ", protagonista.body.getPosition().x + 300, 700);
+        textoMarcador.render(batch, "3", protagonista.body.getPosition().x + 200, 700);
+        textoMarcador.render(batch, " Vidas: ", protagonista.body.getPosition().x + 100, 700);
+
         batch.end();
 
         if(estadoJuego== EstadoJuego.JUGANDO){
@@ -367,8 +383,8 @@ public abstract class Nivel extends Pantalla {
                         mundo.destroyBody(enemigo.body);
                         arrEnemigos.removeIndex(indexEnemigos);
                     }
-
                     arrBalas.removeIndex(indexBala);
+                    puntosJugador += 100;
                     contadorBalas--;
                     return;
                 }
