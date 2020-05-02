@@ -81,6 +81,12 @@ public abstract class Nivel extends Pantalla {
     public void render(float delta) {
         borrarPantalla();
 
+        if(protagonista.sprite.getY()+protagonista.sprite.getHeight()<-20){
+            //Aqui deberia saltar a PantallaPerder
+            System.out.println("Te caiste");
+        }
+
+
         float x = protagonista.body.getPosition().x - protagonista.sprite.getWidth()/2;
         float y = protagonista.body.getPosition().y - protagonista.sprite.getHeight()/2;
         protagonista.sprite.setPosition(x,y);
@@ -145,7 +151,7 @@ public abstract class Nivel extends Pantalla {
     }
 
     private void crearProtagonista(String imgPath){
-        protagonista = new Protagonista(new Texture(imgPath), 60f, 250f, 1f, 30f, 30f,mundo);
+        protagonista = new Protagonista(new Texture(imgPath), 60f, 250f, 1f, 30f, 100,mundo);
     }
 
     private void crearArrBalas(){
@@ -207,12 +213,12 @@ public abstract class Nivel extends Pantalla {
         HUD.addActor(botonDisparar);
 
         ImageButton botonSaltar = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/botonSaltar.png")));
-        botonSaltar.setPosition(ANCHO-botonDisparar.getWidth()-140,30);
+        botonSaltar.setPosition(ANCHO-botonDisparar.getWidth()-210,30);
         botonSaltar.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                protagonista.body.applyForceToCenter(0,9999,true);
+                protagonista.body.applyForceToCenter(0,3000,true);
             }
         });
         HUD.addActor(botonSaltar);
@@ -247,11 +253,8 @@ public abstract class Nivel extends Pantalla {
 
     private void moverProtagonista() {
         if(pad.isTouched()){
-            float xBody = protagonista.body.getPosition().x;
-            float yBody = protagonista.body.getPosition().y;
-
             float percentX = pad.getKnobPercentX();
-            protagonista.body.setLinearVelocity(percentX*4000,protagonista.body.getLinearVelocity().y);
+            protagonista.body.applyForceToCenter(percentX*4000,0, true);
         }
     }
 
