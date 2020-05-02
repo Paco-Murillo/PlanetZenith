@@ -31,6 +31,7 @@ public abstract class Nivel extends Pantalla {
     //Mundo
     protected World mundo; //Simulacion
     private Box2DDebugRenderer debugRenderer;
+    private Contacto contacto;
 
     //Mapa
     private TiledMap mapa;
@@ -79,6 +80,13 @@ public abstract class Nivel extends Pantalla {
         cargarTexturaBalaEnemigos("Proyectiles/balaenemigo.png");
         crearArrBalas();
         crearHUD();
+        crearContacto();
+
+    }
+
+    private void crearContacto() {
+        contacto = new Contacto();
+        mundo.setContactListener(contacto);
     }
 
     private void cargarTexturaBalaEnemigos(String imgPath) {
@@ -88,12 +96,12 @@ public abstract class Nivel extends Pantalla {
     @Override
     public void render(float delta) {
         borrarPantalla();
+        System.out.println(contacto.personajeSuelo);
 
         if(protagonista.sprite.getY()+protagonista.sprite.getHeight()<-20){
             //Aqui deberia saltar a PantallaPerder
             System.out.println("Te caiste");
         }
-
 
         float x = protagonista.body.getPosition().x - protagonista.sprite.getWidth()/2;
         float y = protagonista.body.getPosition().y - protagonista.sprite.getHeight()/2;
@@ -187,7 +195,7 @@ public abstract class Nivel extends Pantalla {
     }
 
     private void crearProtagonista(String imgPath){
-        protagonista = new Protagonista(new Texture(imgPath), 60f, 250f, 1f, 30f, 100,mundo);
+        protagonista = new Protagonista(new Texture(imgPath), 60f, 700f, 1f, 30f, 100,mundo);
     }
 
     private void crearArrBalas(){
@@ -216,6 +224,7 @@ public abstract class Nivel extends Pantalla {
         Vector2 gravedad = new Vector2(0, -165);
         mundo = new World(gravedad, true);
         debugRenderer = new Box2DDebugRenderer();
+
     }
 
     private void crearBotones() {
@@ -262,7 +271,12 @@ public abstract class Nivel extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                protagonista.body.applyForceToCenter(0,3000,true);
+                if(contacto.personajeSuelo) {
+
+                    protagonista.body.applyForceToCenter(0, 3000, true);
+                }
+
+
             }
         });
         HUD.addActor(botonSaltar);
@@ -317,12 +331,22 @@ public abstract class Nivel extends Pantalla {
         }
     }
 
+
+
     protected abstract void moverBala();
 
     private void moverEnemigos(){
         for(Enemigo enemy: arrEnemigos){
             if (protagonista.sprite.getX()<=enemy.sprite.getX()) enemy.setMovimiento(Personaje.Movimientos.IZQUIERDA);
             else enemy.setMovimiento(Personaje.Movimientos.DERECHA);
+
+            if(enemy.movimiento == Personaje.Movimientos.IZQUIERDA && enemy.body.isAwake()==true){
+                enemy.body.applyForceToCenter(-500,0,true);
+            }
+            if(enemy.movimiento == Personaje.Movimientos.DERECHA && enemy.body.isAwake()==true){
+                enemy.body.applyForceToCenter(500,0,true);
+            }
+
         }
     }
 
