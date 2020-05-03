@@ -57,11 +57,11 @@ public abstract class Personaje extends Objeto{
 
     private FixtureDef crearFixtureDef(Texture textura){
         PolygonShape rectangulo = new PolygonShape();
-        rectangulo.setAsBox(textura.getWidth()/2f, textura.getHeight()/2f);
+        rectangulo.setAsBox(textura.getWidth()/2, textura.getHeight()/2);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = rectangulo;
-        fixtureDef.friction = 1f;
-        fixtureDef.restitution = 0f;
+        fixtureDef.friction = 1;
+        fixtureDef.restitution = 0;
 
         return fixtureDef;
     }

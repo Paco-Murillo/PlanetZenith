@@ -235,7 +235,7 @@ public abstract class Nivel extends Pantalla {
     }
 
     private void crearProtagonista(String imgPath){
-        protagonista = new Protagonista(new Texture(imgPath), 60f, 700f, 1f, 30f, 100,mundo);
+        protagonista = new Protagonista(new Texture(imgPath), 60f, 100, 1f, 30f, 100,mundo);
     }
 
     private void crearArrBalas(){
@@ -263,7 +263,7 @@ public abstract class Nivel extends Pantalla {
 
     protected void crearMundo() {
         Box2D.init();
-        Vector2 gravedad = new Vector2(0, -165);
+        Vector2 gravedad = new Vector2(0, -32);
         mundo = new World(gravedad, true);
         debugRenderer = new Box2DDebugRenderer();
     }
@@ -314,7 +314,7 @@ public abstract class Nivel extends Pantalla {
                 super.clicked(event, x, y);
                 if(contacto.personajeSuelo) {
 
-                    protagonista.body.applyForceToCenter(0, 3000, true);
+                    protagonista.body.applyForceToCenter(0, 25000, true);
                 }
 
 
