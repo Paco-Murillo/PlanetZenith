@@ -3,9 +3,11 @@ package mx.jfml;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -24,6 +26,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.util.Random;
 
 public abstract class Nivel extends Pantalla {
     protected final Juego juego;
@@ -72,6 +76,11 @@ public abstract class Nivel extends Pantalla {
     private Array<Bala> arrBalasEnemigos;
     private Texture texturaBalaEnemigos;
     private float timeAcumForEnemyShots;
+    private Random random;
+
+    //Jefe
+    protected Jefe jefe;
+    private ShapeRenderer shapeRenderer;
 
 
     public Nivel(Juego juego) {
@@ -80,16 +89,20 @@ public abstract class Nivel extends Pantalla {
 
     @Override
     public void show(){
-        timeAcumForEnemyShots = 0;
-        crearMundo();
         crearProtagonista("Principal/PersonajeNormalFinal.png");
         cargarTexturaBalaEnemigos("Proyectiles/balaenemigo.png");
         crearTextoMarcador();
         crearArrBalas();
         crearHUD();
         crearContacto();
+        crearBarraVidaJefe();
 
     }
+
+    private void crearBarraVidaJefe() {
+        shapeRenderer = new ShapeRenderer();
+    }
+
     private void crearTextoMarcador(){
         textoMarcador = new Texto("Texto/FuenteCuadro.fnt");
     }
@@ -113,9 +126,10 @@ public abstract class Nivel extends Pantalla {
             System.out.println("Te caiste");
         }
 
+
         float x = protagonista.body.getPosition().x - protagonista.sprite.getWidth()/2;
         float y = protagonista.body.getPosition().y - protagonista.sprite.getHeight()/2;
-        protagonista.sprite.setPosition(x,y);
+        protagonista.sprite.setPosition(x, y);
 
         //Dibujar
         batch.setProjectionMatrix(camara.combined);
@@ -147,6 +161,13 @@ public abstract class Nivel extends Pantalla {
         textoMarcador.render(batch, " Vidas: ", protagonista.body.getPosition().x + 100, 700);
 
         batch.end();
+        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.BLACK);
+        shapeRenderer.rect(jefe.sprite.getX(), jefe.sprite.getY()+jefe.sprite.getHeight()+20, jefe.sprite.getWidth(), 10);
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.rect(jefe.sprite.getX(), jefe.sprite.getY()+jefe.sprite.getHeight()+20, (jefe.sprite.getWidth()*jefe.getVida())/jefe.getVidaOriginal(), 10);
+        shapeRenderer.end();
 
         if(estadoJuego== EstadoJuego.JUGANDO){
             batch.setProjectionMatrix(orthographicCameraHUD.combined);
@@ -169,25 +190,28 @@ public abstract class Nivel extends Pantalla {
     }
 
     private void dispararEnemigos(float delta) {
-        for (Enemigo enemigo :
-                arrEnemigos) {
-            if (camara.position.x-ANCHO/2 < enemigo.sprite.getX() && enemigo.sprite.getX() <camara.position.x+ANCHO){
-                timeAcumForEnemyShots += delta;
-                if(timeAcumForEnemyShots > 3){
+        timeAcumForEnemyShots += delta;
+        if(timeAcumForEnemyShots > 3){
+            for (Enemigo enemigo : arrEnemigos) {
+                if (camara.position.x-ANCHO/2 < enemigo.sprite.getX() && enemigo.sprite.getX() <camara.position.x+ANCHO && enemigo.getTiempoDisparos()<=0){
                     if(enemigo.getMovimiento() == Personaje.Movimientos.DERECHA) {
                         float xBala = enemigo.sprite.getX() + enemigo.sprite.getWidth() - texturaBalaEnemigos.getWidth();
                         float yBala = enemigo.sprite.getY() + (2 * enemigo.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f;
+                        enemigo.setTiempoDisparos(random.nextInt(2));
                         Bala bala = new Bala(texturaBalaEnemigos, xBala, yBala, 100f, 0f, 30f);
                         arrBalasEnemigos.add(bala);
                     }else if(enemigo.getMovimiento() == Personaje.Movimientos.IZQUIERDA){
                         float xBala = enemigo.sprite.getX();
                         float yBala = enemigo.sprite.getY() + (2 * enemigo.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f;
+                        enemigo.setTiempoDisparos(random.nextInt(2));
                         Bala bala = new Bala(texturaBalaEnemigos, xBala, yBala, -100f, 0f, 30f);
                         arrBalasEnemigos.add(bala);
                     }
-                    timeAcumForEnemyShots = 0;
+                }else {
+                    enemigo.setTiempoDisparos(enemigo.getTiempoDisparos() - 1);
                 }
             }
+        timeAcumForEnemyShots = 0;
         }
     }
 
@@ -217,8 +241,10 @@ public abstract class Nivel extends Pantalla {
     private void crearArrBalas(){
         contadorBalas = 0;
         arrBalas = new Array<>(3);
+        timeAcumForEnemyShots = 0;
         arrBalasEnemigos = new Array<>();
         System.out.println(arrBalas.toString());
+        random = new Random();
     }
 
     protected void cargarTexturaBala(String imgPath) {
@@ -235,12 +261,11 @@ public abstract class Nivel extends Pantalla {
         crearPad();
     }
 
-    private void crearMundo() {
+    protected void crearMundo() {
         Box2D.init();
         Vector2 gravedad = new Vector2(0, -165);
         mundo = new World(gravedad, true);
         debugRenderer = new Box2DDebugRenderer();
-
     }
 
     private void crearBotones() {
@@ -323,8 +348,7 @@ public abstract class Nivel extends Pantalla {
     }
 
     private void moverBalasEnemigos(float delta) {
-        for (Bala bala :
-                arrBalasEnemigos) {
+        for (Bala bala : arrBalasEnemigos) {
             bala.moverX(delta);
         }
     }
@@ -347,8 +371,6 @@ public abstract class Nivel extends Pantalla {
         }
     }
 
-
-
     protected abstract void moverBala();
 
     private void moverEnemigos(){
@@ -356,13 +378,14 @@ public abstract class Nivel extends Pantalla {
             if (protagonista.sprite.getX()<=enemy.sprite.getX()) enemy.setMovimiento(Personaje.Movimientos.IZQUIERDA);
             else enemy.setMovimiento(Personaje.Movimientos.DERECHA);
 
-            if(enemy.movimiento == Personaje.Movimientos.IZQUIERDA && enemy.body.isAwake()==true){
+            if(enemy.movimiento == Personaje.Movimientos.IZQUIERDA && enemy.body.isAwake()){
                 enemy.body.applyForceToCenter(-500,0,true);
+                enemy.sprite.setFlip(false,false);
             }
-            if(enemy.movimiento == Personaje.Movimientos.DERECHA && enemy.body.isAwake()==true){
+            if(enemy.movimiento == Personaje.Movimientos.DERECHA && enemy.body.isAwake()){
                 enemy.body.applyForceToCenter(500,0,true);
+                enemy.sprite.setFlip(true,false);
             }
-
         }
     }
 
@@ -383,6 +406,7 @@ public abstract class Nivel extends Pantalla {
                         mundo.destroyBody(enemigo.body);
                         arrEnemigos.removeIndex(indexEnemigos);
                     }
+
                     arrBalas.removeIndex(indexBala);
                     puntosJugador += 100;
                     contadorBalas--;

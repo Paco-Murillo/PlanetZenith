@@ -9,16 +9,16 @@ public class PantallaJuegoNivelUno extends Nivel {
     private static final int ANCHO_MAPA = 6400;
     private static final int ALTO_MAPA = 736;
 
-    private Jefe jefe;
 
 
     public PantallaJuegoNivelUno(Juego juego){super(juego);}
 
     @Override
     public void show() {
+        crearMundo();
+        crearEnemigos();
         super.show();
         cargaMapa("MapaJuego.tmx");
-        crearEnemigos();
         cargarTexturaBala("Proyectiles/bala1.png");
         Gdx.input.setInputProcessor(HUD);
         definirParedes();
@@ -52,7 +52,7 @@ public class PantallaJuegoNivelUno extends Nivel {
         arrEnemigos.add(enemigo);
         enemigo = new Enemigo(enemigoTexture, 6120, 180, 1f, 30f, 30f, mundo);
         arrEnemigos.add(enemigo);
-        jefe = new Jefe(new Texture("Enemigos/JefeUnoJetPack.png"), 6876, 72, 1f, 30f, 30f, mundo); //Checar JEFE
+        jefe = new Jefe(new Texture("Enemigos/JefeUnoJetPack.png"), 6876, 72, 1f, 30f, 400, mundo); //Checar JEFE
     }
 
     @Override
