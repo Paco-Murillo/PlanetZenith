@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -43,10 +44,15 @@ class PantallaConfiguracion extends Pantalla {
     //Manager de audio
     private AudioManejador audioManager;
 
+    //Audio
+    private Music musicaFondo;
+    private Sound efectoBoton;
+
 
     public PantallaConfiguracion(Juego juego) {
         this.juego = juego;
         assetManager = juego.getAssetManager();
+        audioManager = juego.getAudioManejador();
     }
 
     @Override
@@ -58,15 +64,13 @@ class PantallaConfiguracion extends Pantalla {
 
     private void crearAjustes() {
         cargarEscritura();
-        cargarTexturas();
+        cargarAssets();
 
-        audioManager = new AudioManejador(assetManager);
 
         escenaConfig = new Stage(vista);
 
         Gdx.input.setInputProcessor(escenaConfig);
 
-        audioManager.playMusica();
 
         //Botones
         //Boton Subir Volumen Musica
@@ -110,11 +114,10 @@ class PantallaConfiguracion extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                audioManager.efectoBtnMenu.play(audioManager.getVolEfectos());
+                efectoBoton.play(audioManager.getVolEfectos());
                 if(audioManager.getVolMusica() < 1f){
                     audioManager.setVolMusica(audioManager.getVolMusica() + .15f);
-                } else if(audioManager.getVolMusica() >= 1f){
-                    audioManager.setVolMusica(1f);
+                    musicaFondo.setVolume(audioManager.getVolMusica());
                 }
             }
         });
@@ -123,12 +126,12 @@ class PantallaConfiguracion extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                audioManager.efectoBtnMenu.play(audioManager.getVolEfectos());
+                efectoBoton.play(audioManager.getVolEfectos());
                 if(audioManager.getVolMusica() > 0){
                     audioManager.setVolMusica(audioManager.getVolMusica() - .15f);
-                } else if(audioManager.getVolMusica() <= 0){
-                    audioManager.setVolMusica(0);
+                    musicaFondo.setVolume(audioManager.getVolMusica());
                 }
+
             }
         });
 
@@ -136,11 +139,9 @@ class PantallaConfiguracion extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                audioManager.efectoBtnMenu.play(audioManager.getVolEfectos());
+                efectoBoton.play(audioManager.getVolEfectos());
                 if(audioManager.getVolEfectos() < 1f){
                     audioManager.setVolEfectos(audioManager.getVolEfectos() + .15f);
-                } else if(audioManager.getVolEfectos() >= 1f){
-                    audioManager.setVolEfectos(1f);
                 }
             }
         });
@@ -149,11 +150,9 @@ class PantallaConfiguracion extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                audioManager.efectoBtnMenu.play(audioManager.getVolEfectos());
+                efectoBoton.play(audioManager.getVolEfectos());
                 if(audioManager.getVolEfectos() > 0){
-                    audioManager.setVolEfectos(audioManager.getVolEfectos()-.15f);
-                } else if(audioManager.getVolMusica() <= 0){
-                    audioManager.setVolEfectos(0);
+                    audioManager.setVolEfectos(audioManager.getVolEfectos() - .15f);
                 }
             }
         });
@@ -162,9 +161,9 @@ class PantallaConfiguracion extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                audioManager.efectoBtnMenu.play(audioManager.getVolEfectos());
+                efectoBoton.play(audioManager.getVolEfectos());
                 audioManager.setVolMusica(0);
-                audioManager.setVolEfectos(-1f);
+                audioManager.setVolEfectos(0);
             }
         });
 
@@ -172,10 +171,10 @@ class PantallaConfiguracion extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                audioManager.setTocando(false);
-                audioManager.efectoBtnMenu.play(audioManager.getVolEfectos());
                 juego.setScreen(new PantallaMenu(juego));
-                audioManager.stopMusica();
+                efectoBoton.play(audioManager.getVolEfectos());
+                audioManager.setTocando(false);
+                musicaFondo.stop();
             }
         });
 
@@ -183,8 +182,10 @@ class PantallaConfiguracion extends Pantalla {
     }
 
 
-    private void cargarTexturas() {
-
+    private void cargarAssets() {
+        //Audio y Musica
+        assetManager.load("Audio/Musica/superMetroid.mp3", Music.class);
+        assetManager.load("Audio/Efectos/sonidoboton.mp3", Sound.class);
 
         //Textura de botones
         assetManager.load("BotonesConf/btnVolArriba.png", Texture.class);
@@ -204,6 +205,9 @@ class PantallaConfiguracion extends Pantalla {
         texturaBtnVolDownEfectos = assetManager.get("BotonesConf/btnVolAbajoEf.png");
         texturaBtnMute = assetManager.get("BotonesConf/btnMute.png");
         texturaBtnRegresar = assetManager.get("BotonesConf/btnRegresar.png");
+
+        musicaFondo = assetManager.get("Audio/Musica/superMetroid.mp3");
+        efectoBoton = assetManager.get("Audio/Efectos/sonidoboton.mp3");
     }
 
     private void cargarEscritura() {
@@ -249,13 +253,15 @@ class PantallaConfiguracion extends Pantalla {
     @Override
     public void dispose() {
         //Liberar la memoria usada
+        texturaFondo.dispose();
         texturaBtnRegresar.dispose();
         texturaBtnMute.dispose();
         texturaBtnVolDownEfectos.dispose();
         texturaBtnVolDownMusica.dispose();
         texturaBtnVolUpMusica.dispose();
         texturaBtnVolUpEfectos.dispose();
-        audioManager.dispose();
+        musicaFondo.dispose();
+        efectoBoton.dispose();
         escenaConfig.dispose();
 
         //Ahora el asset manager libera los recursos
@@ -265,7 +271,8 @@ class PantallaConfiguracion extends Pantalla {
         assetManager.unload("BotonesConf/btnVolAbajoEf.png");
         assetManager.unload("BotonesConf/btnMute.png");
         assetManager.unload("BotonesConf/btnRegresar.png");
-        audioManager.unLoad();
+        assetManager.unload("Audio/Musica/superMetroid.mp3");
+        assetManager.unload("Audio/Efectos/sonidoboton.mp3");
 
     }
 }

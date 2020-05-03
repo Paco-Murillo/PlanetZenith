@@ -6,54 +6,26 @@ import com.badlogic.gdx.audio.Sound;
 
 public class AudioManejador {
 
-    //Asset Manager
-    public AssetManager manager;
 
-    //Musica
-    protected Music musicaFondo;
-
-    //Efectos
-    protected Sound efectoBtnMenu;
-    public  float volEfectos = 1f;
+    //Volumen
+    public  float volEfectos;
+    public float volMusica;
 
     //Variable que dice si la musica se esta reproduciendo actualmente
-    public static boolean tocando;
+    public boolean tocando;
 
-    public AudioManejador(AssetManager manager){
-        this.tocando = false;
-
-        this.manager = manager;
-        manager.load("Audio/Musica/superMetroid.mp3", Music.class);
-        manager.load("Audio/Efectos/sonidoboton.mp3", Sound.class);
-        manager.finishLoading();
-
-        musicaFondo = manager.get("Audio/Musica/superMetroid.mp3", Music.class);
-
-        efectoBtnMenu = manager.get("Audio/Efectos/sonidoboton.mp3", Sound.class);
-    }
-
-    public void setMusicaFondo(String musica) {
-        musicaFondo = manager.get(musica, Music.class);
-    }
-
-    public void setLooping(Boolean loop){
-        musicaFondo.setLooping(loop);
-    }
-
-    public void playMusica(){
-        musicaFondo.play();
-    }
-
-    public void stopMusica(){
-        musicaFondo.stop();
+    public AudioManejador(boolean tocando,float volEfectos, float volMusica){
+        this.tocando = tocando;
+        this.volEfectos = volEfectos;
+        this.volMusica = volMusica;
     }
 
     public float getVolMusica(){
-        return musicaFondo.getVolume();
+        return volMusica;
     }
 
-    public void setVolMusica(float volumen){
-        musicaFondo.setVolume(volumen);
+    public void setVolMusica(float volMusica){
+        this.volMusica = volMusica;
     }
 
     public void setVolEfectos(float volumen){
@@ -72,14 +44,5 @@ public class AudioManejador {
         this.tocando = tocando;
     }
 
-    public void dispose(){
-        musicaFondo.dispose();
-        efectoBtnMenu.dispose();
-    }
-
-    public void unLoad(){
-        manager.unload("Audio/Musica/superMetroid.mp3");
-        manager.unload("Audio/Efectos/sonidoboton.mp3");
-    }
 
 }

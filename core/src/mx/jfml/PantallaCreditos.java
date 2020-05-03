@@ -2,6 +2,9 @@ package mx.jfml;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -13,7 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 class PantallaCreditos extends Pantalla {
 
     private final Juego juego;
+
+    //Texturas
     private Texture texturaFondo;
+    private Texture texturabtnRegresar;
 
     //Creditos
     private Stage escenaCreditos;
@@ -27,8 +33,20 @@ class PantallaCreditos extends Pantalla {
     private Escritura txtDerechos1;
     private  Escritura txtDerechos2;
 
+    //Asset manager
+    private final AssetManager assetManager;
+
+    //Audio manager
+    private AudioManejador audioManager;
+
+    //Audio
+    private Music musicaFondo;
+    private Sound efectoBoton;
+
     public PantallaCreditos(Juego juego) {
         this.juego = juego;
+        assetManager = juego.getAssetManager();
+        audioManager = juego.getAudioManejador();
     }
 
     @Override
@@ -39,29 +57,46 @@ class PantallaCreditos extends Pantalla {
     }
 
     private void crearCreditos() {
+        cargarEscritura();
+        cargarAssets();
+
         escenaCreditos = new Stage(vista);
 
-        cargarEscritura();
+        Gdx.input.setInputProcessor(escenaCreditos);
 
         //Boton Regresar
-        Texture texturabtnRegresar = new Texture("BotonesConf/btnRegresar.png");
         TextureRegionDrawable trdRegresar = new TextureRegionDrawable(new TextureRegion(texturabtnRegresar));
-
         ImageButton btnRegresar = new ImageButton(trdRegresar);
         btnRegresar.setPosition(64,64);
+        escenaCreditos.addActor(btnRegresar);
 
         //Listener
         btnRegresar.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                efectoBoton.play(audioManager.getVolEfectos());
+                musicaFondo.stop();
+                audioManager.setTocando(false);
                 juego.setScreen(new PantallaMenu(juego));
             }
         });
+    }
 
-        escenaCreditos.addActor(btnRegresar);
 
-        Gdx.input.setInputProcessor(escenaCreditos);
+    private void cargarAssets() {
+        assetManager.load("BotonesConf/btnRegresar.png", Texture.class);
+
+        assetManager.load("Audio/Musica/superMetroid.mp3", Music.class);
+        assetManager.load("Audio/Efectos/sonidoboton.mp3", Sound.class);
+
+
+        assetManager.finishLoading();
+
+        texturabtnRegresar = assetManager.get("BotonesConf/btnRegresar.png");
+
+        musicaFondo = assetManager.get("Audio/Musica/superMetroid.mp3");
+        efectoBoton = assetManager.get("Audio/Efectos/sonidoboton.mp3");
     }
 
     private void cargarEscritura() {
@@ -125,5 +160,12 @@ class PantallaCreditos extends Pantalla {
     @Override
     public void dispose() {
         texturaFondo.dispose();
+        texturabtnRegresar.dispose();
+        musicaFondo.dispose();
+        efectoBoton.dispose();
+
+        assetManager.unload("BotonesConf/btnRegresar.png");
+        assetManager.unload("Audio/Efectos/sonidoboton.mp3");
+        assetManager.unload("Audio/Musica/superMetroid.mp3");
     }
 }

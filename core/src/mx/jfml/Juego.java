@@ -17,6 +17,7 @@ public class Juego extends Game {
 
 	//Ahora habrá un SOLO AssetManager en toda la applicación
 	private final AssetManager assetManager = new AssetManager();
+	private AudioManejador audioManejador = new AudioManejador(false, 1f,1f);
 
 	@Override
 	public void create(){
@@ -31,6 +32,10 @@ public class Juego extends Game {
 	//Accesor del AssetManager, para que otras clases lo utilicen
 	public AssetManager getAssetManager(){
 		return assetManager;
+	}
+
+	public AudioManejador getAudioManejador(){
+		return audioManejador;
 	}
 
 	@Override
