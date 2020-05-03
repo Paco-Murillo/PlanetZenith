@@ -42,7 +42,7 @@ public abstract class Personaje extends Objeto{
 
         body = crearBody(x,y,mundo);
         fixtureDef = crearFixtureDef(textura);
-        body.createFixture(fixtureDef);
+        body.createFixture(fixtureDef).setUserData("personaje");
     }
 
     private Body crearBody(float x, float y, World mundo){

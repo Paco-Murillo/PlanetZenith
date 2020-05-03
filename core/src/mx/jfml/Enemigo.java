@@ -30,7 +30,7 @@ public class Enemigo extends Personaje {
 
     public void crearSueloSensor(Texture textura){
         PolygonShape rectangulo = new PolygonShape();
-        rectangulo.setAsBox(4,5, new Vector2(-textura.getWidth()/2f, -textura.getHeight()/2f),0);
+        rectangulo.setAsBox(4,5, new Vector2(-textura.getWidth()/2-10, -textura.getHeight()/2f),0);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape=rectangulo;
         fixtureDef.isSensor=true;

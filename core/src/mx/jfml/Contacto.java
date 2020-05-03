@@ -34,6 +34,13 @@ public class Contacto implements ContactListener {
             fb.getBody().setAwake(true);
         }
 
+        if(fa.getUserData() != null && fa.getUserData().equals("personaje") && fb.getUserData() != null && fb.getUserData().equals("sensorEnemigo")) {
+            fb.getBody().setAwake(false);
+
+        }
+        if(fb.getUserData() != null && fb.getUserData().equals("personaje") && fa.getUserData() != null && fa.getUserData().equals("sensorEnemigo")){
+            fa.getBody().setAwake(false);
+        }
 
     }
 

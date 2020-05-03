@@ -175,6 +175,7 @@ public abstract class Nivel extends Pantalla {
             actualizar(delta);
             dispararEnemigos(delta);
             probarColisiones();
+            probarColisionesProtagonista();
             mundo.step(1/60f, 6, 2);
         }
         else if(estadoJuego == EstadoJuego.PAUSADO){
@@ -189,6 +190,22 @@ public abstract class Nivel extends Pantalla {
         }
     }
 
+    private void probarColisionesProtagonista() {
+        Rectangle rectProtagonista = protagonista.sprite.getBoundingRectangle();
+        System.out.println(arrBalasEnemigos.size);
+        for(int indexBala= 0; indexBala < arrBalasEnemigos.size; indexBala++) {
+            if (arrBalasEnemigos.get(indexBala) == null) continue;
+            Bala bala = arrBalasEnemigos.get(indexBala);
+            if (rectProtagonista.overlaps(bala.sprite.getBoundingRectangle())) {
+                protagonista.setVida(bala.getDanio());
+                arrBalasEnemigos.removeIndex(indexBala);
+                return;
+            }
+        }
+
+
+    }
+
     private void dispararEnemigos(float delta) {
         timeAcumForEnemyShots += delta;
         if(timeAcumForEnemyShots > 3){
@@ -198,13 +215,13 @@ public abstract class Nivel extends Pantalla {
                         float xBala = enemigo.sprite.getX() + enemigo.sprite.getWidth() - texturaBalaEnemigos.getWidth();
                         float yBala = enemigo.sprite.getY() + (2 * enemigo.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f;
                         enemigo.setTiempoDisparos(random.nextInt(2));
-                        Bala bala = new Bala(texturaBalaEnemigos, xBala, yBala, 100f, 0f, 30f);
+                        Bala bala = new Bala(texturaBalaEnemigos, xBala, yBala, 100f, 0f, 20f);
                         arrBalasEnemigos.add(bala);
                     }else if(enemigo.getMovimiento() == Personaje.Movimientos.IZQUIERDA){
                         float xBala = enemigo.sprite.getX();
                         float yBala = enemigo.sprite.getY() + (2 * enemigo.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f;
                         enemigo.setTiempoDisparos(random.nextInt(2));
-                        Bala bala = new Bala(texturaBalaEnemigos, xBala, yBala, -100f, 0f, 30f);
+                        Bala bala = new Bala(texturaBalaEnemigos, xBala, yBala, -100f, 0f, 20f);
                         arrBalasEnemigos.add(bala);
                     }
                 }else {
@@ -235,7 +252,7 @@ public abstract class Nivel extends Pantalla {
     }
 
     private void crearProtagonista(String imgPath){
-        protagonista = new Protagonista(new Texture(imgPath), 60f, 100, 1f, 30f, 0,mundo);
+        protagonista = new Protagonista(new Texture(imgPath), 60f, 100, 1f, 30f, 100,mundo);
     }
 
     private void crearArrBalas(){
@@ -378,12 +395,12 @@ public abstract class Nivel extends Pantalla {
             if (protagonista.sprite.getX()<=enemy.sprite.getX()) enemy.setMovimiento(Personaje.Movimientos.IZQUIERDA);
             else enemy.setMovimiento(Personaje.Movimientos.DERECHA);
 
-            if(enemy.movimiento == Personaje.Movimientos.IZQUIERDA && enemy.body.isAwake()){
-                enemy.body.applyForceToCenter(-500,0,true);
+            if(enemy.movimiento == Personaje.Movimientos.IZQUIERDA && enemy.body.isAwake() && enemy.sprite.getX()-protagonista.sprite.getX()>300){
+                enemy.body.applyForceToCenter(-300,0,true);
                 enemy.sprite.setFlip(false,false);
             }
-            if(enemy.movimiento == Personaje.Movimientos.DERECHA && enemy.body.isAwake()){
-                enemy.body.applyForceToCenter(500,0,true);
+            if(enemy.movimiento == Personaje.Movimientos.DERECHA && enemy.body.isAwake() && enemy.sprite.getX()-protagonista.sprite.getX()>-300){
+                enemy.body.applyForceToCenter(300,0,true);
                 enemy.sprite.setFlip(true,false);
             }
         }
