@@ -13,10 +13,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
+
 class PantallaMenu extends Pantalla {
 
     private final Juego juego;
+
+    //Textura
     private Texture texturaFondo;
+    private Texture texturaBotonJugar;
+    private Texture texturaBotonConfigurar;
+    private Texture texturaBotonCreditos;
 
     // Menu
     private Stage escenaMenu;
@@ -25,8 +31,16 @@ class PantallaMenu extends Pantalla {
     //Texto
     private Escritura txtZenith;
 
+    //Asset Manager
+    private  final AssetManager assetManager;
+
+    //Audio Manager
+    private AudioManejador audioManager;
+
     public PantallaMenu(Juego juego) {
+
         this.juego = juego;
+        assetManager = juego.getAssetManager();
     }
 
 
@@ -38,10 +52,15 @@ class PantallaMenu extends Pantalla {
     }
 
     private void crearMenu() {
+        cargarTextura();
+
+        audioManager = new AudioManejador(assetManager);
+
         escenaMenu = new Stage(vista);
 
-        audioManager.setLooping(true);
-        if(!audioManager.tocando) {
+        Gdx.input.setInputProcessor(escenaMenu);
+
+        if(audioManager.getTocando() == false || audioManager.getVolMusica() <= 0 || audioManager.getVolEfectos() <= 0){
             audioManager.playMusica();
         }
 
@@ -50,26 +69,22 @@ class PantallaMenu extends Pantalla {
         txtZenith.setEnunciado("Planet Zenith");
 
         // Boton jugar
-        Texture texturaBotonJugar = new Texture("BotonesMenu/btnJugar.png");
         TextureRegionDrawable trdJugar = new TextureRegionDrawable(new TextureRegion(texturaBotonJugar));
-
         ImageButton botonJugar = new ImageButton(trdJugar);
         botonJugar.setPosition(ANCHO/3 - botonJugar.getWidth()/2, ALTO/2 - botonJugar.getHeight()/2);
+        escenaMenu.addActor(botonJugar);
 
         //Boton Creditos
-        Texture texturaBotonCreditos = new Texture("BotonesMenu/btnCred.png");
         TextureRegionDrawable trdCreditos = new TextureRegionDrawable(new TextureRegion(texturaBotonCreditos));
-
         ImageButton botonCreditos = new ImageButton(trdCreditos);
         botonCreditos.setPosition(botonJugar.getX() + botonJugar.getWidth() + 120 - botonCreditos.getWidth()/2, ALTO/2 - botonCreditos.getHeight()/2);
+        escenaMenu.addActor(botonCreditos);
 
         //Boton Configuración
-        Texture texturaBotonConfigurar = new Texture("BotonesMenu/btnConf.png");
         TextureRegionDrawable trdConfigurar = new TextureRegionDrawable(new TextureRegion(texturaBotonConfigurar));
-
         ImageButton botonConfigurar = new ImageButton(trdConfigurar);
         botonConfigurar.setPosition(botonCreditos.getX() + botonCreditos.getWidth() + 120 - botonConfigurar.getWidth()/2, ALTO/2 - botonConfigurar.getHeight()/2);
-
+        escenaMenu.addActor(botonConfigurar);
 
         //Listener
         botonJugar.addListener(new ClickListener() {
@@ -77,6 +92,8 @@ class PantallaMenu extends Pantalla {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 audioManager.efectoBtnMenu.play(audioManager.getVolEfectos());
+                audioManager.stopMusica();
+                audioManager.setTocando(true);
                 juego.setScreen(new PantallaJuegoNivelUno(juego));
             }
         });
@@ -103,15 +120,19 @@ class PantallaMenu extends Pantalla {
             }
         });
 
+    }
 
+    private void cargarTextura() {
+        //Textura botones
+        assetManager.load("BotonesMenu/btnJugar.png", Texture.class);
+        assetManager.load("BotonesMenu/btnCred.png", Texture.class);
+        assetManager.load("BotonesMenu/btnConf.png", Texture.class);
 
-        escenaMenu.addActor(botonJugar);
-        escenaMenu.addActor(botonCreditos);
-        escenaMenu.addActor(botonConfigurar);
+        assetManager.finishLoading();
 
-
-
-        Gdx.input.setInputProcessor(escenaMenu);
+        texturaBotonJugar = assetManager.get("BotonesMenu/btnJugar.png");
+        texturaBotonConfigurar = assetManager.get("BotonesMenu/btnConf.png");
+        texturaBotonCreditos = assetManager.get("BotonesMenu/btnCred.png");
     }
 
 
@@ -154,5 +175,15 @@ class PantallaMenu extends Pantalla {
     @Override
     public void dispose() {
         texturaFondo.dispose();
+        texturaBotonCreditos.dispose();
+        texturaBotonConfigurar.dispose();
+        texturaBotonJugar.dispose();
+        audioManager.dispose();
+        escenaMenu.dispose();
+
+        assetManager.unload("BotonesMenu/btnJugar.png");
+        assetManager.unload("BotonesMenu/btnConf.png");
+        assetManager.unload("BotonesMenu/btnConf.png");
+        audioManager.unLoad();
     }
 }
