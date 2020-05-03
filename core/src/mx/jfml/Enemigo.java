@@ -9,29 +9,28 @@ import com.badlogic.gdx.physics.box2d.World;
 public class Enemigo extends Personaje {
     //Para usarlo en disparando después
 
-    private boolean disparando;
+    private int tiempoDisparos;
     private boolean sueloDisponible;
 
     public Enemigo(Texture textura, float x, float y, float vx, float vy, float vida, World mundo) {
         super(textura, x, y, vx, vy, vida, mundo);
         movimiento = Movimientos.IZQUIERDA;
-        disparando = false;
+        tiempoDisparos = 0;
         sueloDisponible = true;
         crearSueloSensor(textura);
     }
 
-    public boolean isDisparando() {
-        return disparando;
+    public int getTiempoDisparos() {
+        return tiempoDisparos;
     }
 
-    public void setDisparando(boolean disparando) {
-        this.disparando = disparando;
+    public void setTiempoDisparos(int tiempoDisparos) {
+        this.tiempoDisparos = tiempoDisparos;
     }
-
 
     public void crearSueloSensor(Texture textura){
         PolygonShape rectangulo = new PolygonShape();
-        rectangulo.setAsBox(4,5, new Vector2(-textura.getWidth()/2, -textura.getHeight()/2),0);
+        rectangulo.setAsBox(4,5, new Vector2(-textura.getWidth()/2f, -textura.getHeight()/2f),0);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape=rectangulo;
         fixtureDef.isSensor=true;
