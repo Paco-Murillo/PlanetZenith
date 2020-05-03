@@ -64,8 +64,22 @@ public class AudioManejador {
         return volEfectos;
     }
 
+    public boolean getTocando(){
+        return tocando;
+    }
+
     public void setTocando(boolean tocando){
         this.tocando = tocando;
+    }
+
+    public void dispose(){
+        musicaFondo.dispose();
+        efectoBtnMenu.dispose();
+    }
+
+    public void unLoad(){
+        manager.unload("Audio/Musica/superMetroid.mp3");
+        manager.unload("Audio/Efectos/sonidoboton.mp3");
     }
 
 }
