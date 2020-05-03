@@ -121,11 +121,11 @@ public abstract class Nivel extends Pantalla {
         borrarPantalla();
         System.out.println(contacto.personajeSuelo);
 
-        if(protagonista.sprite.getY()+protagonista.sprite.getHeight()<-20){
+        //Condiciones para que pierda el jugador
+        if(protagonista.sprite.getY()+protagonista.sprite.getHeight()<-20 || protagonista.getVida()<=0) {
             //Aqui deberia saltar a PantallaPerder
-            System.out.println("Te caiste");
+            System.out.println("Has muerto");
         }
-
 
         float x = protagonista.body.getPosition().x - protagonista.sprite.getWidth()/2;
         float y = protagonista.body.getPosition().y - protagonista.sprite.getHeight()/2;
@@ -155,10 +155,10 @@ public abstract class Nivel extends Pantalla {
             bala.render(batch);
         }
         //Texto para el marcador, por ahora muestra los enemigos asesinados *100
-        textoMarcador.render(batch, Integer.toString(puntosJugador), protagonista.body.getPosition().x + 400, 700);
-        textoMarcador.render(batch, " Puntos: ", protagonista.body.getPosition().x + 300, 700);
-        textoMarcador.render(batch, "3", protagonista.body.getPosition().x + 200, 700);
-        textoMarcador.render(batch, " Vidas: ", protagonista.body.getPosition().x + 100, 700);
+        textoMarcador.render(batch, Integer.toString(puntosJugador), protagonista.body.getPosition().x + 500, 700);
+        textoMarcador.render(batch, " Puntos: ", protagonista.body.getPosition().x + 400, 700);
+        textoMarcador.render(batch, Float.toString(protagonista.getVida()), protagonista.body.getPosition().x + 240, 700);
+        textoMarcador.render(batch, " Vida: ", protagonista.body.getPosition().x + 140, 700);
 
         batch.end();
         shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
@@ -235,7 +235,7 @@ public abstract class Nivel extends Pantalla {
     }
 
     private void crearProtagonista(String imgPath){
-        protagonista = new Protagonista(new Texture(imgPath), 60f, 100, 1f, 30f, 100,mundo);
+        protagonista = new Protagonista(new Texture(imgPath), 60f, 100, 1f, 30f, 0,mundo);
     }
 
     private void crearArrBalas(){
