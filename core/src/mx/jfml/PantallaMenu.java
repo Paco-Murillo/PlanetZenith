@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
 
 class PantallaMenu extends Pantalla {
@@ -56,7 +57,7 @@ class PantallaMenu extends Pantalla {
         crearMenu();
     }
 
-    private void crearMenu() {
+    private void crearMenu() throws GdxRuntimeException {
         cargarAssets();
 
         escenaMenu = new Stage(vista);
@@ -65,11 +66,28 @@ class PantallaMenu extends Pantalla {
 
         musicaFondo.setVolume(audioManager.getVolMusica());
 
+        try {
+            if (audioManager.getTocando() == false) {
+                musicaFondo.play();
+            }
+        } catch(GdxRuntimeException g){
+            musicaFondo.dispose();
+            efectoBoton.dispose();
 
+            assetManager.unload("Audio/Musica/superMetroid.mp3");
+            assetManager.unload("Audio/Efectos/sonidoboton.mp3");
+
+            assetManager.load("Audio/Musica/superMetroid.mp3", Music.class);
+            assetManager.load("Audio/Efectos/sonidoboton.mp3", Sound.class);
+
+            assetManager.finishLoading();
+
+            musicaFondo = assetManager.get("Audio/Musica/superMetroid.mp3");
+            efectoBoton = assetManager.get("Audio/Efectos/sonidoboton.mp3");
             if(audioManager.getTocando() == false){
                 musicaFondo.play();
             }
-
+        }
 
         //Texto
         txtZenith = new Escritura(ANCHO/2, ALTO - 120);
@@ -101,6 +119,7 @@ class PantallaMenu extends Pantalla {
                 musicaFondo.stop();
                 efectoBoton.play(audioManager.getVolEfectos());
                 juego.setScreen(new PantallaJuegoNivelUno(juego));
+                dispose();
             }
         });
 
@@ -108,7 +127,7 @@ class PantallaMenu extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y){
                 super.clicked(event, x, y);
-                audioManager.setTocando(true);
+                audioManager.setTocando(!audioManager.getTocando());
                 efectoBoton.play(audioManager.getVolEfectos());
                 juego.setScreen(new PantallaConfiguracion(juego));
             }
@@ -118,7 +137,7 @@ class PantallaMenu extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y){
                 super.clicked(event, x, y);
-                audioManager.setTocando(true);
+                audioManager.setTocando(!audioManager.getTocando());
                 efectoBoton.play(audioManager.getVolEfectos());
                 juego.setScreen(new PantallaCreditos(juego));
             }

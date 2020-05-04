@@ -77,7 +77,10 @@ class PantallaCreditos extends Pantalla {
                 super.clicked(event, x, y);
                 efectoBoton.play(audioManager.getVolEfectos());
                 musicaFondo.stop();
-                audioManager.setTocando(false);
+                efectoBoton.stop();
+                audioManager.setTocando(!audioManager.getTocando());
+                musicaFondo.dispose();
+                efectoBoton.dispose();
                 juego.setScreen(new PantallaMenu(juego));
             }
         });
