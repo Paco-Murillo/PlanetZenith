@@ -36,7 +36,7 @@ public class cargarMapa {
     }
 
     //Crear una nueva forma poligonal con el objeto mandado
-    private static PolygonShape getRectangle(RectangleMapObject objeto) {
+    public static PolygonShape getRectangle(RectangleMapObject objeto) {
         //Obtener el rectangulo del objeto
         Rectangle rectangulo = objeto.getRectangle();
         //Crear nuevo poligono a usar

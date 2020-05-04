@@ -38,7 +38,7 @@ public abstract class Nivel extends Pantalla {
     private Contacto contacto;
 
     //Mapa
-    private TiledMap mapa;
+    protected TiledMap mapa;
     private OrthogonalTiledMapRenderer mapRenderer;
 
     //Personaje
@@ -46,7 +46,7 @@ public abstract class Nivel extends Pantalla {
 
     //Pausa
     private EscenaPausa escenaPausa;
-    private EstadoJuego estadoJuego = EstadoJuego.JUGANDO; //Jugando, PAusado, Poner DEBUG en caso de checar nivel sin actualizaciones
+    protected EstadoJuego estadoJuego = EstadoJuego.JUGANDO; //Jugando, PAusado, Poner DEBUG en caso de checar nivel sin actualizaciones
 
     //Texto para marcador del juego
     private int puntosJugador = 0;

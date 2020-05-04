@@ -35,7 +35,6 @@ public class Enemigo extends Personaje {
         fixtureDef.shape=rectangulo;
         fixtureDef.isSensor=true;
         body.createFixture(fixtureDef).setUserData("sensorEnemigo");
-
     }
 
     @Override
