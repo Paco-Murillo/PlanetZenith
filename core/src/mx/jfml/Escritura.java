@@ -14,7 +14,7 @@ class Escritura {
     public Escritura(float x, float y){
         this.x = x;
         this.y = y;
-        this.texto = new Texto( "Fuentes/fuente60px.fnt");
+        this.texto = new Texto("Fuentes/fuente60px.fnt");
     }
 
     public void setEnunciado(String enunciado){
