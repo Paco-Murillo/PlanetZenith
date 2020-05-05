@@ -28,6 +28,8 @@ class PantallaMenu extends Pantalla {
     // Menu
     private Stage escenaMenu;
 
+    //Seleccionador de nivel
+    private  SeleccionaNivel seleccionaNivel;
 
     //Texto
     private Escritura txtZenith;
@@ -47,6 +49,7 @@ class PantallaMenu extends Pantalla {
         this.juego = juego;
         assetManager = juego.getAssetManager();
         audioManager = juego.getAudioManejador();
+        seleccionaNivel = juego.getSeleccionaNivel();
     }
 
 
@@ -68,6 +71,7 @@ class PantallaMenu extends Pantalla {
 
         try {
             if (audioManager.getTocando() == false) {
+                musicaFondo.setLooping(true);
                 musicaFondo.play();
             }
         } catch(GdxRuntimeException g){
@@ -85,6 +89,7 @@ class PantallaMenu extends Pantalla {
             musicaFondo = assetManager.get("Audio/Musica/superMetroid.mp3");
             efectoBoton = assetManager.get("Audio/Efectos/sonidoboton.mp3");
             if(audioManager.getTocando() == false){
+                musicaFondo.setLooping(true);
                 musicaFondo.play();
             }
         }
@@ -118,8 +123,8 @@ class PantallaMenu extends Pantalla {
                 super.clicked(event, x, y);
                 musicaFondo.stop();
                 efectoBoton.play(audioManager.getVolEfectos());
+                juego.setSeleccionaNivel(SeleccionaNivel.NIVELUNO);
                 juego.setScreen(new PantallaJuegoNivelUno(juego));
-                dispose();
             }
         });
 

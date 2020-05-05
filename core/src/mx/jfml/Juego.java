@@ -19,6 +19,9 @@ public class Juego extends Game {
 	private final AssetManager assetManager = new AssetManager();
 	private AudioManejador audioManejador = new AudioManejador(false, 1f,1f);
 
+	//Un enumerador que dice que nivel debe cargarse
+	private SeleccionaNivel  seleccionaNivel;
+
 	@Override
 	public void create(){
 
@@ -36,6 +39,14 @@ public class Juego extends Game {
 
 	public AudioManejador getAudioManejador(){
 		return audioManejador;
+	}
+
+	public SeleccionaNivel getSeleccionaNivel(){
+		return seleccionaNivel;
+	}
+
+	public void setSeleccionaNivel(SeleccionaNivel seleccionaNivel){
+		this.seleccionaNivel = seleccionaNivel;
 	}
 
 	@Override

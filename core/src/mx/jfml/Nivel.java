@@ -124,7 +124,7 @@ public abstract class Nivel extends Pantalla {
         //Condiciones para que pierda el jugador
         if(protagonista.sprite.getY()+protagonista.sprite.getHeight()<-20 || protagonista.getVida()<=0) {
             //Aqui deberia saltar a PantallaPerder
-            System.out.println("Has muerto");
+            juego.setScreen(new PantallaPerder(juego));
         }
 
         float x = protagonista.body.getPosition().x - protagonista.sprite.getWidth()/2;

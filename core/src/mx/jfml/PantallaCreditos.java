@@ -118,11 +118,11 @@ class PantallaCreditos extends Pantalla {
         txtJose = new Escritura(ANCHO/2, ALTO/3);
         txtJose.setEnunciado("Jose Francicso Murillo");
 
-        txtDerechos1 = new Escritura(ANCHO/2, ALTO/10 + 20);
+        txtDerechos1 = new Escritura(ANCHO/2 + 50, ALTO/10 + 20);
         txtDerechos1.setTexto(new Texto("Fuentes/fuente30px.fnt"));
         txtDerechos1.setEnunciado("Todos los assets prestados pertenecen");
 
-        txtDerechos2 = new Escritura(ANCHO/2, ALTO/10);
+        txtDerechos2 = new Escritura(ANCHO/2 + 50, ALTO/10);
         txtDerechos2.setTexto(new Texto("Fuentes/fuente30px.fnt"));
         txtDerechos2.setEnunciado("a sus autores correspondientes");
     }
