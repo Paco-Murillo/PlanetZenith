@@ -25,7 +25,8 @@ public class PantallaJuegoNivelUno extends Nivel {
 
     @Override
     public void show() {
-        crearMundo();
+        crearGravedad();
+        crearMundo(gravedad);
         crearEnemigos();
         super.show();
         cargaMapa("MapaJuego.tmx");

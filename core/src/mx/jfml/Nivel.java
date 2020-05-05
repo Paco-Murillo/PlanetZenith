@@ -36,6 +36,7 @@ public abstract class Nivel extends Pantalla {
     protected World mundo; //Simulacion
     private Box2DDebugRenderer debugRenderer;
     private Contacto contacto;
+    protected Vector2 gravedad;
 
     //Mapa
     protected TiledMap mapa;
@@ -48,17 +49,16 @@ public abstract class Nivel extends Pantalla {
     private EscenaPausa escenaPausa;
     protected EstadoJuego estadoJuego = EstadoJuego.JUGANDO; //Jugando, PAusado, Poner DEBUG en caso de checar nivel sin actualizaciones
 
-    //Texto para marcador del juego
-    private int puntosJugador = 0;
-    private Texto textoMarcador;
-
-
     /*
     EstadoJuego.DEBUG les permite moverse rapidamente a traves del mapa para checar cosas,
     No actualiza posiciones de animacion (gravedad)
     ---- Importante ----
     Para no salirse de EstadoJuego.DEBUG, NO presionar el boton de pausa
      */
+
+    //Texto para marcador del juego
+    private int puntosJugador = 0;
+    private Texto textoMarcador;
 
     //Bala
     protected Array<Bala> arrBalas;
@@ -96,7 +96,10 @@ public abstract class Nivel extends Pantalla {
         crearHUD();
         crearContacto();
         crearBarraVidaJefe();
+    }
 
+    protected void crearGravedad(){
+        gravedad = new Vector2(0,-98);
     }
 
     private void crearBarraVidaJefe() {
@@ -119,7 +122,9 @@ public abstract class Nivel extends Pantalla {
     @Override
     public void render(float delta) {
         borrarPantalla();
-        System.out.println(contacto.personajeSuelo);
+
+
+        //System.out.println(contacto.personajeSuelo);
 
         //Condiciones para que pierda el jugador
         if(protagonista.sprite.getY()+protagonista.sprite.getHeight()<-20 || protagonista.getVida()<=0) {
@@ -154,6 +159,8 @@ public abstract class Nivel extends Pantalla {
                 arrBalasEnemigos){
             bala.render(batch);
         }
+        jefe.render(batch);
+
         //Texto para el marcador, por ahora muestra los enemigos asesinados *100
         textoMarcador.render(batch, Integer.toString(puntosJugador), protagonista.body.getPosition().x + 500, 700);
         textoMarcador.render(batch, " Puntos: ", protagonista.body.getPosition().x + 400, 700);
@@ -161,6 +168,7 @@ public abstract class Nivel extends Pantalla {
         textoMarcador.render(batch, " Vida: ", protagonista.body.getPosition().x + 140, 700);
 
         batch.end();
+
         shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.BLACK);
@@ -176,7 +184,7 @@ public abstract class Nivel extends Pantalla {
             dispararEnemigos(delta);
             probarColisiones();
             probarColisionesProtagonista();
-            mundo.step(1/60f, 6, 2);
+            mundo.step(delta, 6, 2);  //1/60f, 6, 2);
         }
         else if(estadoJuego == EstadoJuego.PAUSADO){
             batch.setProjectionMatrix(orthographicCameraHUD.combined); //Probar sin esto
@@ -192,7 +200,7 @@ public abstract class Nivel extends Pantalla {
 
     private void probarColisionesProtagonista() {
         Rectangle rectProtagonista = protagonista.sprite.getBoundingRectangle();
-        System.out.println(arrBalasEnemigos.size);
+        //System.out.println(arrBalasEnemigos.size);
         for(int indexBala= 0; indexBala < arrBalasEnemigos.size; indexBala++) {
             if (arrBalasEnemigos.get(indexBala) == null) continue;
             Bala bala = arrBalasEnemigos.get(indexBala);
@@ -260,7 +268,7 @@ public abstract class Nivel extends Pantalla {
         arrBalas = new Array<>(3);
         timeAcumForEnemyShots = 0;
         arrBalasEnemigos = new Array<>();
-        System.out.println(arrBalas.toString());
+        //System.out.println(arrBalas.toString());
         random = new Random();
     }
 
@@ -278,9 +286,8 @@ public abstract class Nivel extends Pantalla {
         crearPad();
     }
 
-    protected void crearMundo() {
+    protected void crearMundo(Vector2 gravedad) {
         Box2D.init();
-        Vector2 gravedad = new Vector2(0, -32);
         mundo = new World(gravedad, true);
         debugRenderer = new Box2DDebugRenderer();
     }
@@ -330,7 +337,7 @@ public abstract class Nivel extends Pantalla {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 if(contacto.personajeSuelo) {
-
+                    protagonista.body.setGravityScale(16/49f);
                     protagonista.body.applyForceToCenter(0, 25000, true);
                 }
 
@@ -384,7 +391,10 @@ public abstract class Nivel extends Pantalla {
                 protagonista.setMovimiento(Personaje.Movimientos.IZQUIERDA);
                 protagonista.sprite.setFlip(true,false);
             }
-            protagonista.body.applyForceToCenter(percentX*4000,0, true);
+            if(protagonista.body.getLinearVelocity().y > 0) protagonista.body.applyForceToCenter(percentX * 4000, 0, true);
+            else {
+                protagonista.body.applyForceToCenter(percentX * 4000, -1000*Math.abs(percentX), true);
+            }
         }
     }
 
