@@ -11,13 +11,15 @@ public class Enemigo extends Personaje {
 
     private int tiempoDisparos;
     private boolean sueloDisponible;
+    private int index;
 
-    public Enemigo(Texture textura, float x, float y, float vx, float vy, float vida, World mundo) {
+    public Enemigo(Texture textura, float x, float y, float vx, float vy, float vida, World mundo,int index) {
         super(textura, x, y, vx, vy, vida, mundo);
         movimiento = Movimientos.IZQUIERDA;
         tiempoDisparos = 0;
         sueloDisponible = true;
-        crearSueloSensor(textura);
+        this.index=index;
+        crearSensores(textura);
     }
 
     public int getTiempoDisparos() {
@@ -28,13 +30,18 @@ public class Enemigo extends Personaje {
         this.tiempoDisparos = tiempoDisparos;
     }
 
-    public void crearSueloSensor(Texture textura){
+    public void crearSensores(Texture textura){
+        String indice = Integer.toString(index);
         PolygonShape rectangulo = new PolygonShape();
-        rectangulo.setAsBox(4,5, new Vector2(-textura.getWidth()/2-10, -textura.getHeight()/2f),0);
+        rectangulo.setAsBox(4,5, new Vector2(-textura.getWidth()/2-10, -textura.getHeight()/2),0);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape=rectangulo;
         fixtureDef.isSensor=true;
-        body.createFixture(fixtureDef).setUserData("sensorEnemigo");
+        body.createFixture(fixtureDef).setUserData("sensorEnemigoIzquierda");
+        rectangulo.setAsBox(8,5,new Vector2(0,-textura.getHeight()/2),9);
+        fixtureDef.shape=rectangulo;
+        body.createFixture(fixtureDef).setUserData("sensorSueloEnemigo"+indice
+        );
     }
 
     @Override
