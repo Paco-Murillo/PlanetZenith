@@ -7,15 +7,38 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Enemigo extends Personaje {
-    //Para usarlo en disparando después
 
     private int tiempoDisparos;
 
+    /**
+     * La clase Enemigo representa a aquellos objetos que se les permite hacer danio a Protagonista
+     * @param textura La imagen que representa este proyectil
+     * @param x Posicion inicial en x
+     * @param y Posicion inicial en y
+     * @param vx Velocidad definida en x
+     * @param vy Velocidad definida en y
+     * @param vida Vida del objeto creado
+     * @param mundo Animacion en donde se agrega el "cuerpo" que representa a este objeto en la
+     *              animacion
+     */
     public Enemigo(Texture textura, float x, float y, float vx, float vy, float vida, World mundo) {
         super(textura, x, y, vx, vy, vida, mundo);
         movimiento = Movimientos.IZQUIERDA;
         tiempoDisparos = 0;
         crearSensores(textura);
+    }
+
+    /**
+     * Permite crear un sensor para detectar si los enemigos estan en el suelo
+     * @param textura Imagen que representa al objeto
+     */
+    private void crearSensores(Texture textura){
+        PolygonShape rectangulo = new PolygonShape();
+        rectangulo.setAsBox(4,5, new Vector2(-textura.getWidth()/2f-10, -textura.getHeight()/2f),0);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape=rectangulo;
+        fixtureDef.isSensor=true;
+        body.createFixture(fixtureDef).setUserData("sensorEnemigoIzquierda");
     }
 
     public int getTiempoDisparos() {
@@ -24,15 +47,6 @@ public class Enemigo extends Personaje {
 
     public void setTiempoDisparos(int tiempoDisparos) {
         this.tiempoDisparos = tiempoDisparos;
-    }
-
-    public void crearSensores(Texture textura){
-        PolygonShape rectangulo = new PolygonShape();
-        rectangulo.setAsBox(4,5, new Vector2(-textura.getWidth()/2-10, -textura.getHeight()/2),0);
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape=rectangulo;
-        fixtureDef.isSensor=true;
-        body.createFixture(fixtureDef).setUserData("sensorEnemigoIzquierda");
     }
 
     @Override

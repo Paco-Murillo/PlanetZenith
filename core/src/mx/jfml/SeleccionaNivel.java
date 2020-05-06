@@ -1,6 +1,6 @@
 package mx.jfml;
 
-enum SeleccionaNivel {
+public enum SeleccionaNivel {
     NIVELUNO,
     NIVELDOS,
     NIVELTRES,

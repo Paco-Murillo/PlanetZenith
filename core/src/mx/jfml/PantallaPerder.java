@@ -14,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-class PantallaPerder extends Pantalla {
+public class PantallaPerder extends Pantalla {
 
     private final Juego juego;
 
@@ -96,6 +96,12 @@ class PantallaPerder extends Pantalla {
                 switch(seleccionaNivel){
                     case NIVELUNO:
                         juego.setScreen(new PantallaJuegoNivelUno(juego));
+                        break;
+                    case NIVELDOS:
+                        break;
+                    case NIVELTRES:
+                        break;
+                    case NIVELCUATRO:
                         break;
                     default:
                         break;

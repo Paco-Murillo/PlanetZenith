@@ -15,12 +15,14 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class Juego extends Game {
 
-	//Ahora habrá un SOLO AssetManager en toda la applicación
+	/**
+	 * @value assetManager Objeto que permite cargar recursos
+	 * @value audioManejador Controlador de audio
+	 * @value seleccionaNivel Permite saber que nivel cargar
+	 */
 	private final AssetManager assetManager = new AssetManager();
 	private AudioManejador audioManejador = new AudioManejador(false, 1f,1f);
-
-	//Un enumerador que dice que nivel debe cargarse
-	private SeleccionaNivel  seleccionaNivel;
+	private SeleccionaNivel seleccionaNivel;
 
 	@Override
 	public void create(){
@@ -33,17 +35,11 @@ public class Juego extends Game {
 	}
 
 	//Accesor del AssetManager, para que otras clases lo utilicen
-	public AssetManager getAssetManager(){
-		return assetManager;
-	}
+	public AssetManager getAssetManager(){ return assetManager;	}
 
-	public AudioManejador getAudioManejador(){
-		return audioManejador;
-	}
+	public AudioManejador getAudioManejador(){ return audioManejador;}
 
-	public SeleccionaNivel getSeleccionaNivel(){
-		return seleccionaNivel;
-	}
+	public SeleccionaNivel getSeleccionaNivel(){ return seleccionaNivel; }
 
 	public void setSeleccionaNivel(SeleccionaNivel seleccionaNivel){
 		this.seleccionaNivel = seleccionaNivel;

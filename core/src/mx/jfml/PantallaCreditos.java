@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-class PantallaCreditos extends Pantalla {
+public class PantallaCreditos extends Pantalla {
 
     private final Juego juego;
 

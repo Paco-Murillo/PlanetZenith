@@ -14,8 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
-
-class PantallaMenu extends Pantalla {
+public class PantallaMenu extends Pantalla {
 
     private final Juego juego;
 
@@ -70,7 +69,7 @@ class PantallaMenu extends Pantalla {
         musicaFondo.setVolume(audioManager.getVolMusica());
 
         try {
-            if (audioManager.getTocando() == false) {
+            if (!audioManager.getTocando()) {
                 musicaFondo.setLooping(true);
                 musicaFondo.play();
             }
@@ -88,7 +87,7 @@ class PantallaMenu extends Pantalla {
 
             musicaFondo = assetManager.get("Audio/Musica/superMetroid.mp3");
             efectoBoton = assetManager.get("Audio/Efectos/sonidoboton.mp3");
-            if(audioManager.getTocando() == false){
+            if(!audioManager.getTocando()){
                 musicaFondo.setLooping(true);
                 musicaFondo.play();
             }

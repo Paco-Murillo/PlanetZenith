@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-class PantallaConfiguracion extends Pantalla {
+public class PantallaConfiguracion extends Pantalla {
 
     private final Juego juego;
 
@@ -66,11 +66,9 @@ class PantallaConfiguracion extends Pantalla {
         cargarEscritura();
         cargarAssets();
 
-
         escenaConfig = new Stage(vista);
 
         Gdx.input.setInputProcessor(escenaConfig);
-
 
         //Botones
         //Boton Bajar Volumen Musica
@@ -185,7 +183,6 @@ class PantallaConfiguracion extends Pantalla {
 
     }
 
-
     private void cargarAssets() {
         //Audio y Musica
         assetManager.load("Audio/Musica/superMetroid.mp3", Music.class);
@@ -201,7 +198,6 @@ class PantallaConfiguracion extends Pantalla {
 
         //Se bloquea hasta cargar los recursos
         assetManager.finishLoading();
-
 
         texturaBtnVolUpMusica = assetManager.get("BotonesConf/btnVolArriba.png");
         texturaBtnVolDownMusica = assetManager.get("BotonesConf/btnVolAbajo.png");

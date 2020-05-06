@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
- * Representa el comportamiento genérico de cualquier pantalla que forma
+ * Representa el comportamiento generico de cualquier pantalla que forma
  * parte del juego
  */
 public abstract class Pantalla implements Screen

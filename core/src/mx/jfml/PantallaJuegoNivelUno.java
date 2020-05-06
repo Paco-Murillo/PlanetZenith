@@ -5,12 +5,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Array;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 public class PantallaJuegoNivelUno extends Nivel {
 
@@ -20,10 +18,12 @@ public class PantallaJuegoNivelUno extends Nivel {
     private boolean batallaJefeActiva;
     private boolean paredesBatallaJefeActivas;
 
-    public  Array<Boolean> arrayEstadoEnemigoSuelo;
+    //public Array<Boolean> arrayEstadoEnemigoSuelo;
 
-
-
+    /**
+     * Clase representa el primer nivel
+     * @param juego Referencia al objeto que creo la pantalla
+     */
     public PantallaJuegoNivelUno(Juego juego){super(juego);}
 
     @Override
@@ -31,29 +31,12 @@ public class PantallaJuegoNivelUno extends Nivel {
         crearGravedad();
         crearMundo(gravedad);
         crearEnemigos();
-        creararrayEstadoEnemigoSuelo();
+        //creararrayEstadoEnemigoSuelo();
         super.show();
         cargaMapa("MapaJuego.tmx");
         cargarTexturaBala("Proyectiles/bala1.png");
         Gdx.input.setInputProcessor(HUD);
         definirParedes();
-    }
-
-    private void creararrayEstadoEnemigoSuelo() {
-        arrayEstadoEnemigoSuelo = new Array<>(arrEnemigos.size);
-        for(int i=0; i<arrayEstadoEnemigoSuelo.size;i++) {
-            arrayEstadoEnemigoSuelo.add(false);
-        }
-
-
-    }
-
-    private void checarInicioBatallaJefe() {
-        if (camara.position.x >= ANCHO_MAPA-ANCHO/2-10 && !batallaJefeActiva){
-            camara.position.set(ANCHO_MAPA-ANCHO/2, camara.position.y, 0);
-            camara.update();
-            batallaJefeActiva = true;
-        }
     }
 
     private void crearEnemigos(){
@@ -89,6 +72,15 @@ public class PantallaJuegoNivelUno extends Nivel {
         paredesBatallaJefeActivas = false;
     }
 
+    /*
+    private void creararrayEstadoEnemigoSuelo() {
+        arrayEstadoEnemigoSuelo = new Array<>(arrEnemigos.size);
+        for(int i=0; i<arrayEstadoEnemigoSuelo.size;i++) {
+            arrayEstadoEnemigoSuelo.add(false);
+        }
+    }
+     */
+
     @Override
     protected void actualizarCamara() {
         if(protagonista.sprite.getX() > ANCHO/2 && protagonista.sprite.getX() < ANCHO_MAPA-ANCHO/2 && !batallaJefeActiva) { // 6400 = Ancho en
@@ -98,13 +90,12 @@ public class PantallaJuegoNivelUno extends Nivel {
     }
 
     @Override
-    protected void moverBala() {
+    protected void moverBala(float delta) {
         for(int indexBalas = 0; indexBalas < arrBalas.size; indexBalas++){
             if(arrBalas.get(indexBalas) == null) continue;
             Bala bala = arrBalas.get(indexBalas);
-            bala.moverX(.1f);
-            //Salio??
-            if(bala.sprite.getX() > ANCHO_MAPA){
+            bala.moverX(delta);
+            if(bala.sprite.getX() > camara.position.x+ANCHO/2){
                 arrBalas.removeIndex(indexBalas);
                 contadorBalas--;
             }
@@ -122,6 +113,14 @@ public class PantallaJuegoNivelUno extends Nivel {
         */
     }
 
+    private void checarInicioBatallaJefe() {
+        if (camara.position.x >= ANCHO_MAPA-ANCHO/2-10 && !batallaJefeActiva){
+            camara.position.set(ANCHO_MAPA-ANCHO/2, camara.position.y, 0);
+            camara.update();
+            batallaJefeActiva = true;
+        }
+    }
+
     private void batallaJefe() {
         if (batallaJefeActiva){
             if(!paredesBatallaJefeActivas) {
@@ -134,7 +133,7 @@ public class PantallaJuegoNivelUno extends Nivel {
     private void crearParedesBatallaJefe() {
         MapObjects objetos = mapa.getLayers().get("ParedesJefe").getObjects();
         for(MapObject objeto: objetos){
-            Shape rectangulo = cargarMapa.getRectangle((RectangleMapObject)objeto);
+            Shape rectangulo = CargarMapa.getRectangle((RectangleMapObject)objeto);
             BodyDef bd = new BodyDef();
             bd.position.set(((RectangleMapObject) objeto).getRectangle().x, ((RectangleMapObject) objeto).getRectangle().y);
             bd.type  = BodyDef.BodyType.StaticBody;
