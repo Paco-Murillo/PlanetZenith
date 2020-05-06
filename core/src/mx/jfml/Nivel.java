@@ -186,12 +186,12 @@ public abstract class Nivel extends Pantalla {
                     if(protagonista.getMovimiento() == Personaje.Movimientos.DERECHA) {
                         float xBala = protagonista.sprite.getX() + protagonista.sprite.getWidth() - texturaBala.getWidth();
                         float yBala = protagonista.sprite.getY() + (2 * protagonista.sprite.getHeight() / 3) - texturaBala.getHeight() / 2f;
-                        Bala bala = new Bala(texturaBala, xBala, yBala, 100f, 0f, 30f);
+                        Bala bala = new Bala(texturaBala, xBala, yBala, 500f, 0f, 30f);
                         arrBalas.add(bala);
                     }else if(protagonista.getMovimiento() == Personaje.Movimientos.IZQUIERDA){
                         float xBala = protagonista.sprite.getX();
                         float yBala = protagonista.sprite.getY() + (2 * protagonista.sprite.getHeight() / 3) - texturaBala.getHeight() / 2f;
-                        Bala bala = new Bala(texturaBala, xBala, yBala, -100f, 0f, 30f);
+                        Bala bala = new Bala(texturaBala, xBala, yBala, -500f, 0f, 30f);
                         arrBalas.add(bala);
                     }
                     contadorBalas++;
