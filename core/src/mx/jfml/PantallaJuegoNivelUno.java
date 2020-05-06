@@ -59,30 +59,30 @@ public class PantallaJuegoNivelUno extends Nivel {
     private void crearEnemigos(){
         arrEnemigos = new Array<>(10);
         Texture enemigoTexture = new Texture("Enemigos/EnemigoGeneralVerde.png");
-        Enemigo enemigo = new Enemigo(enemigoTexture, 792, 72, 1f, 30f, 30f, mundo,0); //Enmigo 1
+        Enemigo enemigo = new Enemigo(enemigoTexture, 792, 72, 1f, 30f, 30f, mundo); //Enmigo 1
         //enemigo.direccion= Personaje.Movimientos.IZQUIERDA;
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 900, 416, 1f, 30f, 30f, mundo,1); //Enemigo 2
+        enemigo = new Enemigo(enemigoTexture, 900, 416, 1f, 30f, 30f, mundo); //Enemigo 2
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 1472, 160, 1f, 30f, 30f, mundo,2); //Enemigo 3
+        enemigo = new Enemigo(enemigoTexture, 1472, 160, 1f, 30f, 30f, mundo); //Enemigo 3
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 1920, 160, 1f, 30f, 30f, mundo,3); //Enemigo 4
+        enemigo = new Enemigo(enemigoTexture, 1920, 160, 1f, 30f, 30f, mundo); //Enemigo 4
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 2720, 64, 1f, 30f, 30f, mundo,4); //Enemigo 5
+        enemigo = new Enemigo(enemigoTexture, 2720, 64, 1f, 30f, 30f, mundo); //Enemigo 5
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 3008, 256, 1f, 30f, 30f, mundo,5); //Enemigo 6
+        enemigo = new Enemigo(enemigoTexture, 3008, 256, 1f, 30f, 30f, mundo); //Enemigo 6
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 3456, 192, 1f, 30f, 30f, mundo,6); //Enemigo 7
+        enemigo = new Enemigo(enemigoTexture, 3456, 192, 1f, 30f, 30f, mundo); //Enemigo 7
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 4000, 384, 1f, 30f, 30f, mundo,7); //Enemigo 8
+        enemigo = new Enemigo(enemigoTexture, 4000, 384, 1f, 30f, 30f, mundo); //Enemigo 8
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 4384, 64, 1f, 30f, 30f, mundo,8); //Enemigo 9
+        enemigo = new Enemigo(enemigoTexture, 4384, 64, 1f, 30f, 30f, mundo); //Enemigo 9
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 4960, 64, 1f, 30f, 30f, mundo,9); //Enemigo 10
+        enemigo = new Enemigo(enemigoTexture, 4960, 64, 1f, 30f, 30f, mundo); //Enemigo 10
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 5088, 224, 1f, 30f, 30f, mundo,10); //Enemigo 11
+        enemigo = new Enemigo(enemigoTexture, 5088, 224, 1f, 30f, 30f, mundo); //Enemigo 11
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 5440, 160, 1f, 30f, 30f, mundo,11); //Enenmigo 12
+        enemigo = new Enemigo(enemigoTexture, 5440, 160, 1f, 30f, 30f, mundo); //Enenmigo 12
         arrEnemigos.add(enemigo);
         jefe = new Jefe(new Texture("Enemigos/JefeUnoJetPack.png"), 6100, 72, 1f, 30f, 400, mundo); //Checar JEFE
         batallaJefeActiva = false;

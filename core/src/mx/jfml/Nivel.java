@@ -336,12 +336,10 @@ public abstract class Nivel extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                if(contacto.personajeSuelo) {
+                if(contacto.isPersonajeSuelo()) {
                     protagonista.body.setGravityScale(16/49f);
                     protagonista.body.applyForceToCenter(0, 25000, true);
                 }
-
-
             }
         });
         HUD.addActor(botonSaltar);
@@ -405,15 +403,21 @@ public abstract class Nivel extends Pantalla {
             if (protagonista.sprite.getX()<=enemy.sprite.getX()) enemy.setMovimiento(Personaje.Movimientos.IZQUIERDA);
             else enemy.setMovimiento(Personaje.Movimientos.DERECHA);
 
-            if(enemy.movimiento == Personaje.Movimientos.IZQUIERDA && enemy.body.isAwake() && enemy.sprite.getX()-protagonista.sprite.getX()>300){
-                enemy.body.applyForceToCenter(-300,0,true);
+            if(enemy.movimiento == Personaje.Movimientos.IZQUIERDA){
                 enemy.sprite.setFlip(false,false);
+                if(enemy.body.isAwake() && enemy.sprite.getX()-protagonista.sprite.getX()>300){
+                    enemy.body.applyForceToCenter(-300,0,true);
+                }
+
+
+
             }
-            if(enemy.movimiento == Personaje.Movimientos.DERECHA && enemy.body.isAwake() && enemy.sprite.getX()-protagonista.sprite.getX()>-300){
-                enemy.body.applyForceToCenter(300,0,true);
+            if(enemy.movimiento == Personaje.Movimientos.DERECHA){
                 enemy.sprite.setFlip(true,false);
+                if(enemy.body.isAwake() && enemy.sprite.getX()-protagonista.sprite.getX()>-300)
+                    enemy.body.applyForceToCenter(300,0,true);
+                 }
             }
-        }
     }
 
     //Pureba si la bala le pegó a un enemigo

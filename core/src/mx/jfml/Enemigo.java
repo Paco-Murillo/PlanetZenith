@@ -10,15 +10,11 @@ public class Enemigo extends Personaje {
     //Para usarlo en disparando después
 
     private int tiempoDisparos;
-    private boolean sueloDisponible;
-    private int index;
 
-    public Enemigo(Texture textura, float x, float y, float vx, float vy, float vida, World mundo,int index) {
+    public Enemigo(Texture textura, float x, float y, float vx, float vy, float vida, World mundo) {
         super(textura, x, y, vx, vy, vida, mundo);
         movimiento = Movimientos.IZQUIERDA;
         tiempoDisparos = 0;
-        sueloDisponible = true;
-        this.index=index;
         crearSensores(textura);
     }
 
@@ -31,14 +27,12 @@ public class Enemigo extends Personaje {
     }
 
     public void crearSensores(Texture textura){
-        String indice = Integer.toString(index);
         PolygonShape rectangulo = new PolygonShape();
         rectangulo.setAsBox(4,5, new Vector2(-textura.getWidth()/2-10, -textura.getHeight()/2),0);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape=rectangulo;
         fixtureDef.isSensor=true;
         body.createFixture(fixtureDef).setUserData("sensorEnemigoIzquierda");
-        rectangulo.setAsBox(8,5,new Vector2(0,-textura.getHeight()/2),9);
     }
 
     @Override

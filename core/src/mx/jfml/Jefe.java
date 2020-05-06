@@ -7,7 +7,7 @@ public class Jefe extends Enemigo {
     private int vidaOriginal;
 
     public Jefe(Texture textura, float x, float y, float vx, float vy, float vida, World mundo) {
-        super(textura, x, y, vx, vy, vida, mundo,200);
+        super(textura, x, y, vx, vy, vida, mundo);
         vidaOriginal = (int)vida;
     }
 
