@@ -74,7 +74,7 @@ public abstract class Nivel extends Pantalla {
     //Enemigos
     protected Array<Enemigo> arrEnemigos;
     private Array<Bala> arrBalasEnemigos;
-    private Texture texturaBalaEnemigos;
+    protected Texture texturaBalaEnemigos;
     private float timeAcumForEnemyShots;
     private Random random;
 
@@ -309,6 +309,7 @@ public abstract class Nivel extends Pantalla {
             bala.render(batch);
         }
         jefe.render(batch);
+        // jefe.sprite.setPosition(jefe.body.getPosition().x - jefe.sprite.getWidth()/2, jefe.body.getPosition().y - jefe.sprite.getHeight()/2);
         batch.end();
 
         actualizarBarraJefe();

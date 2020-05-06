@@ -43,9 +43,11 @@ public abstract class Personaje extends Objeto{
         this.vx = vx;
         this.vy = vy;
 
-        body = crearBody(x,y,mundo);
-        FixtureDef fixtureDef = crearFixtureDef(textura);
-        body.createFixture(fixtureDef).setUserData("personaje");
+        if(!(this instanceof Jefe)) {
+            body = crearBody(x, y, mundo);
+            FixtureDef fixtureDef = crearFixtureDef(textura);
+            body.createFixture(fixtureDef).setUserData("personaje");
+        }
     }
 
     private Body crearBody(float x, float y, World mundo){

@@ -25,7 +25,9 @@ public class Enemigo extends Personaje {
         super(textura, x, y, vx, vy, vida, mundo);
         movimiento = Movimientos.IZQUIERDA;
         tiempoDisparos = 0;
-        crearSensores(textura);
+        if(!(this instanceof Jefe)) {
+            crearSensores(textura);
+        }
     }
 
     /**
