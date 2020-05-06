@@ -170,8 +170,6 @@ public class PantallaConfiguracion extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                efectoBoton.play(audioManager.getVolEfectos());
-                efectoBoton.stop();
                 musicaFondo.stop();
                 audioManager.setTocando(!audioManager.getTocando());
                 musicaFondo.dispose();

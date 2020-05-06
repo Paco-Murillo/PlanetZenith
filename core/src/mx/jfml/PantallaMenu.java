@@ -87,6 +87,7 @@ public class PantallaMenu extends Pantalla {
 
             musicaFondo = assetManager.get("Audio/Musica/superMetroid.mp3");
             efectoBoton = assetManager.get("Audio/Efectos/sonidoboton.mp3");
+
             if(!audioManager.getTocando()){
                 musicaFondo.setLooping(true);
                 musicaFondo.play();

@@ -75,9 +75,7 @@ public class PantallaCreditos extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                efectoBoton.play(audioManager.getVolEfectos());
                 musicaFondo.stop();
-                efectoBoton.stop();
                 audioManager.setTocando(!audioManager.getTocando());
                 musicaFondo.dispose();
                 efectoBoton.dispose();
