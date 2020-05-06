@@ -260,7 +260,7 @@ public abstract class Nivel extends Pantalla {
     }
 
     private void crearProtagonista(String imgPath){
-        protagonista = new Protagonista(new Texture(imgPath), 60f, 100, 1f, 30f, 100,mundo);
+        protagonista = new Protagonista(new Texture(imgPath), 60f, 100, 1f, 30f, 1000,mundo);
     }
 
     private void crearArrBalas(){

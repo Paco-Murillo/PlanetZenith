@@ -27,19 +27,20 @@ public class Contacto implements ContactListener {
             personajeSuelo = true;
         }
 
-        //if(fa.getUserData() != null && fa.getUserData().equals("sensorEnemigo")) {
-        //    fa.getBody().setAwake(true);
+        if(fa.getUserData() != null && fa.getUserData().equals("sensorEnemigoIzquierda") && fa.getBody().getLinearVelocity().y!=0) {
+            fa.getBody().setAwake(true);
+        }
+        if(fb.getUserData() != null && fb.getUserData().equals("sensorEnemigoIzquierda") && fb.getBody().getLinearVelocity().y!=0) {
+            fb.getBody().setAwake(true);
+        }
 
-        //}
-        //if(fb.getUserData() != null && fb.getUserData().equals("sensorEnemigo")) {
-        //    fb.getBody().setAwake(true);
-        //}
-
-        if(fa.getUserData() != null && fa.getUserData().equals("personaje") && fb.getUserData() != null && fb.getUserData().equals("sensorEnemigo")) {
+        if(fa.getUserData() != null && fa.getUserData().equals("personaje") && fb.getUserData() != null && fb.getUserData().equals("sensorEnemigoIzquierda")
+        && fb.getBody().getLinearVelocity().y==0) {
             fb.getBody().setAwake(false);
 
         }
-        if(fb.getUserData() != null && fb.getUserData().equals("personaje") && fa.getUserData() != null && fa.getUserData().equals("sensorEnemigo")){
+        if(fb.getUserData() != null && fb.getUserData().equals("personaje") && fa.getUserData() != null && fa.getUserData().equals("sensorEnemigoIquierda")
+                && fa.getBody().getLinearVelocity().y==0){
             fa.getBody().setAwake(false);
         }
 
@@ -57,23 +58,35 @@ public class Contacto implements ContactListener {
             personajeSuelo = false;
         }
 
-        if(fa.getUserData() != null && fa.getUserData().equals("sensorEnemigoIzquierda")) {
+        if(fa.getUserData() != null && fa.getUserData().equals("sensorEnemigoIzquierda") && fa.getBody().getLinearVelocity().y==0) {
 
             fa.getBody().setAwake(false);
             fa.getBody().setLinearVelocity(0,0);
 
         }
-        if(fb.getUserData() != null && fb.getUserData().equals("sensorEnemigoIzquierda")) {
+        if(fb.getUserData() != null && fb.getUserData().equals("sensorEnemigoIzquierda") && fa.getBody().getLinearVelocity().y==0) {
             fb.getBody().setAwake(false);
             fb.getBody().setLinearVelocity(0,0);
         }
-        for(int i=0;i<20;i++) {
-            if (fa.getUserData() != null && fa.getUserData().equals("sensorSueloEnemigo"+i)) {
-                fa.getBody().setAwake(true);
-            }
-            if (fb.getUserData() != null && fb.getUserData().equals("sensorSueloEnemigo"+i)) {
-                fb.getBody().setAwake(false);
-            }
+
+        if(fa.getUserData() != null && fa.getUserData().equals("sensorEnemigoIzquierda") && fa.getBody().getLinearVelocity().y!=0) {
+
+            fa.getBody().setAwake(true);
+
+
+        }
+        if(fb.getUserData() != null && fb.getUserData().equals("sensorEnemigoIzquierda") && fb.getBody().getLinearVelocity().y!=0) {
+            fb.getBody().setAwake(true);
+        }
+
+        if(fa.getUserData() != null && fa.getUserData().equals("personaje") && fb.getUserData() != null && fb.getUserData().equals("sensorEnemigoIzquierda")
+                &&fa.getBody().getLinearVelocity().y!=0) {
+            fb.getBody().setAwake(true);
+
+        }
+        if(fb.getUserData() != null && fb.getUserData().equals("personaje") && fa.getUserData() != null && fa.getUserData().equals("sensorEnemigoIquierda")
+                &&fa.getBody().getLinearVelocity().y!=0){
+            fa.getBody().setAwake(true);
         }
 
 

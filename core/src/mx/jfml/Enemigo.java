@@ -39,9 +39,6 @@ public class Enemigo extends Personaje {
         fixtureDef.isSensor=true;
         body.createFixture(fixtureDef).setUserData("sensorEnemigoIzquierda");
         rectangulo.setAsBox(8,5,new Vector2(0,-textura.getHeight()/2),9);
-        fixtureDef.shape=rectangulo;
-        body.createFixture(fixtureDef).setUserData("sensorSueloEnemigo"+indice
-        );
     }
 
     @Override
