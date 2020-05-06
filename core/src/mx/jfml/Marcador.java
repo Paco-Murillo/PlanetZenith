@@ -3,7 +3,10 @@ package mx.jfml;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-class Marcador {
+/**
+ * Not Used
+ */
+public class Marcador {
 
 	private int puntos;
 

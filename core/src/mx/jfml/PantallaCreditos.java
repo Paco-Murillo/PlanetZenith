@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-class PantallaCreditos extends Pantalla {
+public class PantallaCreditos extends Pantalla {
 
     private final Juego juego;
 
@@ -75,9 +75,10 @@ class PantallaCreditos extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                efectoBoton.play(audioManager.getVolEfectos());
                 musicaFondo.stop();
-                audioManager.setTocando(false);
+                audioManager.setTocando(!audioManager.getTocando());
+                musicaFondo.dispose();
+                efectoBoton.dispose();
                 juego.setScreen(new PantallaMenu(juego));
             }
         });
@@ -115,11 +116,11 @@ class PantallaCreditos extends Pantalla {
         txtJose = new Escritura(ANCHO/2, ALTO/3);
         txtJose.setEnunciado("Jose Francicso Murillo");
 
-        txtDerechos1 = new Escritura(ANCHO/2, ALTO/10 + 20);
+        txtDerechos1 = new Escritura(ANCHO/2 + 50, ALTO/10 + 20);
         txtDerechos1.setTexto(new Texto("Fuentes/fuente30px.fnt"));
         txtDerechos1.setEnunciado("Todos los assets prestados pertenecen");
 
-        txtDerechos2 = new Escritura(ANCHO/2, ALTO/10);
+        txtDerechos2 = new Escritura(ANCHO/2 + 50, ALTO/10);
         txtDerechos2.setTexto(new Texto("Fuentes/fuente30px.fnt"));
         txtDerechos2.setEnunciado("a sus autores correspondientes");
     }

@@ -36,6 +36,7 @@ public abstract class Nivel extends Pantalla {
     protected World mundo; //Simulacion
     private Box2DDebugRenderer debugRenderer;
     private Contacto contacto;
+    protected Vector2 gravedad;
 
     //Mapa
     protected TiledMap mapa;
@@ -48,17 +49,16 @@ public abstract class Nivel extends Pantalla {
     private EscenaPausa escenaPausa;
     protected EstadoJuego estadoJuego = EstadoJuego.JUGANDO; //Jugando, PAusado, Poner DEBUG en caso de checar nivel sin actualizaciones
 
-    //Texto para marcador del juego
-    private int puntosJugador = 0;
-    private Texto textoMarcador;
-
-
     /*
     EstadoJuego.DEBUG les permite moverse rapidamente a traves del mapa para checar cosas,
     No actualiza posiciones de animacion (gravedad)
     ---- Importante ----
     Para no salirse de EstadoJuego.DEBUG, NO presionar el boton de pausa
      */
+
+    //Texto para marcador del juego
+    private int puntosJugador = 0;
+    private Texto textoMarcador;
 
     //Bala
     protected Array<Bala> arrBalas;
@@ -74,7 +74,7 @@ public abstract class Nivel extends Pantalla {
     //Enemigos
     protected Array<Enemigo> arrEnemigos;
     private Array<Bala> arrBalasEnemigos;
-    private Texture texturaBalaEnemigos;
+    protected Texture texturaBalaEnemigos;
     private float timeAcumForEnemyShots;
     private Random random;
 
@@ -82,7 +82,10 @@ public abstract class Nivel extends Pantalla {
     protected Jefe jefe;
     private ShapeRenderer shapeRenderer;
 
-
+    /**
+     * Clase abstracta que permite representar los fundamentos de cada nivel
+     * @param juego Referencia al objeto que creo la pantalla
+     */
     public Nivel(Juego juego) {
         this.juego = juego;
     }
@@ -95,164 +98,49 @@ public abstract class Nivel extends Pantalla {
         crearArrBalas();
         crearHUD();
         crearContacto();
-        crearBarraVidaJefe();
-
+        crearShapeRenderer();
     }
 
-    private void crearBarraVidaJefe() {
-        shapeRenderer = new ShapeRenderer();
+    /*
+     * Metodos llamados por los metodos show() de cada nivel
+     */
+
+    protected void crearGravedad(){
+        gravedad = new Vector2(0,-98);
     }
 
-    private void crearTextoMarcador(){
-        textoMarcador = new Texto("Texto/FuenteCuadro.fnt");
+    /**
+     * Crea el encargado de las animaciones
+     * @param gravedad Vector de 2 dimensiones que representa la fuerza que se aplica en 'x' y 'y'
+     */
+    protected void crearMundo(Vector2 gravedad) {
+        Box2D.init();
+        mundo = new World(gravedad, true);
+        debugRenderer = new Box2DDebugRenderer();
     }
 
-    private void crearContacto() {
-        contacto = new Contacto();
-        mundo.setContactListener(contacto);
+    /*
+     * Metodos llamados por el metodo show() de Nivel
+     */
+
+    /**
+     * Crea el objeto Protagonista de cada nivel
+     * @param imgPath Path de la imagen
+     */
+    private void crearProtagonista(String imgPath){
+        protagonista = new Protagonista(new Texture(imgPath), 60f, 100, 1f, 30f, 1000,mundo);
     }
 
+    /**
+     * Crea la textura de las balas de los enemigos
+     * @param imgPath Path de la imagen
+     */
     private void cargarTexturaBalaEnemigos(String imgPath) {
         texturaBalaEnemigos = new Texture(imgPath);
     }
 
-    @Override
-    public void render(float delta) {
-        borrarPantalla();
-        System.out.println(contacto.personajeSuelo);
-
-        //Condiciones para que pierda el jugador
-        if(protagonista.sprite.getY()+protagonista.sprite.getHeight()<-20 || protagonista.getVida()<=0) {
-            //Aqui deberia saltar a PantallaPerder
-            System.out.println("Has muerto");
-        }
-
-        float x = protagonista.body.getPosition().x - protagonista.sprite.getWidth()/2;
-        float y = protagonista.body.getPosition().y - protagonista.sprite.getHeight()/2;
-        protagonista.sprite.setPosition(x, y);
-
-        //Dibujar
-        batch.setProjectionMatrix(camara.combined);
-        mapRenderer.setView(camara);
-        mapRenderer.render();
-
-        debugRenderer.render(mundo, camara.combined);
-
-        batch.begin();
-        protagonista.render(batch);
-        //render todos los enemigos
-        for(Enemigo enemy: arrEnemigos){
-            enemy.render(batch);
-            float enemyX = enemy.body.getPosition().x - enemy.sprite.getWidth()/2;
-            float enemyY = enemy.body.getPosition().y - enemy.sprite.getHeight()/2;
-            enemy.sprite.setPosition(enemyX,enemyY);
-        }
-        for(Bala bala: arrBalas){
-            bala.render(batch);
-        }
-        for (Bala bala :
-                arrBalasEnemigos){
-            bala.render(batch);
-        }
-        //Texto para el marcador, por ahora muestra los enemigos asesinados *100
-        textoMarcador.render(batch, Integer.toString(puntosJugador), protagonista.body.getPosition().x + 500, 700);
-        textoMarcador.render(batch, " Puntos: ", protagonista.body.getPosition().x + 400, 700);
-        textoMarcador.render(batch, Float.toString(protagonista.getVida()), protagonista.body.getPosition().x + 240, 700);
-        textoMarcador.render(batch, " Vida: ", protagonista.body.getPosition().x + 140, 700);
-
-        batch.end();
-        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.BLACK);
-        shapeRenderer.rect(jefe.sprite.getX(), jefe.sprite.getY()+jefe.sprite.getHeight()+20, jefe.sprite.getWidth(), 10);
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.rect(jefe.sprite.getX(), jefe.sprite.getY()+jefe.sprite.getHeight()+20, (jefe.sprite.getWidth()*jefe.getVida())/jefe.getVidaOriginal(), 10);
-        shapeRenderer.end();
-
-        if(estadoJuego== EstadoJuego.JUGANDO){
-            batch.setProjectionMatrix(orthographicCameraHUD.combined);
-            HUD.draw();
-            actualizar(delta);
-            dispararEnemigos(delta);
-            probarColisiones();
-            probarColisionesProtagonista();
-            mundo.step(1/60f, 6, 2);
-        }
-        else if(estadoJuego == EstadoJuego.PAUSADO){
-            batch.setProjectionMatrix(orthographicCameraHUD.combined); //Probar sin esto
-            escenaPausa.draw();
-        }
-        else if (estadoJuego == EstadoJuego.DEBUG){
-            //Solo para debugging, se quitará al final
-            batch.setProjectionMatrix(orthographicCameraHUD.combined);
-            HUD.draw();
-            debugMoverCamara();
-        }
-    }
-
-    private void probarColisionesProtagonista() {
-        Rectangle rectProtagonista = protagonista.sprite.getBoundingRectangle();
-        System.out.println(arrBalasEnemigos.size);
-        for(int indexBala= 0; indexBala < arrBalasEnemigos.size; indexBala++) {
-            if (arrBalasEnemigos.get(indexBala) == null) continue;
-            Bala bala = arrBalasEnemigos.get(indexBala);
-            if (rectProtagonista.overlaps(bala.sprite.getBoundingRectangle())) {
-                protagonista.setVida(bala.getDanio());
-                arrBalasEnemigos.removeIndex(indexBala);
-                return;
-            }
-        }
-
-
-    }
-
-    private void dispararEnemigos(float delta) {
-        timeAcumForEnemyShots += delta;
-        if(timeAcumForEnemyShots > 3){
-            for (Enemigo enemigo : arrEnemigos) {
-                if (camara.position.x-ANCHO/2 < enemigo.sprite.getX() && enemigo.sprite.getX() <camara.position.x+ANCHO && enemigo.getTiempoDisparos()<=0){
-                    if(enemigo.getMovimiento() == Personaje.Movimientos.DERECHA) {
-                        float xBala = enemigo.sprite.getX() + enemigo.sprite.getWidth() - texturaBalaEnemigos.getWidth();
-                        float yBala = enemigo.sprite.getY() + (2 * enemigo.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f;
-                        enemigo.setTiempoDisparos(random.nextInt(2));
-                        Bala bala = new Bala(texturaBalaEnemigos, xBala, yBala, 100f, 0f, 20f);
-                        arrBalasEnemigos.add(bala);
-                    }else if(enemigo.getMovimiento() == Personaje.Movimientos.IZQUIERDA){
-                        float xBala = enemigo.sprite.getX();
-                        float yBala = enemigo.sprite.getY() + (2 * enemigo.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f;
-                        enemigo.setTiempoDisparos(random.nextInt(2));
-                        Bala bala = new Bala(texturaBalaEnemigos, xBala, yBala, -100f, 0f, 20f);
-                        arrBalasEnemigos.add(bala);
-                    }
-                }else {
-                    enemigo.setTiempoDisparos(enemigo.getTiempoDisparos() - 1);
-                }
-            }
-        timeAcumForEnemyShots = 0;
-        }
-    }
-
-    private void debugMoverCamara() {
-        if (pad.isTouched()){
-            camara.position.set(camara.position.x+pad.getKnobPercentX()*50,camara.position.y,0);
-            camara.update();
-        }
-    }
-
-    protected abstract void actualizarCamara();
-
-    protected void cargaMapa(String mapPath) {
-        AssetManager manager = new AssetManager();
-        manager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
-        manager.load(mapPath, TiledMap.class);
-        manager.finishLoading();
-
-        mapa = manager.get(mapPath);
-        mapRenderer = new OrthogonalTiledMapRenderer(mapa);
-    }
-
-    private void crearProtagonista(String imgPath){
-        protagonista = new Protagonista(new Texture(imgPath), 60f, 100, 1f, 30f, 100,mundo);
+    private void crearTextoMarcador(){
+        textoMarcador = new Texto("Texto/FuenteCuadro.fnt");
     }
 
     private void crearArrBalas(){
@@ -260,12 +148,8 @@ public abstract class Nivel extends Pantalla {
         arrBalas = new Array<>(3);
         timeAcumForEnemyShots = 0;
         arrBalasEnemigos = new Array<>();
-        System.out.println(arrBalas.toString());
+        //System.out.println(arrBalas.toString());
         random = new Random();
-    }
-
-    protected void cargarTexturaBala(String imgPath) {
-        texturaBala = new Texture(imgPath);
     }
 
     private void crearHUD() {
@@ -276,13 +160,6 @@ public abstract class Nivel extends Pantalla {
         HUD = new Stage(viewportHUD);
         crearBotones();
         crearPad();
-    }
-
-    protected void crearMundo() {
-        Box2D.init();
-        Vector2 gravedad = new Vector2(0, -32);
-        mundo = new World(gravedad, true);
-        debugRenderer = new Box2DDebugRenderer();
     }
 
     private void crearBotones() {
@@ -329,12 +206,10 @@ public abstract class Nivel extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                if(contacto.personajeSuelo) {
-
+                if(contacto.isPersonajeSuelo()) {
+                    protagonista.body.setGravityScale(16/49f);
                     protagonista.body.applyForceToCenter(0, 25000, true);
                 }
-
-
             }
         });
         HUD.addActor(botonSaltar);
@@ -355,25 +230,161 @@ public abstract class Nivel extends Pantalla {
         HUD.addActor(pad);
     }
 
+    private void crearContacto() {
+        contacto = new Contacto(false);
+        mundo.setContactListener(contacto);
+    }
+
+    private void crearShapeRenderer() {
+        shapeRenderer = new ShapeRenderer();
+    }
+
+    /*
+     * Metodos llamados por los metodos show() de cada nivel
+     */
+
+    /**
+     * Crea mapa y su renderer
+     * @param mapPath Path al archivo .tmx del nivel
+     */
+    protected void cargaMapa(String mapPath) {
+        AssetManager manager = new AssetManager();
+        manager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
+        manager.load(mapPath, TiledMap.class);
+        manager.finishLoading();
+
+        mapa = manager.get(mapPath);
+        mapRenderer = new OrthogonalTiledMapRenderer(mapa);
+    }
+
+    /**
+     * Crea la textura de las balas del Protagonista
+     * @param imgPath Path de la imagen
+     */
+    protected void cargarTexturaBala(String imgPath) {
+        texturaBala = new Texture(imgPath);
+    }
+
+    protected void definirParedes(){
+        CargarMapa.crearCuerpos(mapa,mundo);
+    }
+
+    @Override
+    public void render(float delta) {
+        borrarPantalla();
+
+        //System.out.println(contacto.personajeSuelo);
+
+        //Condiciones para que pierda el jugador
+        if(protagonista.sprite.getY()+protagonista.sprite.getHeight()<-20 || protagonista.getVida()<=0) {
+            //Aqui deberia saltar a PantallaPerder
+            juego.setScreen(new PantallaPerder(juego));
+        }
+
+        float x = protagonista.body.getPosition().x - protagonista.sprite.getWidth()/2;
+        float y = protagonista.body.getPosition().y - protagonista.sprite.getHeight()/2;
+        protagonista.sprite.setPosition(x, y);
+
+        //Dibujar
+        batch.setProjectionMatrix(camara.combined);
+        mapRenderer.setView(camara);
+        mapRenderer.render();
+
+        debugRenderer.render(mundo, camara.combined);
+
+        batch.begin();
+        protagonista.render(batch);
+        //render todos los enemigos
+        for(Enemigo enemy: arrEnemigos){
+            enemy.render(batch);
+            float enemyX = enemy.body.getPosition().x - enemy.sprite.getWidth()/2;
+            float enemyY = enemy.body.getPosition().y - enemy.sprite.getHeight()/2;
+            enemy.sprite.setPosition(enemyX,enemyY);
+        }
+        for(Bala bala: arrBalas){
+            bala.render(batch);
+        }
+        for (Bala bala :
+                arrBalasEnemigos){
+            bala.render(batch);
+        }
+        jefe.render(batch);
+        // jefe.sprite.setPosition(jefe.body.getPosition().x - jefe.sprite.getWidth()/2, jefe.body.getPosition().y - jefe.sprite.getHeight()/2);
+        batch.end();
+
+        actualizarBarraJefe();
+
+        if(estadoJuego== EstadoJuego.JUGANDO){
+            batch.setProjectionMatrix(orthographicCameraHUD.combined);
+            HUD.draw();
+            //Texto para el marcador, por ahora muestra los enemigos asesinados * 100
+            batch.begin();
+            textoMarcador.render(batch, " Vida: ", 200, 700);
+            textoMarcador.render(batch, Float.toString(protagonista.getVida()), 300, 700);
+            textoMarcador.render(batch, " Puntos: ", 460, 700);
+            textoMarcador.render(batch, Integer.toString(puntosJugador), 560, 700);
+            batch.end();
+            actualizar(delta);
+            dispararEnemigos(delta);
+            probarColisiones();
+            probarColisionesProtagonista();
+            mundo.step(delta, 6, 2);  //1/60f, 6, 2);
+        }
+        else if(estadoJuego == EstadoJuego.PAUSADO){
+            batch.setProjectionMatrix(orthographicCameraHUD.combined); //Probar sin esto
+            escenaPausa.draw();
+        }
+        else if (estadoJuego == EstadoJuego.DEBUG){
+            //Solo para debugging, se quitará al final
+            batch.setProjectionMatrix(orthographicCameraHUD.combined);
+            HUD.draw();
+            debugMoverCamara();
+        }
+    }
+
+    /**
+     * Actualiza el tamanio de la barra de vida del Jefe del nivel
+     */
+    private void actualizarBarraJefe() {
+        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.BLACK);
+        shapeRenderer.rect(jefe.sprite.getX(), jefe.sprite.getY()+jefe.sprite.getHeight()+20, jefe.sprite.getWidth(), 10);
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.rect(jefe.sprite.getX(), jefe.sprite.getY()+jefe.sprite.getHeight()+20, (jefe.sprite.getWidth()*jefe.getVida())/jefe.getVidaOriginal(), 10);
+        shapeRenderer.end();
+    }
+
+    /**
+     * Hace una actualizacion a aquello que se debe mover el la pantalla
+     * @param delta Tiempo que a pasado desde la ejecucion anterior
+     */
     private void actualizar(float delta) {
         //Actualizaciones
         actualizarCamara();
-        moverProtagonista();
-        moverBala();
+        moverBala(delta);
         moverBalasEnemigos(delta);
+        moverProtagonista();
         moverEnemigos();
     }
 
+    protected abstract void actualizarCamara();
+
+    protected abstract void moverBala(float delta);
+
+    /**
+     * Actualiza la posicion de las balas de los enemigos
+     * @param delta Tiempo que a pasado desde la ejecucion anterior
+     */
     private void moverBalasEnemigos(float delta) {
         for (Bala bala : arrBalasEnemigos) {
             bala.moverX(delta);
         }
     }
 
-    protected void definirParedes(){
-        cargarMapa.crearCuerpos(mapa,mundo);
-    }
-
+    /**
+     * Mueve al Protagonista haciendo uso del input Pad que pertenece al HUD
+     */
     private void moverProtagonista() {
         if(pad.isTouched()){
             float percentX = pad.getKnobPercentX();
@@ -384,31 +395,71 @@ public abstract class Nivel extends Pantalla {
                 protagonista.setMovimiento(Personaje.Movimientos.IZQUIERDA);
                 protagonista.sprite.setFlip(true,false);
             }
-            protagonista.body.applyForceToCenter(percentX*4000,0, true);
+            if(protagonista.body.getLinearVelocity().y > 0) protagonista.body.applyForceToCenter(percentX * 4000, 0, true);
+            else {
+                protagonista.body.applyForceToCenter(percentX * 4000, -1000*Math.abs(percentX), true);
+            }
         }
     }
 
-    protected abstract void moverBala();
-
+    /**
+     * Mueve a los Enemigos contenidos en arrEnemigos hacia el personaje
+     */
     private void moverEnemigos(){
         for(Enemigo enemy: arrEnemigos){
             if (protagonista.sprite.getX()<=enemy.sprite.getX()) enemy.setMovimiento(Personaje.Movimientos.IZQUIERDA);
             else enemy.setMovimiento(Personaje.Movimientos.DERECHA);
 
-            if(enemy.movimiento == Personaje.Movimientos.IZQUIERDA && enemy.body.isAwake() && enemy.sprite.getX()-protagonista.sprite.getX()>300){
-                enemy.body.applyForceToCenter(-300,0,true);
+            if(enemy.movimiento == Personaje.Movimientos.IZQUIERDA){
                 enemy.sprite.setFlip(false,false);
+                if(enemy.body.isAwake() && enemy.sprite.getX()-protagonista.sprite.getX()>300){
+                    enemy.body.applyForceToCenter(-300,0,true);
+                }
             }
-            if(enemy.movimiento == Personaje.Movimientos.DERECHA && enemy.body.isAwake() && enemy.sprite.getX()-protagonista.sprite.getX()>-300){
-                enemy.body.applyForceToCenter(300,0,true);
+            if(enemy.movimiento == Personaje.Movimientos.DERECHA){
                 enemy.sprite.setFlip(true,false);
+                if(enemy.body.isAwake() && enemy.sprite.getX()-protagonista.sprite.getX()>-300)
+                    enemy.body.applyForceToCenter(300,0,true);
             }
+        }
+    }
+
+    /**
+     * Comportamiento de disparo de los enemigos hacia el personaje (Bidireccional)
+     */
+    private void dispararEnemigos(float delta) {
+        timeAcumForEnemyShots += delta;
+        if(timeAcumForEnemyShots > 3){
+            for (Enemigo enemigo : arrEnemigos) {
+                if (camara.position.x-ANCHO/2 < enemigo.sprite.getX() && enemigo.sprite.getX() <camara.position.x+ANCHO && enemigo.getTiempoDisparos()<=0){
+                    if(enemigo.getMovimiento() == Personaje.Movimientos.DERECHA) {
+                        float xBala = enemigo.sprite.getX() + enemigo.sprite.getWidth() - texturaBalaEnemigos.getWidth();
+                        float yBala = enemigo.sprite.getY() + (2 * enemigo.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f;
+                        enemigo.setTiempoDisparos(random.nextInt(2));
+                        Bala bala = new Bala(texturaBalaEnemigos, xBala, yBala, 100f, 0f, 20f);
+                        arrBalasEnemigos.add(bala);
+                    }else if(enemigo.getMovimiento() == Personaje.Movimientos.IZQUIERDA){
+                        float xBala = enemigo.sprite.getX();
+                        float yBala = enemigo.sprite.getY() + (2 * enemigo.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f;
+                        enemigo.setTiempoDisparos(random.nextInt(2));
+                        Bala bala = new Bala(texturaBalaEnemigos, xBala, yBala, -100f, 0f, 20f);
+                        arrBalasEnemigos.add(bala);
+                    }
+                }else {
+                    enemigo.setTiempoDisparos(enemigo.getTiempoDisparos() - 1);
+                }
+            }
+            timeAcumForEnemyShots = 0;
         }
     }
 
     //Pureba si la bala le pegó a un enemigo
 
     //Falta implementar el choque del personaje con Enemigo
+
+    /**
+     * Prueba las colisiones reductoras de vida de los enemigos
+     */
     private void probarColisiones() {
         for(int indexEnemigos = 0; indexEnemigos < arrEnemigos.size;indexEnemigos++) {
             if (arrEnemigos.get(indexEnemigos)==null) continue;
@@ -430,6 +481,30 @@ public abstract class Nivel extends Pantalla {
                     return;
                 }
             }
+        }
+    }
+
+    /**
+     * Prueba las colisiones reductoras de vida del Protagonista
+     */
+    private void probarColisionesProtagonista() {
+        Rectangle rectProtagonista = protagonista.sprite.getBoundingRectangle();
+        //System.out.println(arrBalasEnemigos.size);
+        for(int indexBala= 0; indexBala < arrBalasEnemigos.size; indexBala++) {
+            if (arrBalasEnemigos.get(indexBala) == null) continue;
+            Bala bala = arrBalasEnemigos.get(indexBala);
+            if (rectProtagonista.overlaps(bala.sprite.getBoundingRectangle())) {
+                protagonista.setVida(bala.getDanio());
+                arrBalasEnemigos.removeIndex(indexBala);
+                return;
+            }
+        }
+    }
+
+    private void debugMoverCamara() {
+        if (pad.isTouched()){
+            camara.position.set(camara.position.x+pad.getKnobPercentX()*50,camara.position.y,0);
+            camara.update();
         }
     }
 

@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-class PantallaConfiguracion extends Pantalla {
+public class PantallaConfiguracion extends Pantalla {
 
     private final Juego juego;
 
@@ -66,36 +66,34 @@ class PantallaConfiguracion extends Pantalla {
         cargarEscritura();
         cargarAssets();
 
-
         escenaConfig = new Stage(vista);
 
         Gdx.input.setInputProcessor(escenaConfig);
 
-
         //Botones
-        //Boton Subir Volumen Musica
-        TextureRegionDrawable trdVolUpMusica = new TextureRegionDrawable(new TextureRegion(texturaBtnVolUpMusica));
-        ImageButton btnVolUpMusica = new ImageButton(trdVolUpMusica);
-        btnVolUpMusica.setPosition(ANCHO*.66f + btnVolUpMusica.getWidth()/2, ALTO*.66f - btnVolUpMusica.getHeight()/2);
-        escenaConfig.addActor(btnVolUpMusica);
-
         //Boton Bajar Volumen Musica
         TextureRegionDrawable trdVolDownMusica = new TextureRegionDrawable(new TextureRegion(texturaBtnVolDownMusica));
         ImageButton btnVolDownMusica = new ImageButton(trdVolDownMusica);
-        btnVolDownMusica.setPosition(btnVolUpMusica.getX() + btnVolUpMusica.getWidth() + 30f, ALTO*.66f - btnVolDownMusica.getHeight()/2);
+        btnVolDownMusica.setPosition(ANCHO*.66f + btnVolDownMusica.getWidth()/2 + 30f, ALTO*.66f - btnVolDownMusica.getHeight()/2);
         escenaConfig.addActor(btnVolDownMusica);
 
-        //Boton Subir Volumen Efectos
-        TextureRegionDrawable trdVolUpEfectos = new TextureRegionDrawable(new TextureRegion(texturaBtnVolUpEfectos));
-        ImageButton btnVolUpEfectos = new ImageButton(trdVolUpEfectos);
-        btnVolUpEfectos.setPosition(ANCHO*.66f, ALTO/2 - btnVolUpEfectos.getHeight()/2);
-        escenaConfig.addActor(btnVolUpEfectos);
+        //Boton Subir Volumen Musica
+        TextureRegionDrawable trdVolUpMusica = new TextureRegionDrawable(new TextureRegion(texturaBtnVolUpMusica));
+        ImageButton btnVolUpMusica = new ImageButton(trdVolUpMusica);
+        btnVolUpMusica.setPosition(btnVolDownMusica.getX() + btnVolDownMusica.getWidth(), ALTO*.66f - btnVolUpMusica.getHeight()/2);
+        escenaConfig.addActor(btnVolUpMusica);
 
         //Boton Bajar Volumen Efectos
         TextureRegionDrawable trdVolDownEfectos = new TextureRegionDrawable(new TextureRegion(texturaBtnVolDownEfectos));
         ImageButton btnVolDownEfectos = new ImageButton(trdVolDownEfectos);
-        btnVolDownEfectos.setPosition(btnVolUpEfectos.getX() + btnVolUpEfectos.getWidth() + 30f, ALTO/2 - btnVolUpEfectos.getHeight()/2);
+        btnVolDownEfectos.setPosition(ANCHO*.66f, ALTO/2 - btnVolDownEfectos.getHeight()/2);
         escenaConfig.addActor(btnVolDownEfectos);
+
+        //Boton Subir Volumen Efectos
+        TextureRegionDrawable trdVolUpEfectos = new TextureRegionDrawable(new TextureRegion(texturaBtnVolUpEfectos));
+        ImageButton btnVolUpEfectos = new ImageButton(trdVolUpEfectos);
+        btnVolUpEfectos.setPosition(btnVolDownEfectos.getX() + btnVolDownEfectos.getWidth() + 30f, ALTO/2 - btnVolDownEfectos.getHeight()/2);
+        escenaConfig.addActor(btnVolUpEfectos);
 
         //Boton Mutear
         TextureRegionDrawable trdMute = new TextureRegionDrawable(new TextureRegion(texturaBtnMute));
@@ -116,7 +114,7 @@ class PantallaConfiguracion extends Pantalla {
                 super.clicked(event, x, y);
                 efectoBoton.play(audioManager.getVolEfectos());
                 if(audioManager.getVolMusica() < 1f){
-                    audioManager.setVolMusica(audioManager.getVolMusica() + .15f);
+                    audioManager.setVolMusica(audioManager.getVolMusica() + .25f);
                     musicaFondo.setVolume(audioManager.getVolMusica());
                 }
             }
@@ -128,7 +126,7 @@ class PantallaConfiguracion extends Pantalla {
                 super.clicked(event, x, y);
                 efectoBoton.play(audioManager.getVolEfectos());
                 if(audioManager.getVolMusica() > 0){
-                    audioManager.setVolMusica(audioManager.getVolMusica() - .15f);
+                    audioManager.setVolMusica(audioManager.getVolMusica() - .25f);
                     musicaFondo.setVolume(audioManager.getVolMusica());
                 }
 
@@ -141,7 +139,7 @@ class PantallaConfiguracion extends Pantalla {
                 super.clicked(event, x, y);
                 efectoBoton.play(audioManager.getVolEfectos());
                 if(audioManager.getVolEfectos() < 1f){
-                    audioManager.setVolEfectos(audioManager.getVolEfectos() + .15f);
+                    audioManager.setVolEfectos(audioManager.getVolEfectos() + .25f);
                 }
             }
         });
@@ -152,7 +150,7 @@ class PantallaConfiguracion extends Pantalla {
                 super.clicked(event, x, y);
                 efectoBoton.play(audioManager.getVolEfectos());
                 if(audioManager.getVolEfectos() > 0){
-                    audioManager.setVolEfectos(audioManager.getVolEfectos() - .15f);
+                    audioManager.setVolEfectos(audioManager.getVolEfectos() - .25f);
                 }
             }
         });
@@ -164,6 +162,7 @@ class PantallaConfiguracion extends Pantalla {
                 efectoBoton.play(audioManager.getVolEfectos());
                 audioManager.setVolMusica(0);
                 audioManager.setVolEfectos(0);
+                musicaFondo.setVolume(audioManager.getVolMusica());
             }
         });
 
@@ -171,16 +170,16 @@ class PantallaConfiguracion extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                juego.setScreen(new PantallaMenu(juego));
-                efectoBoton.play(audioManager.getVolEfectos());
-                audioManager.setTocando(false);
                 musicaFondo.stop();
+                audioManager.setTocando(!audioManager.getTocando());
+                musicaFondo.dispose();
+                efectoBoton.dispose();
+                juego.setScreen(new PantallaMenu(juego));
             }
         });
 
 
     }
-
 
     private void cargarAssets() {
         //Audio y Musica
@@ -197,7 +196,6 @@ class PantallaConfiguracion extends Pantalla {
 
         //Se bloquea hasta cargar los recursos
         assetManager.finishLoading();
-
 
         texturaBtnVolUpMusica = assetManager.get("BotonesConf/btnVolArriba.png");
         texturaBtnVolDownMusica = assetManager.get("BotonesConf/btnVolAbajo.png");

@@ -16,33 +16,38 @@ public abstract class Personaje extends Objeto{
     //Velocidades
     private float vy;
     private float vx;
-    private int contactonum;
+    //private int contactonum;
 
     protected Body body;
-    private FixtureDef fixtureDef;
 
     //Movimientos
     protected Movimientos movimiento = Movimientos.DERECHA;
 
-    public Movimientos getMovimiento() {
-        return movimiento;
-    }
-
-    public void setMovimiento(Movimientos movimiento) {
-        this.movimiento = movimiento;
-    }
-
     private float vida;
 
+    /**
+     * La clase abstracta Personaje representa a aquellos objetos (personificables)
+     * que se mueven en el mapa y son afectados por la gravedad
+     * @param textura La imagen que representa este proyectil
+     * @param x Posicion inicial en x
+     * @param y Posicion inicial en y
+     * @param vx Velocidad definida en x
+     * @param vy Velocidad definida en y
+     * @param vida Vida del objeto creado
+     * @param mundo Animacion en donde se agrega el "cuerpo" que representa a este objeto en la
+     *              animacion
+     */
     public Personaje(Texture textura, float x, float y, float vx, float vy, float vida, World mundo) {
         super(textura, x, y);
         this.vida = vida;
         this.vx = vx;
         this.vy = vy;
 
-        body = crearBody(x,y,mundo);
-        fixtureDef = crearFixtureDef(textura);
-        body.createFixture(fixtureDef).setUserData("personaje");
+        if(!(this instanceof Jefe)) {
+            body = crearBody(x, y, mundo);
+            FixtureDef fixtureDef = crearFixtureDef(textura);
+            body.createFixture(fixtureDef).setUserData("personaje");
+        }
     }
 
     private Body crearBody(float x, float y, World mundo){
@@ -57,7 +62,7 @@ public abstract class Personaje extends Objeto{
 
     private FixtureDef crearFixtureDef(Texture textura){
         PolygonShape rectangulo = new PolygonShape();
-        rectangulo.setAsBox(textura.getWidth()/2, textura.getHeight()/2);
+        rectangulo.setAsBox(textura.getWidth()/2f, textura.getHeight()/2f);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = rectangulo;
         fixtureDef.friction = 1;
@@ -66,14 +71,23 @@ public abstract class Personaje extends Objeto{
         return fixtureDef;
     }
 
+    public Movimientos getMovimiento() {
+        return movimiento;
+    }
+
     public float getVida(){
         return vida;
+    }
+
+    public void setMovimiento(Movimientos movimiento) {
+        this.movimiento = movimiento;
     }
 
     public void setVida(float danio){
         this.vida = vida-danio;
     }
 
+    /*
     public int getContactonum() {
         return contactonum;
     }
@@ -81,6 +95,7 @@ public abstract class Personaje extends Objeto{
     public void setContactonum(int contactonum) {
         this.contactonum = contactonum;
     }
+    */
 
     public enum Movimientos {
         DERECHA,
