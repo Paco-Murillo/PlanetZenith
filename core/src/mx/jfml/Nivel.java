@@ -128,7 +128,7 @@ public abstract class Nivel extends Pantalla {
      * @param imgPath Path de la imagen
      */
     private void crearProtagonista(String imgPath){
-        protagonista = new Protagonista(new Texture(imgPath), 60f, 100, 1f, 30f, 1000,mundo);
+        protagonista = new Protagonista(new Texture(imgPath), 60f, 100, 1f, 30f, 300,mundo);
     }
 
     /**
