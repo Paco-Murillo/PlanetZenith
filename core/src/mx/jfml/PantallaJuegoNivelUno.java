@@ -26,6 +26,8 @@ public class PantallaJuegoNivelUno extends Nivel {
     private float timeAcumMovJefe;
     private int randMov;
 
+    private boolean dispararJefe;
+
     //public Array<Boolean> arrayEstadoEnemigoSuelo;
 
     /**
@@ -206,12 +208,15 @@ public class PantallaJuegoNivelUno extends Nivel {
             }
             timeAcumMovJefe = 0;
             randMov = MathUtils.random(3,10);
+            dispararJefe = false;
+        }else{
+            dispararJefe = true;
         }
     }
 
     private void dispararJefe(float delta){
         timeAcumDisparoJefe += delta;
-        if (timeAcumDisparoJefe > 2) {
+        if (timeAcumDisparoJefe > 2 && dispararJefe) {
             if (jefe.movimiento == Personaje.Movimientos.IZQUIERDA) {
                 Bala bala = new Bala(texturaBalaEnemigos,
                         jefe.sprite.getX(),
@@ -224,8 +229,8 @@ public class PantallaJuegoNivelUno extends Nivel {
                         jefe.sprite.getY() + (2 * jefe.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f,
                         100f, 0f, 100f);
                 balasJefe.add(bala);
-                timeAcumDisparoJefe = 0;
             }
+            timeAcumDisparoJefe = 0;
         }
     }
 
