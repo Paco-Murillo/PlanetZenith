@@ -41,7 +41,6 @@ public class PantallaMenu extends Pantalla {
 
     //Musica y Efectos
     private Music musicaFondo;
-    private Sound efectoBoton;
 
     public PantallaMenu(Juego juego) {
 
@@ -75,18 +74,14 @@ public class PantallaMenu extends Pantalla {
             }
         } catch(GdxRuntimeException g){
             musicaFondo.dispose();
-            efectoBoton.dispose();
 
             assetManager.unload("Audio/Musica/superMetroid.mp3");
-            assetManager.unload("Audio/Efectos/sonidoboton.mp3");
 
             assetManager.load("Audio/Musica/superMetroid.mp3", Music.class);
-            assetManager.load("Audio/Efectos/sonidoboton.mp3", Sound.class);
 
             assetManager.finishLoading();
 
             musicaFondo = assetManager.get("Audio/Musica/superMetroid.mp3");
-            efectoBoton = assetManager.get("Audio/Efectos/sonidoboton.mp3");
 
             if(!audioManager.getTocando()){
                 musicaFondo.setLooping(true);
@@ -122,7 +117,6 @@ public class PantallaMenu extends Pantalla {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 musicaFondo.stop();
-                efectoBoton.play(audioManager.getVolEfectos());
                 juego.setSeleccionaNivel(SeleccionaNivel.NIVELUNO);
                 juego.setScreen(new PantallaJuegoNivelUno(juego));
             }
@@ -133,7 +127,6 @@ public class PantallaMenu extends Pantalla {
             public void clicked(InputEvent event, float x, float y){
                 super.clicked(event, x, y);
                 audioManager.setTocando(!audioManager.getTocando());
-                efectoBoton.play(audioManager.getVolEfectos());
                 juego.setScreen(new PantallaConfiguracion(juego));
             }
         });
@@ -143,7 +136,6 @@ public class PantallaMenu extends Pantalla {
             public void clicked(InputEvent event, float x, float y){
                 super.clicked(event, x, y);
                 audioManager.setTocando(!audioManager.getTocando());
-                efectoBoton.play(audioManager.getVolEfectos());
                 juego.setScreen(new PantallaCreditos(juego));
             }
         });
@@ -153,7 +145,6 @@ public class PantallaMenu extends Pantalla {
     private void cargarAssets() {
         //Musica de fondo
         assetManager.load("Audio/Musica/superMetroid.mp3", Music.class);
-        assetManager.load("Audio/Efectos/sonidoboton.mp3", Sound.class);
 
 
         //Textura botones
@@ -168,7 +159,6 @@ public class PantallaMenu extends Pantalla {
         texturaBotonCreditos = assetManager.get("BotonesMenu/btnCred.png");
 
         musicaFondo = assetManager.get("Audio/Musica/superMetroid.mp3");
-        efectoBoton = assetManager.get("Audio/Efectos/sonidoboton.mp3");
 
     }
 
@@ -216,13 +206,11 @@ public class PantallaMenu extends Pantalla {
         texturaBotonConfigurar.dispose();
         texturaBotonJugar.dispose();
         musicaFondo.dispose();
-        efectoBoton.dispose();
         escenaMenu.dispose();
 
         assetManager.unload("BotonesMenu/btnJugar.png");
         assetManager.unload("BotonesMenu/btnConf.png");
         assetManager.unload("BotonesMenu/btnConf.png");
         assetManager.unload("Audio/Musica/superMetroid.mp3");
-        assetManager.unload("Audio/Efectos/sonidoboton.mp3");
     }
 }

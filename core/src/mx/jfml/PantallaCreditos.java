@@ -41,7 +41,6 @@ public class PantallaCreditos extends Pantalla {
 
     //Audio
     private Music musicaFondo;
-    private Sound efectoBoton;
 
     public PantallaCreditos(Juego juego) {
         this.juego = juego;
@@ -78,7 +77,6 @@ public class PantallaCreditos extends Pantalla {
                 musicaFondo.stop();
                 audioManager.setTocando(!audioManager.getTocando());
                 musicaFondo.dispose();
-                efectoBoton.dispose();
                 juego.setScreen(new PantallaMenu(juego));
             }
         });
@@ -89,7 +87,6 @@ public class PantallaCreditos extends Pantalla {
         assetManager.load("BotonesConf/btnRegresar.png", Texture.class);
 
         assetManager.load("Audio/Musica/superMetroid.mp3", Music.class);
-        assetManager.load("Audio/Efectos/sonidoboton.mp3", Sound.class);
 
 
         assetManager.finishLoading();
@@ -97,7 +94,6 @@ public class PantallaCreditos extends Pantalla {
         texturabtnRegresar = assetManager.get("BotonesConf/btnRegresar.png");
 
         musicaFondo = assetManager.get("Audio/Musica/superMetroid.mp3");
-        efectoBoton = assetManager.get("Audio/Efectos/sonidoboton.mp3");
     }
 
     private void cargarEscritura() {
@@ -163,10 +159,8 @@ public class PantallaCreditos extends Pantalla {
         texturaFondo.dispose();
         texturabtnRegresar.dispose();
         musicaFondo.dispose();
-        efectoBoton.dispose();
 
         assetManager.unload("BotonesConf/btnRegresar.png");
-        assetManager.unload("Audio/Efectos/sonidoboton.mp3");
         assetManager.unload("Audio/Musica/superMetroid.mp3");
     }
 }
