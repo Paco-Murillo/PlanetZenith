@@ -128,7 +128,7 @@ public abstract class Nivel extends Pantalla {
      * @param imgPath Path de la imagen
      */
     private void crearProtagonista(String imgPath){
-        protagonista = new Protagonista(new Texture(imgPath), 60f, 100, 1f, 30f, 400,mundo);
+        protagonista = new Protagonista(new Texture(imgPath), 220, 100, 1f, 30f, 400,mundo);
     }
 
     /**
@@ -177,7 +177,7 @@ public abstract class Nivel extends Pantalla {
         HUD.addActor(botonPausa);
 
         ImageButton botonDisparar = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/botonDisparar.png")));
-        botonDisparar.setPosition(ANCHO-botonDisparar.getWidth()-30,140);
+        botonDisparar.setPosition(ANCHO-botonDisparar.getWidth()-30,135);
         botonDisparar.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -201,7 +201,7 @@ public abstract class Nivel extends Pantalla {
         HUD.addActor(botonDisparar);
 
         ImageButton botonSaltar = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/botonSaltar.png")));
-        botonSaltar.setPosition(ANCHO-botonDisparar.getWidth()-210,30);
+        botonSaltar.setPosition(ANCHO-botonDisparar.getWidth()-150,25);
         botonSaltar.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -225,7 +225,7 @@ public abstract class Nivel extends Pantalla {
 
         //Crear el pad
         pad = new Touchpad(16, touchpadStyle);
-        pad.setBounds(16,16,256,256);
+        pad.setBounds(16,16,190,190);
         pad.setColor(1,1,1,0.7f);
         HUD.addActor(pad);
     }
