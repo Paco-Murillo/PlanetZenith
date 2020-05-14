@@ -1,14 +1,118 @@
 package mx.jfml;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+
 public class PantallaSelecNivel extends Pantalla {
+
+    private final Juego juego;
+
+    //Textura
+    private Texture texturaFondo;
+    private Texture texturaNvlUno;
+    private Texture texturaNvlDos;
+    private Texture texturaNvlTres;
+    private Texture texturaBtnRegresar;
+
+    //Seleccionador de Nivel
+    private SeleccionaNivel seleccionaNivel;
+
+    //Vista
+    private Stage escenaSeleccion;
+
+    //AssetManager
+    private final AssetManager assetManager;
+
+    //Audio Manejador
+    private AudioManejador audioManejador;
+
+    //Musica y Efectos
+    private Music musicaFondo;
+    private Sound efectoSelec;
+
+    public PantallaSelecNivel(Juego juego){
+        this.juego = juego;
+        assetManager = juego.getAssetManager();
+        audioManejador = juego.getAudioManejador();
+        seleccionaNivel = juego.getSeleccionaNivel();
+    }
+
     @Override
     public void show() {
 
+        crearSeleccion();
+
+    }
+
+    private void crearSeleccion() {
+        cargarAssets();
+
+        escenaSeleccion = new Stage(vista);
+
+        Gdx.input.setInputProcessor(escenaSeleccion);
+
+        Image imagenFondo = new Image(texturaFondo);
+
+        float escalaX = ANCHO / imagenFondo.getWidth();
+        float escalaY = ALTO / imagenFondo.getHeight();
+        imagenFondo.setScale(escalaX,escalaY);
+        escenaSeleccion.addActor(imagenFondo);
+
+        //Botones
+        //Boton Regresar
+        TextureRegionDrawable trdRegresar = new TextureRegionDrawable(new TextureRegion(texturaBtnRegresar));
+        ImageButton btnRegresar = new ImageButton(trdRegresar);
+        btnRegresar.setPosition(64,64);
+        escenaSeleccion.addActor(btnRegresar);
+
+        //Listener
+        btnRegresar.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                musicaFondo.stop();
+                audioManejador.setTocando(!audioManejador.getTocando());
+                musicaFondo.dispose();
+                efectoSelec.dispose();
+                juego.setScreen(new PantallaMenu(juego));
+                }
+            });
+    }
+
+    private void cargarAssets() {
+        assetManager.load("Fondos/fondoPantalla.png", Texture.class);
+        assetManager.load("Audio/Musica/superMetroid.mp3", Music.class);
+        assetManager.load("Audio/Efectos/selecNivel.wav", Sound.class);
+        assetManager.load("BotonesConf/btnRegresar.png", Texture.class);
+
+        assetManager.finishLoading();
+
+        texturaFondo = assetManager.get("Fondos/fondoPantalla.png");
+        texturaBtnRegresar = assetManager.get("BotonesConf/btnRegresar.png");
+        musicaFondo = assetManager.get("Audio/Musica/superMetroid.mp3");
+        efectoSelec = assetManager.get("Audio/Efectos/selecNivel.wav");
     }
 
     @Override
     public void render(float delta) {
+        borrarPantalla();
+        batch.setProjectionMatrix(camara.combined);
 
+        batch.begin();
+
+        batch.end();
+
+        escenaSeleccion.draw();
     }
 
     @Override
@@ -23,6 +127,15 @@ public class PantallaSelecNivel extends Pantalla {
 
     @Override
     public void dispose() {
+        texturaBtnRegresar.dispose();
+        texturaFondo.dispose();
+        musicaFondo.dispose();
+        efectoSelec.dispose();
+        escenaSeleccion.dispose();
 
+        assetManager.unload("Fondos/fondoPantalla.png");
+        assetManager.unload("BotonesConf/btnRegresar.png");
+        assetManager.unload("Audio/Musica/superMetroid.mp3");
+        assetManager.unload("Audio/Efectos/selecNivel.wav");
     }
 }
