@@ -35,7 +35,6 @@ public class PantallaGanar extends Pantalla {
     private AudioManejador audioManejador;
 
     //Audio
-    private Sound efectoBoton;
     private Music victoria;
 
     public PantallaGanar(Juego juego){
@@ -84,7 +83,6 @@ public class PantallaGanar extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                efectoBoton.play(audioManejador.getVolEfectos());
                 juego.setScreen(new PantallaMenu(juego));
             }
         });
@@ -102,14 +100,12 @@ public class PantallaGanar extends Pantalla {
         assetManager.load("Fondos/Success.png", Texture.class);
         assetManager.load("BotonesGyP/btnHogar.png", Texture.class);
         assetManager.load("BotonesGyP/btnSiguiente.png", Texture.class);
-        assetManager.load("Audio/Efectos/sonidoefecto.mp3", Sound.class);
 
         assetManager.finishLoading();
 
         texturaFondo = assetManager.get("Fondos/Success.png");
         texturaBotonHogar = assetManager.get("BotonesGyP/btnHogar.png");
         texturaBotonSiguiente = assetManager.get("BotonesGyP/btnSiguiente.png");
-        efectoBoton = assetManager.get("Audio/Efectos/sonidoefecto.mp3");
     }
 
     @Override
@@ -139,12 +135,10 @@ public class PantallaGanar extends Pantalla {
         texturaFondo.dispose();
         texturaBotonSiguiente.dispose();
         texturaBotonHogar.dispose();
-        efectoBoton.dispose();
         escenaGanar.dispose();
 
         assetManager.unload("Fondos/Success.png");
         assetManager.unload("BotonesGyP/btnHogar.png");
         assetManager.unload("BotonesGyP/btnSiguiente.png");
-        assetManager.unload("Audio/Efectos/sonidoefecto.mp3");
     }
 }
