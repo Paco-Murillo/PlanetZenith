@@ -34,27 +34,27 @@ public class PantallaJuegoNivelDos extends Nivel {
     private void crearEnemigos(){
         arrEnemigos = new Array<>(10);
         Texture enemigoTexture = new Texture("Enemigos/EnemigoGeneralAzul.png");
-        Enemigo enemigo = new Enemigo(enemigoTexture, 640, 256, 1f, 30f, 30f, mundo); //Enmigo 1
+        Enemigo enemigo = new Enemigo(enemigoTexture, 640, 256, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enmigo 1
         //enemigo.direccion= Personaje.Movimientos.IZQUIERDA;
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 1504, 192, 1f, 30f, 30f, mundo); //Enemigo 2
+        enemigo = new Enemigo(enemigoTexture, 1504, 192, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 2
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 1920, 32, 1f, 30f, 30f, mundo); //Enemigo 3
+        enemigo = new Enemigo(enemigoTexture, 1920, 32, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 3
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 2040, 32, 1f, 30f, 30f, mundo); //Enemigo 4
+        enemigo = new Enemigo(enemigoTexture, 2040, 32, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 4
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 2680, 32, 1f, 30f, 30f, mundo); //Enemigo 5
+        enemigo = new Enemigo(enemigoTexture, 2680, 32, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 5
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 3040, 32, 1f, 30f, 30f, mundo); //Enemigo 6
+        enemigo = new Enemigo(enemigoTexture, 3040, 32, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 6
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 3520, 224, 1f, 30f, 30f, mundo); //Enemigo 7
+        enemigo = new Enemigo(enemigoTexture, 3520, 224, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 7
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 4256, 416, 1f, 30f, 30f, mundo); //Enemigo 8
+        enemigo = new Enemigo(enemigoTexture, 4256, 416, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 8
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 4224, 224, 1f, 30f, 30f, mundo); //Enemigo 9
+        enemigo = new Enemigo(enemigoTexture, 4224, 224, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 9
         arrEnemigos.add(enemigo);
         //Enemigo 9
-        enemigo = new Enemigo(enemigoTexture, 4928, 32, 1f, 30f, 30f, mundo); //Enemigo 10
+        enemigo = new Enemigo(enemigoTexture, 4928, 32, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 10
         arrEnemigos.add(enemigo);
 
         //Cambiar Sprite Jefe
