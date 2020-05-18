@@ -118,6 +118,7 @@ public class PantallaMenu extends Pantalla {
                 super.clicked(event, x, y);
                 musicaFondo.stop();
                 juego.setSeleccionaNivel(SeleccionaNivel.NIVELUNO);
+                //juego.setScreen(new PantallaJuegoNivelDos(juego));
                 juego.setScreen(new PantallaJuegoNivelUno(juego));
             }
         });

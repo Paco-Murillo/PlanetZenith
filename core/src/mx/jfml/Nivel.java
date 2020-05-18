@@ -395,7 +395,9 @@ public abstract class Nivel extends Pantalla {
                 protagonista.setMovimiento(Personaje.Movimientos.IZQUIERDA);
                 protagonista.sprite.setFlip(true,false);
             }
-            if(protagonista.body.getLinearVelocity().y > 0) protagonista.body.applyForceToCenter(percentX * 4000, 0, true);
+            if(protagonista.body.getLinearVelocity().y > 0) {
+                protagonista.body.applyForceToCenter(percentX * 4000, 0, true);
+            }
             else {
                 protagonista.body.applyForceToCenter(percentX * 4000, -1000*Math.abs(percentX), true);
             }
@@ -453,7 +455,7 @@ public abstract class Nivel extends Pantalla {
         }
     }
 
-    //Pureba si la bala le pegó a un enemigo
+    //Prueba si la bala le pegó a un enemigo
 
     //Falta implementar el choque del personaje con Enemigo
 
@@ -474,7 +476,6 @@ public abstract class Nivel extends Pantalla {
                         mundo.destroyBody(enemigo.body);
                         arrEnemigos.removeIndex(indexEnemigos);
                     }
-
                     arrBalas.removeIndex(indexBala);
                     puntosJugador += 100;
                     contadorBalas--;
@@ -524,6 +525,28 @@ public abstract class Nivel extends Pantalla {
                 }
             });
             addActor(botonPlay);
+
+            ImageButton botonNiveles = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/botonNivel.png")));
+            botonNiveles.setPosition(ANCHO-botonNiveles.getWidth()-15,ALTO-botonNiveles.getHeight());
+            botonNiveles.addListener(new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y){
+                    super.clicked(event,x,y);
+                    juego.setScreen(new PantallaSelecNivel(juego));
+                }
+            });
+            addActor(botonNiveles);
+
+            ImageButton botonHome = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/botonMenu.png")));
+            botonHome.setPosition(ANCHO-(2*(botonHome.getWidth()+15)),ALTO-botonHome.getHeight());
+            botonHome.addListener(new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y){
+                    super.clicked(event,x,y);
+                    juego.setScreen(new PantallaMenu(juego));
+                }
+            });
+            addActor(botonHome);
         }
     }
 
