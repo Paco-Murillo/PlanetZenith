@@ -75,6 +75,24 @@ public class PantallaSelecNivel extends Pantalla {
         btnRegresar.setPosition(64,64);
         escenaSeleccion.addActor(btnRegresar);
 
+        //Boton Nivel 2
+        TextureRegionDrawable trdNivelDos = new TextureRegionDrawable(new TextureRegion(texturaNvlDos));
+        ImageButton btnNivelDos = new ImageButton(trdNivelDos);
+        btnNivelDos.setPosition(ANCHO/2 - btnNivelDos.getWidth()/2, ALTO/2 - btnNivelDos.getHeight()/2);
+        escenaSeleccion.addActor(btnNivelDos);
+
+        //Boton Nivel 1
+        TextureRegionDrawable trdNivelUno = new TextureRegionDrawable(new TextureRegion(texturaNvlUno));
+        ImageButton btnNivelUno = new ImageButton(trdNivelUno);
+        btnNivelUno.setPosition(btnNivelDos.getX() - 300 - btnNivelUno.getWidth()/2, ALTO/2 - btnNivelUno.getHeight()/2);
+        escenaSeleccion.addActor(btnNivelUno);
+
+        //Boton Nivel 3
+        TextureRegionDrawable trdNivelTres = new TextureRegionDrawable(new TextureRegion(texturaNvlTres));
+        ImageButton btnNivelTres = new ImageButton(trdNivelTres);
+        btnNivelTres.setPosition(btnNivelDos.getX() + btnNivelDos.getWidth() + 300 - btnNivelTres.getWidth()/2, ALTO/2 - btnNivelTres.getHeight()/2);
+        escenaSeleccion.addActor(btnNivelTres);
+
         //Listener
         btnRegresar.addListener(new ClickListener() {
             @Override
@@ -87,6 +105,42 @@ public class PantallaSelecNivel extends Pantalla {
                 juego.setScreen(new PantallaMenu(juego));
                 }
             });
+
+        btnNivelUno.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                super.clicked(event, x, y);
+                efectoSelec.play(audioManejador.getVolEfectos());
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                musicaFondo.stop();
+                juego.setSeleccionaNivel(seleccionaNivel.NIVELUNO);
+                musicaFondo.dispose();
+                efectoSelec.dispose();
+                juego.setScreen(new PantallaJuegoNivelUno(juego));
+            }
+        });
+
+        btnNivelDos.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                efectoSelec.play(audioManejador.getVolEfectos());
+                juego.setSeleccionaNivel(seleccionaNivel.NIVELDOS);
+            }
+        });
+
+        btnNivelTres.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                efectoSelec.play(audioManejador.getVolEfectos());
+                juego.setSeleccionaNivel(seleccionaNivel.NIVELTRES);
+            }
+        });
     }
 
     private void cargarAssets() {
@@ -94,11 +148,17 @@ public class PantallaSelecNivel extends Pantalla {
         assetManager.load("Audio/Musica/superMetroid.mp3", Music.class);
         assetManager.load("Audio/Efectos/selecNivel.wav", Sound.class);
         assetManager.load("BotonesConf/btnRegresar.png", Texture.class);
+        assetManager.load("BotonesSelNivel/btnNiveles1.png", Texture.class);
+        assetManager.load("BotonesSelNivel/btnNiveles2.png", Texture.class);
+        assetManager.load("BotonesSelNivel/btnNiveles3.png", Texture.class);
 
         assetManager.finishLoading();
 
         texturaFondo = assetManager.get("Fondos/fondoPantalla.png");
         texturaBtnRegresar = assetManager.get("BotonesConf/btnRegresar.png");
+        texturaNvlUno = assetManager.get("BotonesSelNivel/btnNiveles1.png");
+        texturaNvlDos = assetManager.get("BotonesSelNivel/btnNiveles2.png");
+        texturaNvlTres = assetManager.get("BotonesSelNivel/btnNiveles3.png");
         musicaFondo = assetManager.get("Audio/Musica/superMetroid.mp3");
         efectoSelec = assetManager.get("Audio/Efectos/selecNivel.wav");
     }
@@ -128,6 +188,9 @@ public class PantallaSelecNivel extends Pantalla {
     @Override
     public void dispose() {
         texturaBtnRegresar.dispose();
+        texturaNvlUno.dispose();
+        texturaNvlDos.dispose();
+        texturaNvlTres.dispose();
         texturaFondo.dispose();
         musicaFondo.dispose();
         efectoSelec.dispose();
@@ -135,6 +198,9 @@ public class PantallaSelecNivel extends Pantalla {
 
         assetManager.unload("Fondos/fondoPantalla.png");
         assetManager.unload("BotonesConf/btnRegresar.png");
+        assetManager.unload("BotonesSelNivel/btnNiveles1.png");
+        assetManager.unload("BotonesSelNivel/btnNiveles2.png");
+        assetManager.unload("BotonesSelNivel/btnNiveles3.png");
         assetManager.unload("Audio/Musica/superMetroid.mp3");
         assetManager.unload("Audio/Efectos/selecNivel.wav");
     }
