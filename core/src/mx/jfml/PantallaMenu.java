@@ -116,9 +116,8 @@ public class PantallaMenu extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                musicaFondo.stop();
-                juego.setSeleccionaNivel(SeleccionaNivel.NIVELUNO);
-                juego.setScreen(new PantallaJuegoNivelUno(juego));
+                audioManager.setTocando(!audioManager.getTocando());
+                juego.setScreen(new PantallaSelecNivel(juego));
             }
         });
 
