@@ -77,7 +77,7 @@ public class PantallaJuegoNivelUno extends Nivel {
         arrEnemigos.add(enemigo);
         enemigo = new Enemigo(enemigoTexture, 5440, 160, 1f, 30f, 30f, mundo); //Enenmigo 12
         arrEnemigos.add(enemigo);
-        jefe = new Jefe(new Texture("Enemigos/JefeUnoJetPack.png"), 6100, 72, 1f, 30f, 400, mundo); //Checar JEFE
+        jefe = new Jefe(new Texture("Enemigos/JefeUnoJetPackFinal.png"), 6100, 72, 1f, 30f, 400, mundo); //Checar JEFE
         iniciarVariablesJefe();
     }
 
