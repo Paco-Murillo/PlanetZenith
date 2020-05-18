@@ -55,6 +55,13 @@ public class Contacto implements ContactListener {
                 fa.getBody().getLinearVelocity().y==0){
             fa.getBody().setAwake(false);
         }
+        if(fa.getUserData() != null && fa.getUserData().equals("sensorJetPack")){
+            fa.getBody().applyForceToCenter(0,25000, true);
+        }
+
+        if(fb.getUserData() != null && fb.getUserData().equals("sensorJetPack")){
+            fb.getBody().applyForceToCenter(0,25000, true);
+        }
 
     }
 

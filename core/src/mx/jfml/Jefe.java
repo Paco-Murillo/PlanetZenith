@@ -21,7 +21,7 @@ public class Jefe extends Enemigo {
      *              animacion
      */
     public Jefe(Texture textura, float x, float y, float vx, float vy, float vida, World mundo) {
-        super(textura, x, y, vx, vy, vida, mundo);
+        super(textura, x, y, vx, vy, vida, mundo, TipoEnemigo.JEFE);
         vidaOriginal = (int)vida;
     }
 

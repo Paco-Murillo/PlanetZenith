@@ -408,21 +408,36 @@ public abstract class Nivel extends Pantalla {
      * Mueve a los Enemigos contenidos en arrEnemigos hacia el personaje
      */
     private void moverEnemigos(){
-        for(Enemigo enemy: arrEnemigos){
-            if (protagonista.sprite.getX()<=enemy.sprite.getX()) enemy.setMovimiento(Personaje.Movimientos.IZQUIERDA);
+        for(Enemigo enemy: arrEnemigos) {
+            if (protagonista.sprite.getX() <= enemy.sprite.getX())
+                enemy.setMovimiento(Personaje.Movimientos.IZQUIERDA);
             else enemy.setMovimiento(Personaje.Movimientos.DERECHA);
 
-            if(enemy.movimiento == Personaje.Movimientos.IZQUIERDA){
-                enemy.sprite.setFlip(false,false);
-                if(enemy.body.isAwake() && enemy.sprite.getX()-protagonista.sprite.getX()>300){
-                    enemy.body.applyForceToCenter(-300,0,true);
+            if (enemy.movimiento == Personaje.Movimientos.IZQUIERDA) {
+                enemy.sprite.setFlip(false, false);
+                if(enemy.tipoEnemigo== Enemigo.TipoEnemigo.CAMINANTE) {
+                    if (enemy.body.isAwake() && enemy.sprite.getX() - protagonista.sprite.getX() > 300) {
+                        enemy.body.applyForceToCenter(-300, 0, true);
+                    }
                 }
             }
-            if(enemy.movimiento == Personaje.Movimientos.DERECHA){
-                enemy.sprite.setFlip(true,false);
-                if(enemy.body.isAwake() && enemy.sprite.getX()-protagonista.sprite.getX()>-300)
-                    enemy.body.applyForceToCenter(300,0,true);
+
+            if (enemy.movimiento == Personaje.Movimientos.DERECHA) {
+                enemy.sprite.setFlip(true, false);
+                if (enemy.tipoEnemigo == Enemigo.TipoEnemigo.CAMINANTE){
+                    if (enemy.body.isAwake() && enemy.sprite.getX() - protagonista.sprite.getX() > -300) {
+                        enemy.body.applyForceToCenter(300, 0, true);
+                    }
+                }
             }
+
+
+
+
+
+
+
+
         }
     }
 
