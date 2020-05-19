@@ -2,6 +2,7 @@ package mx.jfml;
 
 import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -69,6 +70,7 @@ public class PantallaConfiguracion extends Pantalla {
         escenaConfig = new Stage(vista);
 
         Gdx.input.setInputProcessor(escenaConfig);
+        Gdx.input.setCatchKey(Input.Keys.BACK, true);
 
         //Botones
         //Boton Bajar Volumen Musica
@@ -236,6 +238,15 @@ public class PantallaConfiguracion extends Pantalla {
         batch.end();
 
         escenaConfig.draw();
+
+        //Tecla de Back
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
+            musicaFondo.stop();
+            audioManager.setTocando(!audioManager.getTocando());
+            musicaFondo.dispose();
+            efectoBoton.dispose();
+            juego.setScreen(new PantallaMenu(juego));
+        }
     }
 
     @Override

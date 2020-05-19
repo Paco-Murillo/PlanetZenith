@@ -1,6 +1,7 @@
 package mx.jfml;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Color;
@@ -99,6 +100,7 @@ public abstract class Nivel extends Pantalla {
         crearHUD();
         crearContacto();
         crearShapeRenderer();
+        Gdx.input.setCatchKey(Input.Keys.BACK, true);
     }
 
     /*
@@ -313,6 +315,10 @@ public abstract class Nivel extends Pantalla {
         batch.end();
 
         actualizarBarraJefe();
+
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
+            estadoJuego = EstadoJuego.PAUSADO;
+        }
 
         if(estadoJuego== EstadoJuego.JUGANDO){
             batch.setProjectionMatrix(orthographicCameraHUD.combined);

@@ -1,6 +1,7 @@
 package mx.jfml;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -62,6 +63,7 @@ public class PantallaCreditos extends Pantalla {
         escenaCreditos = new Stage(vista);
 
         Gdx.input.setInputProcessor(escenaCreditos);
+        Gdx.input.setCatchKey(Input.Keys.BACK, true);
 
         //Boton Regresar
         TextureRegionDrawable trdRegresar = new TextureRegionDrawable(new TextureRegion(texturabtnRegresar));
@@ -142,6 +144,14 @@ public class PantallaCreditos extends Pantalla {
         batch.end();
 
         escenaCreditos.draw();
+
+        //Tecla de Back
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
+            musicaFondo.stop();
+            audioManager.setTocando(!audioManager.getTocando());
+            musicaFondo.dispose();
+            juego.setScreen(new PantallaMenu(juego));
+        }
     }
 
     @Override

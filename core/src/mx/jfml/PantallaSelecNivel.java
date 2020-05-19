@@ -1,6 +1,7 @@
 package mx.jfml;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -60,6 +61,7 @@ public class PantallaSelecNivel extends Pantalla {
         escenaSeleccion = new Stage(vista);
 
         Gdx.input.setInputProcessor(escenaSeleccion);
+        Gdx.input.setCatchKey(Input.Keys.BACK, true);
 
         Image imagenFondo = new Image(texturaFondo);
 
@@ -173,6 +175,14 @@ public class PantallaSelecNivel extends Pantalla {
         batch.end();
 
         escenaSeleccion.draw();
+
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
+            musicaFondo.stop();
+            audioManejador.setTocando(!audioManejador.getTocando());
+            musicaFondo.dispose();
+            efectoSelec.dispose();
+            juego.setScreen(new PantallaMenu(juego));
+        }
     }
 
     @Override
