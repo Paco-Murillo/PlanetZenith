@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -50,6 +52,12 @@ public abstract class Nivel extends Pantalla {
     private EscenaPausa escenaPausa;
     protected EstadoJuego estadoJuego = EstadoJuego.JUGANDO; //Jugando, PAusado, Poner DEBUG en caso de checar nivel sin actualizaciones
 
+    //AssetManager para la musica y otras cosas
+    private AssetManager assetManager;
+
+    //El manejador de audio para controlar el volumen
+    private AudioManejador audioManejador;
+
     /*
     EstadoJuego.DEBUG les permite moverse rapidamente a traves del mapa para checar cosas,
     No actualiza posiciones de animacion (gravedad)
@@ -83,24 +91,65 @@ public abstract class Nivel extends Pantalla {
     protected Jefe jefe;
     private ShapeRenderer shapeRenderer;
 
+    //Musica y Efectos
+    protected Music musicaNivelUno;
+    protected Music musicaNivelDos;
+    protected Sound efectoLazer;
+
+    //Selector de nivel dice que musica poner mientras esta el nivel
+    private  SeleccionaNivel seleccionaNivel;
+
     /**
      * Clase abstracta que permite representar los fundamentos de cada nivel
      * @param juego Referencia al objeto que creo la pantalla
      */
     public Nivel(Juego juego) {
         this.juego = juego;
+        assetManager = juego.getAssetManager();
+        audioManejador = juego.getAudioManejador();
+        seleccionaNivel = juego.getSeleccionaNivel();
     }
 
     @Override
     public void show(){
         crearProtagonista("Principal/PersonajeNormalFinal.png");
         cargarTexturaBalaEnemigos("Proyectiles/balaenemigo.png");
+        cargarAssets();
+        cargarMusica();
         crearTextoMarcador();
         crearArrBalas();
         crearHUD();
         crearContacto();
         crearShapeRenderer();
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
+    }
+
+    private void cargarMusica() {
+        switch(seleccionaNivel){
+            case NIVELUNO:
+                musicaNivelUno.setLooping(true);
+                musicaNivelUno.setVolume(audioManejador.getVolMusica());
+                musicaNivelUno.play();
+                break;
+            case NIVELDOS:
+                musicaNivelDos.setLooping(true);
+                musicaNivelDos.setVolume(audioManejador.getVolMusica());
+                musicaNivelDos.play();
+            default:
+                break;
+        }
+    }
+
+    private void cargarAssets() {
+        assetManager.load("Audio/Musica/nivelUno.mp3", Music.class);
+        assetManager.load("Audio/Musica/nivelDos.wav", Music.class);
+        assetManager.load("Audio/Efectos/laser.wav", Sound.class);
+
+        assetManager.finishLoading();
+
+        musicaNivelUno = assetManager.get("Audio/Musica/nivelUno.mp3");
+        musicaNivelDos = assetManager.get("Audio/Musica/nivelDos.wav");
+        efectoLazer = assetManager.get("Audio/Efectos/laser.wav");
     }
 
     /*
@@ -189,11 +238,13 @@ public abstract class Nivel extends Pantalla {
                         float xBala = protagonista.sprite.getX() + protagonista.sprite.getWidth() - texturaBala.getWidth();
                         float yBala = protagonista.sprite.getY() + (2 * protagonista.sprite.getHeight() / 3) - texturaBala.getHeight() / 2f;
                         Bala bala = new Bala(texturaBala, xBala, yBala, 500f, 0f, 30f);
+                        efectoLazer.play(audioManejador.getVolEfectos());
                         arrBalas.add(bala);
                     }else if(protagonista.getMovimiento() == Personaje.Movimientos.IZQUIERDA){
                         float xBala = protagonista.sprite.getX();
                         float yBala = protagonista.sprite.getY() + (2 * protagonista.sprite.getHeight() / 3) - texturaBala.getHeight() / 2f;
                         Bala bala = new Bala(texturaBala, xBala, yBala, -500f, 0f, 30f);
+                        efectoLazer.play(audioManejador.getVolEfectos());
                         arrBalas.add(bala);
                     }
                     contadorBalas++;
