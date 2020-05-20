@@ -238,14 +238,14 @@ public abstract class Nivel extends Pantalla {
                         float xBala = protagonista.sprite.getX() + protagonista.sprite.getWidth() - texturaBala.getWidth();
                         float yBala = protagonista.sprite.getY() + (2 * protagonista.sprite.getHeight() / 3) - texturaBala.getHeight() / 2f;
                         Bala bala = new Bala(texturaBala, xBala, yBala, 500f, 0f, 30f);
-                        efectoLazer.play(audioManejador.getVolEfectos());
                         arrBalas.add(bala);
+                        efectoLazer.play(audioManejador.getVolEfectos());
                     }else if(protagonista.getMovimiento() == Personaje.Movimientos.IZQUIERDA){
                         float xBala = protagonista.sprite.getX();
                         float yBala = protagonista.sprite.getY() + (2 * protagonista.sprite.getHeight() / 3) - texturaBala.getHeight() / 2f;
                         Bala bala = new Bala(texturaBala, xBala, yBala, -500f, 0f, 30f);
-                        efectoLazer.play(audioManejador.getVolEfectos());
                         arrBalas.add(bala);
+                        efectoLazer.play(audioManejador.getVolEfectos());
                     }
                     contadorBalas++;
                 }
@@ -581,6 +581,17 @@ public abstract class Nivel extends Pantalla {
         }
     }
 
+    protected void detenerMusica(){
+        if(musicaNivelUno.isPlaying()){
+            musicaNivelUno.stop();
+            musicaNivelUno.dispose();
+        } else if (musicaNivelDos.isPlaying()){
+            musicaNivelDos.stop();
+            musicaNivelUno.dispose();
+        }
+        efectoLazer.dispose();
+    }
+
     //Clase Pausa( Ventana que se muestra cuando el usuario pausa el juego
     private class EscenaPausa extends Stage{
         private EscenaPausa(Viewport vista, SpriteBatch batch){
@@ -604,6 +615,8 @@ public abstract class Nivel extends Pantalla {
                 @Override
                 public void clicked(InputEvent event, float x, float y){
                     super.clicked(event,x,y);
+                    detenerMusica();
+                    audioManejador.setTocando(!audioManejador.getTocando());
                     juego.setScreen(new PantallaSelecNivel(juego));
                 }
             });
@@ -615,6 +628,8 @@ public abstract class Nivel extends Pantalla {
                 @Override
                 public void clicked(InputEvent event, float x, float y){
                     super.clicked(event,x,y);
+                    detenerMusica();
+                    audioManejador.setTocando(!audioManejador.getTocando());
                     juego.setScreen(new PantallaMenu(juego));
                 }
             });

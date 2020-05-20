@@ -145,6 +145,7 @@ public class PantallaJuegoNivelUno extends Nivel {
 
     private void checarFinal() {
         if(jefe.getVida()<=0){
+            detenerMusica();
             juego.setScreen(new PantallaGanar(juego));
         }
     }

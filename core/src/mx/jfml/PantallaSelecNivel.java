@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
 public class PantallaSelecNivel extends Pantalla {
 
@@ -55,8 +56,30 @@ public class PantallaSelecNivel extends Pantalla {
 
     }
 
-    private void crearSeleccion() {
+    private void crearSeleccion() throws GdxRuntimeException {
         cargarAssets();
+
+        try{
+            if(!audioManejador.getTocando()){
+                musicaFondo.setLooping(true);
+                musicaFondo.play();
+            }
+        } catch(GdxRuntimeException e){
+            musicaFondo.dispose();
+
+            assetManager.unload("Audio/Musica/superMetroid.mp3");
+
+            assetManager.load("Audio/Musica/superMetroid.mp3", Music.class);
+
+            assetManager.finishLoading();
+
+            musicaFondo = assetManager.get("Audio/Musica/superMetroid.mp3");
+
+            if(!audioManejador.getTocando()){
+                musicaFondo.setLooping(true);
+                musicaFondo.play();
+            }
+        }
 
         escenaSeleccion = new Stage(vista);
 
@@ -120,6 +143,7 @@ public class PantallaSelecNivel extends Pantalla {
                 }
                 musicaFondo.stop();
                 juego.setSeleccionaNivel(seleccionaNivel.NIVELUNO);
+                audioManejador.setTocando(!audioManejador.getTocando());
                 musicaFondo.dispose();
                 efectoSelec.dispose();
                 juego.setScreen(new PantallaJuegoNivelUno(juego));

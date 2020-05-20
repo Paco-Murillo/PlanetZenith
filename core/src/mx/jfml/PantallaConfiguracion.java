@@ -28,8 +28,6 @@ public class PantallaConfiguracion extends Pantalla {
     //Botones
     private Texture texturaBtnVolUpMusica;
     private Texture texturaBtnVolDownMusica;
-    private Texture texturaBtnVolUpEfectos;
-    private Texture texturaBtnVolDownEfectos;
     private Texture texturaBtnMute;
     private Texture texturaBtnRegresar;
 
@@ -37,7 +35,6 @@ public class PantallaConfiguracion extends Pantalla {
     //Texto Escritos
     private Escritura txtAjustes;
     private Escritura txtVolMusica;
-    private Escritura txtVolEfectos;
 
     //Asset Manager
     private final AssetManager assetManager;
@@ -76,26 +73,15 @@ public class PantallaConfiguracion extends Pantalla {
         //Boton Bajar Volumen Musica
         TextureRegionDrawable trdVolDownMusica = new TextureRegionDrawable(new TextureRegion(texturaBtnVolDownMusica));
         ImageButton btnVolDownMusica = new ImageButton(trdVolDownMusica);
-        btnVolDownMusica.setPosition(ANCHO*.66f + btnVolDownMusica.getWidth()/2 + 30f, ALTO*.66f - btnVolDownMusica.getHeight()/2);
+        btnVolDownMusica.setPosition(4*ANCHO/9 + btnVolDownMusica.getWidth()/2 + 30f, ALTO/2 - btnVolDownMusica.getHeight()/2);
         escenaConfig.addActor(btnVolDownMusica);
 
         //Boton Subir Volumen Musica
         TextureRegionDrawable trdVolUpMusica = new TextureRegionDrawable(new TextureRegion(texturaBtnVolUpMusica));
         ImageButton btnVolUpMusica = new ImageButton(trdVolUpMusica);
-        btnVolUpMusica.setPosition(btnVolDownMusica.getX() + btnVolDownMusica.getWidth(), ALTO*.66f - btnVolUpMusica.getHeight()/2);
+        btnVolUpMusica.setPosition(btnVolDownMusica.getX() + btnVolDownMusica.getWidth() + 50f, ALTO/2 - btnVolUpMusica.getHeight()/2);
         escenaConfig.addActor(btnVolUpMusica);
 
-        //Boton Bajar Volumen Efectos
-        TextureRegionDrawable trdVolDownEfectos = new TextureRegionDrawable(new TextureRegion(texturaBtnVolDownEfectos));
-        ImageButton btnVolDownEfectos = new ImageButton(trdVolDownEfectos);
-        btnVolDownEfectos.setPosition(ANCHO*.66f, ALTO/2 - btnVolDownEfectos.getHeight()/2);
-        escenaConfig.addActor(btnVolDownEfectos);
-
-        //Boton Subir Volumen Efectos
-        TextureRegionDrawable trdVolUpEfectos = new TextureRegionDrawable(new TextureRegion(texturaBtnVolUpEfectos));
-        ImageButton btnVolUpEfectos = new ImageButton(trdVolUpEfectos);
-        btnVolUpEfectos.setPosition(btnVolDownEfectos.getX() + btnVolDownEfectos.getWidth() + 30f, ALTO/2 - btnVolDownEfectos.getHeight()/2);
-        escenaConfig.addActor(btnVolUpEfectos);
 
         //Boton Mutear
         TextureRegionDrawable trdMute = new TextureRegionDrawable(new TextureRegion(texturaBtnMute));
@@ -119,6 +105,9 @@ public class PantallaConfiguracion extends Pantalla {
                     audioManager.setVolMusica(audioManager.getVolMusica() + .25f);
                     musicaFondo.setVolume(audioManager.getVolMusica());
                 }
+                if(audioManager.getVolEfectos() < 1f){
+                    audioManager.setVolEfectos(audioManager.getVolEfectos() + .25f);
+                }
             }
         });
 
@@ -130,30 +119,12 @@ public class PantallaConfiguracion extends Pantalla {
                 if(audioManager.getVolMusica() > 0){
                     audioManager.setVolMusica(audioManager.getVolMusica() - .25f);
                     musicaFondo.setVolume(audioManager.getVolMusica());
+
                 }
-
-            }
-        });
-
-        btnVolUpEfectos.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                efectoBoton.play(audioManager.getVolEfectos());
-                if(audioManager.getVolEfectos() < 1f){
-                    audioManager.setVolEfectos(audioManager.getVolEfectos() + .25f);
-                }
-            }
-        });
-
-        btnVolDownEfectos.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                efectoBoton.play(audioManager.getVolEfectos());
                 if(audioManager.getVolEfectos() > 0){
                     audioManager.setVolEfectos(audioManager.getVolEfectos() - .25f);
                 }
+
             }
         });
 
@@ -191,8 +162,6 @@ public class PantallaConfiguracion extends Pantalla {
         //Textura de botones
         assetManager.load("BotonesConf/btnVolArriba.png", Texture.class);
         assetManager.load("BotonesConf/btnVolAbajo.png", Texture.class);
-        assetManager.load("BotonesConf/btnVolArribaEf.png", Texture.class);
-        assetManager.load("BotonesConf/btnVolAbajoEf.png", Texture.class);
         assetManager.load("BotonesConf/btnMute.png", Texture.class);
         assetManager.load("BotonesConf/btnRegresar.png", Texture.class);
 
@@ -201,8 +170,6 @@ public class PantallaConfiguracion extends Pantalla {
 
         texturaBtnVolUpMusica = assetManager.get("BotonesConf/btnVolArriba.png");
         texturaBtnVolDownMusica = assetManager.get("BotonesConf/btnVolAbajo.png");
-        texturaBtnVolUpEfectos = assetManager.get("BotonesConf/btnVolArribaEf.png");
-        texturaBtnVolDownEfectos = assetManager.get("BotonesConf/btnVolAbajoEf.png");
         texturaBtnMute = assetManager.get("BotonesConf/btnMute.png");
         texturaBtnRegresar = assetManager.get("BotonesConf/btnRegresar.png");
 
@@ -214,10 +181,8 @@ public class PantallaConfiguracion extends Pantalla {
 
         txtAjustes = new Escritura(ANCHO/2, ALTO - ALTO*.1f);
         txtAjustes.setEnunciado("Ajustes");
-        txtVolMusica = new Escritura(ANCHO/3, ALTO*.66f);
-        txtVolMusica.setEnunciado("Volumen Musica");
-        txtVolEfectos = new Escritura(ANCHO/3, ALTO/2);
-        txtVolEfectos.setEnunciado("Volumen Efectos");
+        txtVolMusica = new Escritura(ANCHO/3, ALTO/2);
+        txtVolMusica.setEnunciado("Volumen: ");
     }
 
     @Override
@@ -231,7 +196,6 @@ public class PantallaConfiguracion extends Pantalla {
 
         //Textos
         txtAjustes.render(batch);
-        txtVolEfectos.render(batch);
         txtVolMusica.render(batch);
 
 
@@ -265,10 +229,7 @@ public class PantallaConfiguracion extends Pantalla {
         texturaFondo.dispose();
         texturaBtnRegresar.dispose();
         texturaBtnMute.dispose();
-        texturaBtnVolDownEfectos.dispose();
-        texturaBtnVolDownMusica.dispose();
         texturaBtnVolUpMusica.dispose();
-        texturaBtnVolUpEfectos.dispose();
         musicaFondo.dispose();
         efectoBoton.dispose();
         escenaConfig.dispose();
@@ -276,8 +237,6 @@ public class PantallaConfiguracion extends Pantalla {
         //Ahora el asset manager libera los recursos
         assetManager.unload("BotonesConf/btnVolArriba.png");
         assetManager.unload("BotonesConf/btnVolAbajo.png");
-        assetManager.unload("BotonesConf/btnVolArribaEf.png");
-        assetManager.unload("BotonesConf/btnVolAbajoEf.png");
         assetManager.unload("BotonesConf/btnMute.png");
         assetManager.unload("BotonesConf/btnRegresar.png");
         assetManager.unload("Audio/Musica/superMetroid.mp3");
