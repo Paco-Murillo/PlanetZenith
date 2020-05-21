@@ -48,7 +48,7 @@ public class Enemigo extends Personaje {
         }
         if (tipoEnemigo==TipoEnemigo.JETPACK){
             PolygonShape rectangulo = new PolygonShape();
-            rectangulo.setAsBox(4, 20, new Vector2(0, -textura.getHeight() / 2f), 0);
+            rectangulo.setAsBox(4, 12, new Vector2(0, -textura.getHeight() / 2f), 0);
             FixtureDef fixtureDef = new FixtureDef();
             fixtureDef.shape = rectangulo;
             fixtureDef.isSensor = true;

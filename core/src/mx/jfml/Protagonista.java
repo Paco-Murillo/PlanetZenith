@@ -27,7 +27,7 @@ public class Protagonista extends Personaje {
 
     private void crearSensorPie(Texture textura){
         PolygonShape rectangulo = new PolygonShape();
-        rectangulo.setAsBox(8,5, new Vector2(0, -textura.getHeight()/2f),0);
+        rectangulo.setAsBox(10,5, new Vector2(0, -textura.getHeight()/2f),0);
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape=rectangulo;
         fixtureDef.isSensor=true;

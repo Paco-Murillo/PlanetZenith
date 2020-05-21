@@ -28,8 +28,6 @@ public class PantallaJuegoNivelUno extends Nivel {
 
     private boolean dispararJefe;
 
-    //public Array<Boolean> arrayEstadoEnemigoSuelo;
-
     /**
      * Clase representa el primer nivel
      * @param juego Referencia al objeto que creo la pantalla
@@ -90,15 +88,6 @@ public class PantallaJuegoNivelUno extends Nivel {
         randMov = 0;
     }
 
-    /*
-    private void creararrayEstadoEnemigoSuelo() {
-        arrayEstadoEnemigoSuelo = new Array<>(arrEnemigos.size);
-        for(int i=0; i<arrayEstadoEnemigoSuelo.size;i++) {
-            arrayEstadoEnemigoSuelo.add(false);
-        }
-    }
-     */
-
     @Override
     protected void actualizarCamara() {
         if(protagonista.sprite.getX() > ANCHO/2 && protagonista.sprite.getX() < ANCHO_MAPA-ANCHO/2 && !batallaJefeActiva) { // 6400 = Ancho en
@@ -139,16 +128,11 @@ public class PantallaJuegoNivelUno extends Nivel {
             moverBalasJefe(delta);
             checarColisiones(arrBalas, jefe);
             checarColisiones(balasJefe, protagonista);
-            checarFinal();
+            checarFinal(jefe);
         }
     }
 
-    private void checarFinal() {
-        if(jefe.getVida()<=0){
-            detenerMusica();
-            juego.setScreen(new PantallaGanar(juego));
-        }
-    }
+
 
     private void checarColisiones(Array<Bala> array, Personaje personaje) {
         for(int indexBalas = 0; indexBalas < array.size; indexBalas++) {

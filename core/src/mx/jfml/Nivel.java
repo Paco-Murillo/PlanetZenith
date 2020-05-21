@@ -157,7 +157,7 @@ public abstract class Nivel extends Pantalla {
      */
 
     protected void crearGravedad(){
-        gravedad = new Vector2(0,-98);
+        gravedad = new Vector2(0,-120);
     }
 
     /**
@@ -416,6 +416,17 @@ public abstract class Nivel extends Pantalla {
      * Hace una actualizacion a aquello que se debe mover el la pantalla
      * @param delta Tiempo que a pasado desde la ejecucion anterior
      */
+
+    protected void checarFinal(Jefe jefe) {
+        if(jefe.getVida()<=0){
+            detenerMusica();
+            juego.setScreen(new PantallaGanar(juego));
+        }
+    }
+
+
+
+
     private void actualizar(float delta) {
         //Actualizaciones
         actualizarCamara();
