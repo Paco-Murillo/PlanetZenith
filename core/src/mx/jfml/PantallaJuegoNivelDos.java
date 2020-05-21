@@ -16,6 +16,8 @@ public class PantallaJuegoNivelDos extends Nivel {
 
     private static final int ANCHO_MAPA = 6400;
     private static final int ALTO_MAPA = 576;
+    private int DYJefe = 2;
+    private int DXJefe = 2;
 
     private boolean batallaJefeActiva;
     private boolean iniciarBatallaJefe;
@@ -23,10 +25,6 @@ public class PantallaJuegoNivelDos extends Nivel {
     private int balasCounterJefe;
     private Array<Bala> balasJefe;
     private float timeAcumDisparoJefe;
-    private float timeAcumMovJefe;
-    private int randMov;
-
-    private boolean dispararJefe;
 
     /**
      * Clase abstracta que permite representar los fundamentos de cada nivel
@@ -86,8 +84,6 @@ public class PantallaJuegoNivelDos extends Nivel {
         batallaJefeActiva = false;
         balasJefe = new Array<>();
         timeAcumDisparoJefe = 0;
-        timeAcumMovJefe = 0;
-        randMov = 0;
     }
 
 
@@ -127,8 +123,8 @@ public class PantallaJuegoNivelDos extends Nivel {
         if (iniciarBatallaJefe) batallaJefe();
         if (batallaJefeActiva && estadoJuego == EstadoJuego.JUGANDO) {
             moverJefe(delta);
-            //dispararJefe(delta);
-            //moverBalasJefe(delta);
+            dispararJefe(delta);
+            moverBalasJefe(delta);
             checarColisiones(arrBalas, jefe);
             checarColisiones(balasJefe, protagonista);
             checarFinal(jefe);
@@ -140,17 +136,59 @@ public class PantallaJuegoNivelDos extends Nivel {
             jefe.setMovimiento(Personaje.Movimientos.IZQUIERDA);
         else jefe.setMovimiento(Personaje.Movimientos.DERECHA);
         if (jefe.movimiento == Personaje.Movimientos.IZQUIERDA) {
-            jefe.sprite.setFlip(false, false);
-        } else if (jefe.movimiento == Personaje.Movimientos.DERECHA) {
             jefe.sprite.setFlip(true, false);
+        } else if (jefe.movimiento == Personaje.Movimientos.DERECHA) {
+            jefe.sprite.setFlip(false, false);
         }
-        randMov = MathUtils.random(3,10);
+        //Prueba Limites Derecha-Izquierda
+        if (jefe.sprite.getX()>=ANCHO_MAPA-jefe.sprite.getWidth() || jefe.sprite.getX()<=5248){
+            DXJefe = -DXJefe;
+        }
+        //Prueba limites Arriba-Abajo
+        if (jefe.sprite.getY()>=ALTO_MAPA-jefe.sprite.getHeight() || jefe.sprite.getY()<=50 ){
+            DYJefe= -DYJefe;
+        }
+        jefe.sprite.setPosition(jefe.sprite.getX()+DXJefe,jefe.sprite.getY()+DYJefe);
     }
+    private void dispararJefe(float delta){
+        timeAcumDisparoJefe += delta;
+        if (timeAcumDisparoJefe > 2) {
+            if (jefe.movimiento == Personaje.Movimientos.IZQUIERDA) {
+                Bala bala = new Bala(texturaBalaEnemigos, jefe.sprite.getX(), jefe.sprite.getY() + (2 * jefe.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f,
+              -300f, 0f, 100f);
+                balasJefe.add(bala);
+            }      else if (jefe.movimiento == Personaje.Movimientos.DERECHA) {
+                Bala bala = new Bala(texturaBalaEnemigos, jefe.sprite.getX() + jefe.sprite.getWidth() - texturaBalaEnemigos.getWidth(),
+                        jefe.sprite.getY() + (2 * jefe.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f, 300f, 0f, 100f);
+                balasJefe.add(bala);
+                    }
+        timeAcumDisparoJefe = 0;
+        }
+
+    }
+
+
+
+
+
+
+
+    private void moverBalasJefe(float delta) {
+        for (int indexBalas = 0; indexBalas < balasJefe.size; indexBalas++) {
+            if (balasJefe.get(indexBalas) == null) continue;
+            Bala bala = balasJefe.get(indexBalas);
+            bala.moverX(delta);
+            if (bala.sprite.getX() > camara.position.x + ANCHO / 2 || bala.sprite.getX() < camara.position.x - ANCHO / 2) {
+                balasJefe.removeIndex(indexBalas);
+            }
+        }
+    }
+
 
     private void checarColisiones(Array<Bala> array, Personaje personaje) {
         for(int indexBalas = 0; indexBalas < array.size; indexBalas++) {
             if (array.get(indexBalas) == null) continue;
-            Bala bala = array.get(indexBalas);
+                Bala bala = array.get(indexBalas);
             Rectangle personajeRect = personaje.sprite.getBoundingRectangle();
             if (personajeRect.overlaps(bala.sprite.getBoundingRectangle())) {
                 personaje.setVida(bala.getDanio());
