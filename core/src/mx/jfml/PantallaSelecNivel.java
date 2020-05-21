@@ -137,7 +137,7 @@ public class PantallaSelecNivel extends Pantalla {
                 super.clicked(event, x, y);
                 efectoSelec.play(audioManejador.getVolEfectos());
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(1500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -155,7 +155,17 @@ public class PantallaSelecNivel extends Pantalla {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 efectoSelec.play(audioManejador.getVolEfectos());
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                musicaFondo.stop();
                 juego.setSeleccionaNivel(seleccionaNivel.NIVELDOS);
+                audioManejador.setTocando(!audioManejador.getTocando());
+                musicaFondo.dispose();
+                efectoSelec.dispose();
+                juego.setScreen(new PantallaJuegoNivelDos(juego));
             }
         });
 
