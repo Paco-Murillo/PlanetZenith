@@ -39,7 +39,6 @@ public class PantallaJuegoNivelUno extends Nivel {
         crearGravedad();
         crearMundo(gravedad);
         crearEnemigos();
-        //creararrayEstadoEnemigoSuelo();
         super.show();
         cargaMapa("MapaJuego.tmx");
         cargarTexturaBala("Proyectiles/bala1.png");
