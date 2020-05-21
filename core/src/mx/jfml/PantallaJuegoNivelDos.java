@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -41,7 +42,6 @@ public class PantallaJuegoNivelDos extends Nivel {
         crearGravedad();
         crearMundo(gravedad);
         crearEnemigos();
-        //creararrayEstadoEnemigoSuelo();
         super.show();
         cargaMapa("NivelDos.tmx");
         cargarTexturaBala("Proyectiles/bala1.png");
@@ -71,8 +71,9 @@ public class PantallaJuegoNivelDos extends Nivel {
         arrEnemigos.add(enemigo);
         enemigo = new Enemigo(enemigoTexture, 4224, 224, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 9
         arrEnemigos.add(enemigo);
+
         //Enemigo 9
-        enemigo = new Enemigo(enemigoTexture, 4928, 32, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 10
+        enemigo = new Enemigo(enemigoTexture, 4928, 32, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.JEFE); //Enemigo 10
         arrEnemigos.add(enemigo);
 
         //Cambiar Sprite Jefe
@@ -125,13 +126,25 @@ public class PantallaJuegoNivelDos extends Nivel {
         checarInicioBatallaJefe();
         if (iniciarBatallaJefe) batallaJefe();
         if (batallaJefeActiva && estadoJuego == EstadoJuego.JUGANDO) {
-            //moverJefe(delta);
+            moverJefe(delta);
             //dispararJefe(delta);
             //moverBalasJefe(delta);
             checarColisiones(arrBalas, jefe);
             checarColisiones(balasJefe, protagonista);
             checarFinal(jefe);
         }
+    }
+
+    private void moverJefe(float delta) {
+        if (protagonista.sprite.getX() <= jefe.sprite.getX())
+            jefe.setMovimiento(Personaje.Movimientos.IZQUIERDA);
+        else jefe.setMovimiento(Personaje.Movimientos.DERECHA);
+        if (jefe.movimiento == Personaje.Movimientos.IZQUIERDA) {
+            jefe.sprite.setFlip(false, false);
+        } else if (jefe.movimiento == Personaje.Movimientos.DERECHA) {
+            jefe.sprite.setFlip(true, false);
+        }
+        randMov = MathUtils.random(3,10);
     }
 
     private void checarColisiones(Array<Bala> array, Personaje personaje) {
