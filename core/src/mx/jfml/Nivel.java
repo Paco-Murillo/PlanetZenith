@@ -82,7 +82,7 @@ public abstract class Nivel extends Pantalla {
 
     //Enemigos
     protected Array<Enemigo> arrEnemigos;
-    private Array<Bala> arrBalasEnemigos;
+    protected Array<Bala> arrBalasEnemigos;
     protected Texture texturaBalaEnemigos;
     private float timeAcumForEnemyShots;
     private Random random;
@@ -157,7 +157,7 @@ public abstract class Nivel extends Pantalla {
      */
 
     protected void crearGravedad(){
-        gravedad = new Vector2(0,-120);
+        gravedad = new Vector2(0,-125);
     }
 
     /**
