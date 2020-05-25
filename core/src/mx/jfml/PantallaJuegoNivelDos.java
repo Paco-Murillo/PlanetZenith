@@ -16,14 +16,12 @@ public class PantallaJuegoNivelDos extends Nivel {
 
     private static final int ANCHO_MAPA = 6400;
     private static final int ALTO_MAPA = 576;
+
     private int DYJefe = 2;
     private int DXJefe = 2;
-
     private float murcielagoTimer=0;
     private boolean batallaJefeActiva;
     private boolean iniciarBatallaJefe;
-    private int balasJefeMax;
-    private int balasCounterJefe;
     private Array<Bala> balasJefe;
     private float timeAcumDisparoJefe;
 
@@ -88,7 +86,6 @@ public class PantallaJuegoNivelDos extends Nivel {
         balasJefe = new Array<>();
         timeAcumDisparoJefe = 0;
     }
-
 
     @Override
     protected void actualizarCamara() {
@@ -171,6 +168,7 @@ public class PantallaJuegoNivelDos extends Nivel {
             timeAcumDisparoJefe = 0;
         }
     }
+
     private void moverBalasJefe(float delta) {
         for (int indexBalas = 0; indexBalas < balasJefe.size; indexBalas++) {
             if (balasJefe.get(indexBalas) == null) continue;
@@ -181,7 +179,6 @@ public class PantallaJuegoNivelDos extends Nivel {
             }
         }
     }
-
 
     private void checarColisiones(Array<Bala> array, Personaje personaje) {
         for(int indexBalas = 0; indexBalas < array.size; indexBalas++) {
@@ -241,7 +238,6 @@ public class PantallaJuegoNivelDos extends Nivel {
             }
         }
         murcielagoTimer=murcielagoTimer+delta;
-
     }
 
     @Override
