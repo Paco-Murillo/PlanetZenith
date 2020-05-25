@@ -16,17 +16,16 @@ public class PantallaJuegoNivelDos extends Nivel {
 
     private static final int ANCHO_MAPA = 6400;
     private static final int ALTO_MAPA = 576;
+    private int DYJefe = 2;
+    private int DXJefe = 2;
 
+    private float murcielagoTimer=0;
     private boolean batallaJefeActiva;
     private boolean iniciarBatallaJefe;
     private int balasJefeMax;
     private int balasCounterJefe;
     private Array<Bala> balasJefe;
     private float timeAcumDisparoJefe;
-    private float timeAcumMovJefe;
-    private int randMov;
-
-    private boolean dispararJefe;
 
     /**
      * Clase abstracta que permite representar los fundamentos de cada nivel
@@ -52,6 +51,8 @@ public class PantallaJuegoNivelDos extends Nivel {
     private void crearEnemigos(){
         arrEnemigos = new Array<>(10);
         Texture enemigoTexture = new Texture("Enemigos/EnemigoGeneralAzul.png");
+        Texture subJefeTexture = new Texture("Enemigos/MiniJedeNivelDos.png");
+
         Enemigo enemigo = new Enemigo(enemigoTexture, 640, 256, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enmigo 1
         //enemigo.direccion= Personaje.Movimientos.IZQUIERDA;
         arrEnemigos.add(enemigo);
@@ -73,7 +74,7 @@ public class PantallaJuegoNivelDos extends Nivel {
         arrEnemigos.add(enemigo);
 
         //Enemigo 9
-        enemigo = new Enemigo(enemigoTexture, 4928, 32, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.JEFE); //Enemigo 10
+        enemigo = new Enemigo(subJefeTexture, 5100, 62, 1f, 30f, 200, mundo, Enemigo.TipoEnemigo.JETPACK); //Enemigo 10
         arrEnemigos.add(enemigo);
 
         //Cambiar Sprite Jefe
@@ -86,8 +87,6 @@ public class PantallaJuegoNivelDos extends Nivel {
         batallaJefeActiva = false;
         balasJefe = new Array<>();
         timeAcumDisparoJefe = 0;
-        timeAcumMovJefe = 0;
-        randMov = 0;
     }
 
 
@@ -115,8 +114,10 @@ public class PantallaJuegoNivelDos extends Nivel {
     @Override
     public void render(float delta){
         super.render(delta);
-
+        System.out.println(murcielagoTimer);
         batch.setProjectionMatrix(camara.combined);
+
+        dispararMurcielago(delta);
         batch.begin();
         for (Bala bala : balasJefe){
             bala.render(batch);
@@ -127,8 +128,8 @@ public class PantallaJuegoNivelDos extends Nivel {
         if (iniciarBatallaJefe) batallaJefe();
         if (batallaJefeActiva && estadoJuego == EstadoJuego.JUGANDO) {
             moverJefe(delta);
-            //dispararJefe(delta);
-            //moverBalasJefe(delta);
+            dispararJefe(delta);
+            moverBalasJefe(delta);
             checarColisiones(arrBalas, jefe);
             checarColisiones(balasJefe, protagonista);
             checarFinal(jefe);
@@ -140,17 +141,52 @@ public class PantallaJuegoNivelDos extends Nivel {
             jefe.setMovimiento(Personaje.Movimientos.IZQUIERDA);
         else jefe.setMovimiento(Personaje.Movimientos.DERECHA);
         if (jefe.movimiento == Personaje.Movimientos.IZQUIERDA) {
-            jefe.sprite.setFlip(false, false);
-        } else if (jefe.movimiento == Personaje.Movimientos.DERECHA) {
             jefe.sprite.setFlip(true, false);
+        } else if (jefe.movimiento == Personaje.Movimientos.DERECHA) {
+            jefe.sprite.setFlip(false, false);
         }
-        randMov = MathUtils.random(3,10);
+        //Prueba Limites Derecha-Izquierda
+        if (jefe.sprite.getX()>=ANCHO_MAPA-jefe.sprite.getWidth() || jefe.sprite.getX()<=5248){
+            DXJefe = -DXJefe;
+        }
+        //Prueba limites Arriba-Abajo
+        if (jefe.sprite.getY()>=ALTO_MAPA-jefe.sprite.getHeight() || jefe.sprite.getY()<=50 ){
+            DYJefe= -DYJefe;
+        }
+        jefe.sprite.setPosition(jefe.sprite.getX()+DXJefe,jefe.sprite.getY()+DYJefe);
     }
+
+    private void dispararJefe(float delta){
+        timeAcumDisparoJefe += delta;
+        if (timeAcumDisparoJefe > 2) {
+            if (jefe.movimiento == Personaje.Movimientos.IZQUIERDA) {
+                Bala bala = new Bala(texturaBalaEnemigos, jefe.sprite.getX(), jefe.sprite.getY() + (2 * jefe.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f,
+                        -300f, 0f, 50f);
+                balasJefe.add(bala);
+            } else if (jefe.movimiento == Personaje.Movimientos.DERECHA) {
+                Bala bala = new Bala(texturaBalaEnemigos, jefe.sprite.getX() + jefe.sprite.getWidth() - texturaBalaEnemigos.getWidth(),
+                        jefe.sprite.getY() + (2 * jefe.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f, 300f, 0f, 100f);
+                balasJefe.add(bala);
+            }
+            timeAcumDisparoJefe = 0;
+        }
+    }
+    private void moverBalasJefe(float delta) {
+        for (int indexBalas = 0; indexBalas < balasJefe.size; indexBalas++) {
+            if (balasJefe.get(indexBalas) == null) continue;
+            Bala bala = balasJefe.get(indexBalas);
+            bala.moverX(delta);
+            if (bala.sprite.getX() > camara.position.x + ANCHO / 2 || bala.sprite.getX() < camara.position.x - ANCHO / 2) {
+                balasJefe.removeIndex(indexBalas);
+            }
+        }
+    }
+
 
     private void checarColisiones(Array<Bala> array, Personaje personaje) {
         for(int indexBalas = 0; indexBalas < array.size; indexBalas++) {
             if (array.get(indexBalas) == null) continue;
-            Bala bala = array.get(indexBalas);
+                Bala bala = array.get(indexBalas);
             Rectangle personajeRect = personaje.sprite.getBoundingRectangle();
             if (personajeRect.overlaps(bala.sprite.getBoundingRectangle())) {
                 personaje.setVida(bala.getDanio());
@@ -187,6 +223,26 @@ public class PantallaJuegoNivelDos extends Nivel {
         }
     }
 
+    private void dispararMurcielago(float delta) {
+        for (Enemigo enemy : arrEnemigos) {
+            if (enemy.tipoEnemigo.equals(Enemigo.TipoEnemigo.JETPACK) && murcielagoTimer>3
+                    && enemy.sprite.getX()-protagonista.sprite.getX()<500 ) {
+                Bala bala;
+                if(enemy.movimiento.equals(Enemigo.Movimientos.DERECHA)) {
+                    bala = new Bala(new Texture("Proyectiles/murcielago.png"), enemy.sprite.getX(),
+                            enemy.sprite.getY() + (2 * enemy.sprite.getHeight() / 3), 300f, 0f, 35f);
+                }
+                else {
+                     bala = new Bala(new Texture("Proyectiles/murcielago.png"), enemy.sprite.getX(),
+                        enemy.sprite.getY() + (2 * enemy.sprite.getHeight() / 3), -300f, 0f, 35f);
+                }
+                arrBalasEnemigos.add(bala);
+                murcielagoTimer=0;
+            }
+        }
+        murcielagoTimer=murcielagoTimer+delta;
+
+    }
 
     @Override
     public void pause() {
@@ -201,5 +257,6 @@ public class PantallaJuegoNivelDos extends Nivel {
     @Override
     public void dispose() {
         texturaBala.dispose();
+        texturaBalaEnemigos.dispose();
     }
 }

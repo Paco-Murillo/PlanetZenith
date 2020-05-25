@@ -49,7 +49,7 @@ public class PantallaJuegoNivelUno extends Nivel {
     private void crearEnemigos(){
         arrEnemigos = new Array<>(10);
         Texture enemigoTexture = new Texture("Enemigos/EnemigoGeneralVerde.png");
-        Enemigo enemigo = new Enemigo(enemigoTexture, 792, 150, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.JETPACK); //Enmigo 1
+        Enemigo enemigo = new Enemigo(enemigoTexture, 792, 150, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enmigo 1
         //enemigo.direccion= Personaje.Movimientos.IZQUIERDA;
         arrEnemigos.add(enemigo);
         enemigo = new Enemigo(enemigoTexture, 900, 416, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 2

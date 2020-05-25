@@ -27,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -82,7 +83,7 @@ public abstract class Nivel extends Pantalla {
 
     //Enemigos
     protected Array<Enemigo> arrEnemigos;
-    private Array<Bala> arrBalasEnemigos;
+    protected Array<Bala> arrBalasEnemigos;
     protected Texture texturaBalaEnemigos;
     private float timeAcumForEnemyShots;
     private Random random;
@@ -124,20 +125,50 @@ public abstract class Nivel extends Pantalla {
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
     }
 
-    private void cargarMusica() {
+    private void cargarMusica() throws GdxRuntimeException {
         switch(seleccionaNivel){
             case NIVELUNO:
-                musicaNivelUno.setLooping(true);
-                musicaNivelUno.setVolume(audioManejador.getVolMusica());
-                musicaNivelUno.play();
+                try{
+                    musicaNivelUno.setLooping(true);
+                    musicaNivelUno.setVolume(audioManejador.getVolMusica());
+                    musicaNivelUno.play();
+                } catch (GdxRuntimeException e){
+                    recargarMusisca(musicaNivelUno, efectoLazer,"Audio/Musica/nivelUno.mp3","Audio/Efectos/laser.wav");
+
+                    musicaNivelUno.setLooping(true);
+                    musicaNivelUno.setVolume(audioManejador.getVolMusica());
+                    musicaNivelUno.play();
+                }
                 break;
             case NIVELDOS:
-                musicaNivelDos.setLooping(true);
-                musicaNivelDos.setVolume(audioManejador.getVolMusica());
-                musicaNivelDos.play();
+                try{
+                    musicaNivelDos.setLooping(true);
+                    musicaNivelDos.setVolume(audioManejador.getVolMusica());
+                    musicaNivelDos.play();
+                } catch (GdxRuntimeException e){
+                    recargarMusisca(musicaNivelDos, efectoLazer, "Audio/Musica/nivelDos.wav", "Audio/Efectos/laser.wav");
+
+                    musicaNivelDos.setLooping(true);
+                    musicaNivelDos.setVolume(audioManejador.getVolMusica());
+                    musicaNivelDos.play();
+                }
             default:
                 break;
         }
+    }
+    private void recargarMusisca(Music musica, Sound sonido, String dirMusica, String dirSonido){
+        musica.dispose();
+        sonido.dispose();
+        assetManager.unload(dirMusica);
+        assetManager.unload(dirSonido);
+
+        assetManager.load(dirMusica, Music.class);
+        assetManager.load(dirSonido, Sound.class);
+
+        assetManager.finishLoading();
+
+        musica = assetManager.get(dirMusica);
+        sonido = assetManager.get(dirSonido);
     }
 
     private void cargarAssets() {
@@ -157,7 +188,7 @@ public abstract class Nivel extends Pantalla {
      */
 
     protected void crearGravedad(){
-        gravedad = new Vector2(0,-120);
+        gravedad = new Vector2(0,-125);
     }
 
     /**
@@ -369,6 +400,8 @@ public abstract class Nivel extends Pantalla {
 
         if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
             estadoJuego = EstadoJuego.PAUSADO;
+            escenaPausa = new EscenaPausa(viewportHUD,batch);
+            Gdx.input.setInputProcessor(escenaPausa);
         }
 
         if(estadoJuego== EstadoJuego.JUGANDO){
@@ -412,10 +445,7 @@ public abstract class Nivel extends Pantalla {
         shapeRenderer.end();
     }
 
-    /**
-     * Hace una actualizacion a aquello que se debe mover el la pantalla
-     * @param delta Tiempo que a pasado desde la ejecucion anterior
-     */
+
 
     protected void checarFinal(Jefe jefe) {
         if(jefe.getVida()<=0){
@@ -424,8 +454,10 @@ public abstract class Nivel extends Pantalla {
         }
     }
 
-
-
+    /**
+     * Hace una actualizacion a aquello que se debe mover el la pantalla
+     * @param delta Tiempo que a pasado desde la ejecucion anterior
+     */
 
     private void actualizar(float delta) {
         //Actualizaciones

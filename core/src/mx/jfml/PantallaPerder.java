@@ -98,10 +98,9 @@ public class PantallaPerder extends Pantalla {
                         juego.setScreen(new PantallaJuegoNivelUno(juego));
                         break;
                     case NIVELDOS:
+                        juego.setScreen(new PantallaJuegoNivelDos(juego));
                         break;
                     case NIVELTRES:
-                        break;
-                    case NIVELCUATRO:
                         break;
                     default:
                         break;

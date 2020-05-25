@@ -53,8 +53,15 @@ public class Enemigo extends Personaje {
             fixtureDef.shape = rectangulo;
             fixtureDef.isSensor = true;
             body.createFixture(fixtureDef).setUserData("sensorJetPack");
-
         }
+        //if (tipoEnemigo==TipoEnemigo.SUBJEFE2){
+        //    PolygonShape rectangulo = new PolygonShape();
+        //    rectangulo.setAsBox(4, 12, new Vector2(0, -textura.getHeight() / 2f), 0);
+        //    FixtureDef fixtureDef = new FixtureDef();
+        //    fixtureDef.shape = rectangulo;
+        //    fixtureDef.isSensor = true;
+        //    body.createFixture(fixtureDef).setUserData("sensorJetPack");
+        //}
     }
 
     public int getTiempoDisparos() {
@@ -76,6 +83,7 @@ public class Enemigo extends Personaje {
     protected enum TipoEnemigo{
         CAMINANTE,
         JETPACK,
+        SUBJEFE2,
         JEFE
     }
     
