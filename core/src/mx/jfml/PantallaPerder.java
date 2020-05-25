@@ -102,8 +102,6 @@ public class PantallaPerder extends Pantalla {
                         break;
                     case NIVELTRES:
                         break;
-                    case NIVELCUATRO:
-                        break;
                     default:
                         break;
                 }
