@@ -132,12 +132,18 @@ public abstract class Nivel extends Pantalla {
                     musicaNivelUno.setLooping(true);
                     musicaNivelUno.setVolume(audioManejador.getVolMusica());
                     musicaNivelUno.play();
+
+                    efectoLazer.stop();
+                    efectoLazer.resume();
                 } catch (GdxRuntimeException e){
-                    recargarMusisca(musicaNivelUno, efectoLazer,"Audio/Musica/nivelUno.mp3","Audio/Efectos/laser.wav");
+                    recargarMusisca(musicaNivelUno, "Audio/Musica/nivelUno.mp3");
 
                     musicaNivelUno.setLooping(true);
                     musicaNivelUno.setVolume(audioManejador.getVolMusica());
                     musicaNivelUno.play();
+
+                    efectoLazer.stop();
+                    efectoLazer.resume();
                 }
                 break;
             case NIVELDOS:
@@ -145,30 +151,32 @@ public abstract class Nivel extends Pantalla {
                     musicaNivelDos.setLooping(true);
                     musicaNivelDos.setVolume(audioManejador.getVolMusica());
                     musicaNivelDos.play();
+
+                    efectoLazer.stop();
+                    efectoLazer.resume();
                 } catch (GdxRuntimeException e){
-                    recargarMusisca(musicaNivelDos, efectoLazer, "Audio/Musica/nivelDos.wav", "Audio/Efectos/laser.wav");
+                    recargarMusisca(musicaNivelDos, "Audio/Musica/nivelDos.wav");
 
                     musicaNivelDos.setLooping(true);
                     musicaNivelDos.setVolume(audioManejador.getVolMusica());
                     musicaNivelDos.play();
+
+                    efectoLazer.stop();
+                    efectoLazer.resume();
                 }
             default:
                 break;
         }
     }
-    private void recargarMusisca(Music musica, Sound sonido, String dirMusica, String dirSonido){
+    private void recargarMusisca(Music musica, String dirMusica){
         musica.dispose();
-        sonido.dispose();
         assetManager.unload(dirMusica);
-        assetManager.unload(dirSonido);
 
         assetManager.load(dirMusica, Music.class);
-        assetManager.load(dirSonido, Sound.class);
 
         assetManager.finishLoading();
 
         musica = assetManager.get(dirMusica);
-        sonido = assetManager.get(dirSonido);
     }
 
     private void cargarAssets() {
