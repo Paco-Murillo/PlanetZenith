@@ -21,7 +21,7 @@ public class Juego extends Game {
 	 * @value seleccionaNivel Permite saber que nivel cargar
 	 */
 	private final AssetManager assetManager = new AssetManager();
-	private AudioManejador audioManejador = new AudioManejador(false, .75f,.75f);
+	private AudioManejador audioManejador = new AudioManejador(false, .50f,.50f);
 	private SeleccionaNivel seleccionaNivel;
 
 	@Override

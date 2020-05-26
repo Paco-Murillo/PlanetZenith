@@ -5,21 +5,17 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Array;
 
-public class PantallaJuegoNivelDos extends Nivel {
+public class PantallaJuegoNivelTres extends Nivel {
 
     private static final int ANCHO_MAPA = 6400;
     private static final int ALTO_MAPA = 576;
 
-    private int DYJefe = 2;
-    private int DXJefe = 2;
-    private float murcielagoTimer=0;
     private boolean batallaJefeActiva;
     private boolean iniciarBatallaJefe;
     private Array<Bala> balasJefe;
@@ -30,7 +26,7 @@ public class PantallaJuegoNivelDos extends Nivel {
      *
      * @param juego Referencia al objeto que creo la pantalla
      */
-    public PantallaJuegoNivelDos(Juego juego) {
+    public PantallaJuegoNivelTres(Juego juego) {
         super(juego);
     }
 
@@ -111,10 +107,8 @@ public class PantallaJuegoNivelDos extends Nivel {
     @Override
     public void render(float delta){
         super.render(delta);
-        System.out.println(murcielagoTimer);
         batch.setProjectionMatrix(camara.combined);
 
-        dispararMurcielago(delta);
         batch.begin();
         for (Bala bala : balasJefe){
             bala.render(batch);
@@ -134,23 +128,7 @@ public class PantallaJuegoNivelDos extends Nivel {
     }
 
     private void moverJefe(float delta) {
-        if (protagonista.sprite.getX() <= jefe.sprite.getX())
-            jefe.setMovimiento(Personaje.Movimientos.IZQUIERDA);
-        else jefe.setMovimiento(Personaje.Movimientos.DERECHA);
-        if (jefe.movimiento == Personaje.Movimientos.IZQUIERDA) {
-            jefe.sprite.setFlip(true, false);
-        } else if (jefe.movimiento == Personaje.Movimientos.DERECHA) {
-            jefe.sprite.setFlip(false, false);
-        }
-        //Prueba Limites Derecha-Izquierda
-        if (jefe.sprite.getX()>=ANCHO_MAPA-jefe.sprite.getWidth() || jefe.sprite.getX()<=5248){
-            DXJefe = -DXJefe;
-        }
-        //Prueba limites Arriba-Abajo
-        if (jefe.sprite.getY()>=ALTO_MAPA-jefe.sprite.getHeight() || jefe.sprite.getY()<=50 ){
-            DYJefe= -DYJefe;
-        }
-        jefe.sprite.setPosition(jefe.sprite.getX()+DXJefe,jefe.sprite.getY()+DYJefe);
+
     }
 
     private void dispararJefe(float delta){
@@ -168,7 +146,6 @@ public class PantallaJuegoNivelDos extends Nivel {
             timeAcumDisparoJefe = 0;
         }
     }
-
     private void moverBalasJefe(float delta) {
         for (int indexBalas = 0; indexBalas < balasJefe.size; indexBalas++) {
             if (balasJefe.get(indexBalas) == null) continue;
@@ -180,10 +157,11 @@ public class PantallaJuegoNivelDos extends Nivel {
         }
     }
 
+
     private void checarColisiones(Array<Bala> array, Personaje personaje) {
         for(int indexBalas = 0; indexBalas < array.size; indexBalas++) {
             if (array.get(indexBalas) == null) continue;
-                Bala bala = array.get(indexBalas);
+            Bala bala = array.get(indexBalas);
             Rectangle personajeRect = personaje.sprite.getBoundingRectangle();
             if (personajeRect.overlaps(bala.sprite.getBoundingRectangle())) {
                 personaje.setVida(bala.getDanio());
@@ -220,25 +198,6 @@ public class PantallaJuegoNivelDos extends Nivel {
         }
     }
 
-    private void dispararMurcielago(float delta) {
-        for (Enemigo enemy : arrEnemigos) {
-            if (enemy.tipoEnemigo.equals(Enemigo.TipoEnemigo.JETPACK) && murcielagoTimer>3
-                    && enemy.sprite.getX()-protagonista.sprite.getX()<500 ) {
-                Bala bala;
-                if(enemy.movimiento.equals(Enemigo.Movimientos.DERECHA)) {
-                    bala = new Bala(new Texture("Proyectiles/murcielago.png"), enemy.sprite.getX(),
-                            enemy.sprite.getY() + (2 * enemy.sprite.getHeight() / 3), 300f, 0f, 35f);
-                }
-                else {
-                     bala = new Bala(new Texture("Proyectiles/murcielago.png"), enemy.sprite.getX(),
-                        enemy.sprite.getY() + (2 * enemy.sprite.getHeight() / 3), -300f, 0f, 35f);
-                }
-                arrBalasEnemigos.add(bala);
-                murcielagoTimer=0;
-            }
-        }
-        murcielagoTimer=murcielagoTimer+delta;
-    }
 
     @Override
     public void pause() {

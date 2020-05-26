@@ -34,7 +34,6 @@ public class PantallaPerder extends Pantalla {
 
     //Audio fondo
     private Music musicaPerder;
-    private Sound efectoBoton;
 
     //Seleccionador de nivel
     private SeleccionaNivel seleccionaNivel;
@@ -83,7 +82,6 @@ public class PantallaPerder extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                efectoBoton.play(audioManejador.getVolEfectos());
                 juego.setScreen(new PantallaMenu(juego));
             }
         });
@@ -92,7 +90,6 @@ public class PantallaPerder extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                efectoBoton.play(audioManejador.getVolEfectos());
                 switch(seleccionaNivel){
                     case NIVELUNO:
                         juego.setScreen(new PantallaJuegoNivelUno(juego));
@@ -115,14 +112,12 @@ public class PantallaPerder extends Pantalla {
         assetManager.load("BotonesGyP/btnHogar.png", Texture.class);
         assetManager.load("BotonesGyP/btnReintentar.png", Texture.class);
 
-        assetManager.load("Audio/Efectos/sonidoboton.mp3", Sound.class);
 
         assetManager.finishLoading();
 
         texturaFondo = assetManager.get("Fondos/GameOver.png");
         texturaBtnHogar = assetManager.get("BotonesGyP/btnHogar.png");
         texturaBtnReintentar = assetManager.get("BotonesGyP/btnReintentar.png");
-        efectoBoton = assetManager.get("Audio/Efectos/sonidoboton.mp3");
     }
 
     @Override
@@ -152,13 +147,11 @@ public class PantallaPerder extends Pantalla {
         texturaFondo.dispose();
         texturaBtnReintentar.dispose();
         texturaBtnHogar.dispose();
-        efectoBoton.dispose();
         escenaPerder.dispose();
 
         assetManager.unload("Fondos/GameOver.png");
         assetManager.unload("BotonesGyP/btnHogar.png");
         assetManager.unload("BotonesGyP/btnReintentar.png");
-        assetManager.unload("Audio/Efectos/sonidoboton.mp3");
 
     }
 }

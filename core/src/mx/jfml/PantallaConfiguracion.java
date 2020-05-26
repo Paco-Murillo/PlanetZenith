@@ -102,11 +102,11 @@ public class PantallaConfiguracion extends Pantalla {
                 super.clicked(event, x, y);
                 efectoBoton.play(audioManager.getVolEfectos());
                 if(audioManager.getVolMusica() < 1f){
-                    audioManager.setVolMusica(audioManager.getVolMusica() + .25f);
+                    audioManager.setVolMusica(audioManager.getVolMusica() + .10f);
                     musicaFondo.setVolume(audioManager.getVolMusica());
                 }
                 if(audioManager.getVolEfectos() < 1f){
-                    audioManager.setVolEfectos(audioManager.getVolEfectos() + .25f);
+                    audioManager.setVolEfectos(audioManager.getVolEfectos() + .10f);
                 }
             }
         });
@@ -117,12 +117,12 @@ public class PantallaConfiguracion extends Pantalla {
                 super.clicked(event, x, y);
                 efectoBoton.play(audioManager.getVolEfectos());
                 if(audioManager.getVolMusica() > 0){
-                    audioManager.setVolMusica(audioManager.getVolMusica() - .25f);
+                    audioManager.setVolMusica(audioManager.getVolMusica() - .10f);
                     musicaFondo.setVolume(audioManager.getVolMusica());
 
                 }
                 if(audioManager.getVolEfectos() > 0){
-                    audioManager.setVolEfectos(audioManager.getVolEfectos() - .25f);
+                    audioManager.setVolEfectos(audioManager.getVolEfectos() - .10f);
                 }
 
             }
