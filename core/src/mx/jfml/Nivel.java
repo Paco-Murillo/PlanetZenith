@@ -410,12 +410,6 @@ public abstract class Nivel extends Pantalla {
 
         actualizarBarraJefe();
 
-        if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
-            estadoJuego = EstadoJuego.PAUSADO;
-            escenaPausa = new EscenaPausa(viewportHUD,batch);
-            Gdx.input.setInputProcessor(escenaPausa);
-        }
-
         if(estadoJuego== EstadoJuego.JUGANDO){
             batch.setProjectionMatrix(orthographicCameraHUD.combined);
             HUD.draw();
@@ -441,6 +435,11 @@ public abstract class Nivel extends Pantalla {
             batch.setProjectionMatrix(orthographicCameraHUD.combined);
             HUD.draw();
             debugMoverCamara();
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
+            estadoJuego = EstadoJuego.PAUSADO;
+            escenaPausa = new EscenaPausa(viewportHUD,batch);
+            Gdx.input.setInputProcessor(escenaPausa);
         }
     }
 
