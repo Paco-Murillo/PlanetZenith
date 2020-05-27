@@ -155,24 +155,11 @@ public class PantallaJuegoNivelUno extends Nivel {
     }
 
     private void batallaJefe() {
-        crearParedesBatallaJefe();
+        crearParedesBatallaJefe(mapa,mundo);
         iniciarBatallaJefe = false;
         batallaJefeActiva = true;
     }
 
-    private void crearParedesBatallaJefe() {
-        MapObjects objetos = mapa.getLayers().get("ParedesJefe").getObjects();
-        for(MapObject objeto: objetos){
-            Shape rectangulo = CargarMapa.getRectangle((RectangleMapObject)objeto);
-            BodyDef bd = new BodyDef();
-            bd.position.set(((RectangleMapObject) objeto).getRectangle().x, ((RectangleMapObject) objeto).getRectangle().y);
-            bd.type  = BodyDef.BodyType.StaticBody;
-            Body body = mundo.createBody(bd);
-            body.createFixture(rectangulo,1);
-            rectangulo.dispose();
-        }
-    }
-    
     private void moverJefe(float delta){
         timeAcumMovJefe += delta;
         if (protagonista.sprite.getX() <= jefe.sprite.getX())

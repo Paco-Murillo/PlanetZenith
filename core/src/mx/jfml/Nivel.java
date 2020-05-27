@@ -11,13 +11,19 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -201,7 +207,7 @@ public abstract class Nivel extends Pantalla {
      */
 
     protected void crearGravedad(){
-        gravedad = new Vector2(0,-125);
+        gravedad = new Vector2(0,-130);
     }
 
     /**
@@ -465,6 +471,19 @@ public abstract class Nivel extends Pantalla {
         }
     }
 
+    protected void crearParedesBatallaJefe(TiledMap mapa, World mundo) {
+        MapObjects objetos = mapa.getLayers().get("ParedesJefe").getObjects();
+        for(MapObject objeto: objetos){
+            Shape rectangulo = CargarMapa.getRectangle((RectangleMapObject)objeto);
+            BodyDef bd = new BodyDef();
+            bd.position.set(((RectangleMapObject) objeto).getRectangle().x, ((RectangleMapObject) objeto).getRectangle().y);
+            bd.type  = BodyDef.BodyType.StaticBody;
+            Body body = mundo.createBody(bd);
+            body.createFixture(rectangulo,1);
+            rectangulo.dispose();
+        }
+    }
+
     /**
      * Hace una actualizacion a aquello que se debe mover el la pantalla
      * @param delta Tiempo que a pasado desde la ejecucion anterior
@@ -541,14 +560,6 @@ public abstract class Nivel extends Pantalla {
                     }
                 }
             }
-
-
-
-
-
-
-
-
         }
     }
 

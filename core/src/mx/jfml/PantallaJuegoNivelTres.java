@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.Array;
 public class PantallaJuegoNivelTres extends Nivel {
 
     private static final int ANCHO_MAPA = 6400;
-    private static final int ALTO_MAPA = 576;
+    private static final int ALTO_MAPA = 320;
 
     private boolean batallaJefeActiva;
     private boolean iniciarBatallaJefe;
@@ -36,43 +36,45 @@ public class PantallaJuegoNivelTres extends Nivel {
         crearMundo(gravedad);
         crearEnemigos();
         super.show();
-        cargaMapa("NivelDos.tmx");
+        cargaMapa("NivelTres.tmx");
         cargarTexturaBala("Proyectiles/bala1.png");
         Gdx.input.setInputProcessor(HUD);
         definirParedes();
     }
 
     private void crearEnemigos(){
-        arrEnemigos = new Array<>(10);
-        Texture enemigoTexture = new Texture("Enemigos/EnemigoGeneralAzul.png");
-        Texture subJefeTexture = new Texture("Enemigos/MiniJedeNivelDos.png");
+        arrEnemigos = new Array<>(12);
+        Texture enemigoTexture = new Texture("Enemigos/EnemigoNivelTres.png");
 
-        Enemigo enemigo = new Enemigo(enemigoTexture, 640, 256, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enmigo 1
+        Enemigo enemigo = new Enemigo(enemigoTexture, 640, 30, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enmigo 1
         //enemigo.direccion= Personaje.Movimientos.IZQUIERDA;
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 1504, 192, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 2
+        enemigo = new Enemigo(enemigoTexture, 850, 200, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 2
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 1920, 32, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 3
+        enemigo = new Enemigo(enemigoTexture, 1300, 32, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 3
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 2040, 32, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 4
+        enemigo = new Enemigo(enemigoTexture, 1688, 32, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 4
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 2680, 32, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 5
+        enemigo = new Enemigo(enemigoTexture, 1900, 32, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 5
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 3040, 32, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 6
+        enemigo = new Enemigo(enemigoTexture, 2070, 128, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 6
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 3520, 224, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 7
+        //Este ememigo puede usarse para pruebas de colisiones
+        enemigo = new Enemigo(enemigoTexture, 2520, 32, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 7
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 4256, 416, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 8
+        enemigo = new Enemigo(enemigoTexture, 3500, 128, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 8
         arrEnemigos.add(enemigo);
-        enemigo = new Enemigo(enemigoTexture, 4224, 224, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 9
+        enemigo = new Enemigo(enemigoTexture, 4000, 32, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 9
         arrEnemigos.add(enemigo);
-
-        //Enemigo 9
-        enemigo = new Enemigo(subJefeTexture, 5100, 62, 1f, 30f, 200, mundo, Enemigo.TipoEnemigo.JETPACK); //Enemigo 10
+        enemigo = new Enemigo(enemigoTexture, 4300, 160, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 10
+        arrEnemigos.add(enemigo);
+        enemigo = new Enemigo(enemigoTexture, 4800, 160, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 11
+        arrEnemigos.add(enemigo);
+        enemigo = new Enemigo(enemigoTexture, 5300, 32, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE); //Enemigo 12
         arrEnemigos.add(enemigo);
 
         //Cambiar Sprite Jefe
-        jefe = new Jefe(new Texture("Enemigos/JefeFinalDos.png"), 6240, 128, 1f, 30f, 400, mundo); //Checar JEFE
+        jefe = new Jefe(new Texture("Enemigos/JefeNivelTres.png"), 6240, 128, 1f, 30f, 400, mundo); //Checar JEFE
         iniciarVariablesJefe();
     }
 
@@ -172,7 +174,7 @@ public class PantallaJuegoNivelTres extends Nivel {
     }
 
     private void checarInicioBatallaJefe() {
-        if (camara.position.x >= ANCHO_MAPA-ANCHO/2-30 && !batallaJefeActiva){
+        if (camara.position.x >= ANCHO_MAPA-ANCHO/2-20 && !batallaJefeActiva){
             camara.position.set(ANCHO_MAPA-ANCHO/2, camara.position.y, 0);
             camara.update();
             iniciarBatallaJefe = true;
@@ -180,23 +182,12 @@ public class PantallaJuegoNivelTres extends Nivel {
     }
 
     private void batallaJefe() {
-        crearParedesBatallaJefe();
+        crearParedesBatallaJefe(mapa,mundo);
         iniciarBatallaJefe = false;
         batallaJefeActiva = true;
     }
 
-    private void crearParedesBatallaJefe() {
-        MapObjects objetos = mapa.getLayers().get("ParedesJefe").getObjects();
-        for(MapObject objeto: objetos){
-            Shape rectangulo = CargarMapa.getRectangle((RectangleMapObject)objeto);
-            BodyDef bd = new BodyDef();
-            bd.position.set(((RectangleMapObject) objeto).getRectangle().x, ((RectangleMapObject) objeto).getRectangle().y);
-            bd.type  = BodyDef.BodyType.StaticBody;
-            Body body = mundo.createBody(bd);
-            body.createFixture(rectangulo,1);
-            rectangulo.dispose();
-        }
-    }
+
 
 
     @Override
