@@ -9,6 +9,8 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObject;
@@ -99,9 +101,9 @@ public abstract class Nivel extends Pantalla {
     private ShapeRenderer shapeRenderer;
 
     //Musica y Efectos
-    protected Music musicaNivelUno;
-    protected Music musicaNivelDos;
-    protected Music musicaNivelTres;
+    private Music musicaNivelUno;
+    private Music musicaNivelDos;
+    private Music musicaNivelTres;
 
     //Selector de nivel dice que musica poner mientras esta el nivel
     private  SeleccionaNivel seleccionaNivel;
@@ -130,6 +132,15 @@ public abstract class Nivel extends Pantalla {
         crearShapeRenderer();
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
     }
+/*
+    protected ParticleEffect crearEfectoMuerte(String particleEmitterFilePath){
+        ParticleEmitter particleEmitter = new ParticleEmitter();
+        ParticleEffect particleEffect = new ParticleEffect();
+        particleEffect.load(Gdx.files.internal(particleEmitterFilePath),Gdx.files.internal(""));
+
+    }
+
+ */
 
     private void cargarMusica() throws GdxRuntimeException {
         switch(seleccionaNivel){
@@ -308,8 +319,12 @@ public abstract class Nivel extends Pantalla {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 if(contacto.isPersonajeSuelo()) {
-                    protagonista.body.setGravityScale(16/49f);
-                    protagonista.body.applyForceToCenter(0, 25000, true);
+                    protagonista.body.setGravityScale(16 / 49f);
+                    if (pad.isTouched()){
+                        protagonista.body.applyForceToCenter(pad.getKnobPercentX() * 4000, 25000, true);
+                    }else {
+                        protagonista.body.applyForceToCenter(0, 25000, true);
+                    }
                 }
             }
         });
@@ -612,6 +627,7 @@ public abstract class Nivel extends Pantalla {
                     if(enemigo.getVida()<=0) {
                         mundo.destroyBody(enemigo.body);
                         arrEnemigos.removeIndex(indexEnemigos);
+                        // Particle emitter
                     }
                     arrBalas.removeIndex(indexBala);
                     puntosJugador += 100;
@@ -646,7 +662,7 @@ public abstract class Nivel extends Pantalla {
         }
     }
 
-    protected void detenerMusica(){
+    private void detenerMusica(){
         if(musicaNivelUno.isPlaying()){
             musicaNivelUno.stop();
             musicaNivelUno.dispose();

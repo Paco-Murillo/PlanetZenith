@@ -188,18 +188,34 @@ public class PantallaJuegoNivelUno extends Nivel {
     private void dispararJefe(float delta){
         timeAcumDisparoJefe += delta;
         if (timeAcumDisparoJefe > 2 && dispararJefe) {
-            if (jefe.movimiento == Personaje.Movimientos.IZQUIERDA) {
-                Bala bala = new Bala(texturaBalaEnemigos,
-                        jefe.sprite.getX(),
-                        jefe.sprite.getY() + (2 * jefe.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f,
-                        -100f, 0f, 100f);
-                balasJefe.add(bala);
-            } else if (jefe.movimiento == Personaje.Movimientos.DERECHA) {
-                Bala bala = new Bala(texturaBalaEnemigos,
-                        jefe.sprite.getX() + jefe.sprite.getWidth() - texturaBalaEnemigos.getWidth(),
-                        jefe.sprite.getY() + (2 * jefe.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f,
-                        100f, 0f, 100f);
-                balasJefe.add(bala);
+            if(protagonista.sprite.getY() < 64){
+                if (jefe.movimiento == Personaje.Movimientos.IZQUIERDA) {
+                    Bala bala = new Bala(texturaBalaEnemigos,
+                            jefe.sprite.getX(),
+                            jefe.sprite.getY() + jefe.sprite.getHeight() / 3 - texturaBalaEnemigos.getHeight() / 2f,
+                            -100f, 0f, 100f);
+                    balasJefe.add(bala);
+                } else if (jefe.movimiento == Personaje.Movimientos.DERECHA) {
+                    Bala bala = new Bala(texturaBalaEnemigos,
+                            jefe.sprite.getX() + jefe.sprite.getWidth() - texturaBalaEnemigos.getWidth(),
+                            jefe.sprite.getY() + jefe.sprite.getHeight() / 3 - texturaBalaEnemigos.getHeight() / 2f,
+                            100f, 0f, 100f);
+                    balasJefe.add(bala);
+                }
+            }else {
+                if (jefe.movimiento == Personaje.Movimientos.IZQUIERDA) {
+                    Bala bala = new Bala(texturaBalaEnemigos,
+                            jefe.sprite.getX(),
+                            jefe.sprite.getY() + (2 * jefe.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f,
+                            -100f, 0f, 100f);
+                    balasJefe.add(bala);
+                } else if (jefe.movimiento == Personaje.Movimientos.DERECHA) {
+                    Bala bala = new Bala(texturaBalaEnemigos,
+                            jefe.sprite.getX() + jefe.sprite.getWidth() - texturaBalaEnemigos.getWidth(),
+                            jefe.sprite.getY() + (2 * jefe.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f,
+                            100f, 0f, 100f);
+                    balasJefe.add(bala);
+                }
             }
             timeAcumDisparoJefe = 0;
         }
