@@ -191,7 +191,7 @@ public class PantallaSelecNivel extends Pantalla {
 
     private void cargarAssets() {
         assetManager.load("Fondos/fondoPantalla.png", Texture.class);
-        assetManager.load("Audio/Musica/superMetroid.mp3", Music.class);
+        assetManager.load("Audio/Musica/principal.wav", Music.class);
         assetManager.load("Audio/Efectos/selecNivel.wav", Sound.class);
         assetManager.load("BotonesConf/btnRegresar.png", Texture.class);
         assetManager.load("BotonesSelNivel/btnNiveles1.png", Texture.class);
@@ -205,7 +205,7 @@ public class PantallaSelecNivel extends Pantalla {
         texturaNvlUno = assetManager.get("BotonesSelNivel/btnNiveles1.png");
         texturaNvlDos = assetManager.get("BotonesSelNivel/btnNiveles2.png");
         texturaNvlTres = assetManager.get("BotonesSelNivel/btnNiveles3.png");
-        musicaFondo = assetManager.get("Audio/Musica/superMetroid.mp3");
+        musicaFondo = assetManager.get("Audio/Musica/principal.wav");
         efectoSelec = assetManager.get("Audio/Efectos/selecNivel.wav");
     }
 
@@ -255,7 +255,7 @@ public class PantallaSelecNivel extends Pantalla {
         assetManager.unload("BotonesSelNivel/btnNiveles1.png");
         assetManager.unload("BotonesSelNivel/btnNiveles2.png");
         assetManager.unload("BotonesSelNivel/btnNiveles3.png");
-        assetManager.unload("Audio/Musica/superMetroid.mp3");
+        assetManager.unload("Audio/Musica/principal.wav");
         assetManager.unload("Audio/Efectos/selecNivel.wav");
     }
 }
