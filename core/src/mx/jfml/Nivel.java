@@ -95,6 +95,7 @@ public abstract class Nivel extends Pantalla {
     //Musica y Efectos
     protected Music musicaNivelUno;
     protected Music musicaNivelDos;
+    protected Music musicaNivelTres;
 
     //Selector de nivel dice que musica poner mientras esta el nivel
     private  SeleccionaNivel seleccionaNivel;
@@ -156,6 +157,18 @@ public abstract class Nivel extends Pantalla {
                     musicaNivelDos.play();
 
                 }
+            case NIVELTRES:
+                try{
+                    musicaNivelTres.setLooping(true);
+                    musicaNivelTres.setVolume(audioManejador.getVolMusica());
+                    musicaNivelTres.play();
+                }catch (GdxRuntimeException e){
+                    recargarMusisca(musicaNivelTres, "Audio/Musica/nivelTres.mp3");
+
+                    musicaNivelTres.setLooping(true);
+                    musicaNivelTres.setVolume(audioManejador.getVolMusica());
+                    musicaNivelTres.play();
+                }
             default:
                 break;
         }
@@ -174,11 +187,13 @@ public abstract class Nivel extends Pantalla {
     private void cargarAssets() {
         assetManager.load("Audio/Musica/nivelUno.mp3", Music.class);
         assetManager.load("Audio/Musica/nivelDos.wav", Music.class);
+        assetManager.load("Audio/Musica/nivelTres.mp3", Music.class);
 
         assetManager.finishLoading();
 
         musicaNivelUno = assetManager.get("Audio/Musica/nivelUno.mp3");
         musicaNivelDos = assetManager.get("Audio/Musica/nivelDos.wav");
+        musicaNivelTres = assetManager.get("Audio/Musica/nivelTres.mp3");
     }
 
     /*
@@ -628,6 +643,9 @@ public abstract class Nivel extends Pantalla {
         } else if (musicaNivelDos.isPlaying()){
             musicaNivelDos.stop();
             musicaNivelUno.dispose();
+        } else if(musicaNivelTres.isPlaying()){
+            musicaNivelTres.stop();
+            musicaNivelTres.dispose();
         }
     }
 

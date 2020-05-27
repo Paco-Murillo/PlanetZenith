@@ -143,7 +143,7 @@ public class PantallaMenu extends Pantalla {
 
     private void cargarAssets() {
         //Musica de fondo
-        assetManager.load("Audio/Musica/superMetroid.mp3", Music.class);
+        assetManager.load("Audio/Musica/principal.wav", Music.class);
 
 
         //Textura botones
@@ -157,7 +157,7 @@ public class PantallaMenu extends Pantalla {
         texturaBotonConfigurar = assetManager.get("BotonesMenu/btnConf.png");
         texturaBotonCreditos = assetManager.get("BotonesMenu/btnCred.png");
 
-        musicaFondo = assetManager.get("Audio/Musica/superMetroid.mp3");
+        musicaFondo = assetManager.get("Audio/Musica/principal.wav");
 
     }
 
@@ -210,6 +210,6 @@ public class PantallaMenu extends Pantalla {
         assetManager.unload("BotonesMenu/btnJugar.png");
         assetManager.unload("BotonesMenu/btnConf.png");
         assetManager.unload("BotonesMenu/btnConf.png");
-        assetManager.unload("Audio/Musica/superMetroid.mp3");
+        assetManager.unload("Audio/Musica/principal.wav");
     }
 }
