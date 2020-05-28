@@ -127,7 +127,7 @@ public class PantallaJuegoNivelTres extends Nivel {
             moverBalasJefe(delta);
             checarColisiones(arrBalas, jefe);
             checarColisiones(balasJefe, protagonista);
-            checarFinal(jefe);
+            checarFinal();
             //generarEnemigos(delta);
         }
     }
