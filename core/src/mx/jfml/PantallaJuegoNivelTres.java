@@ -2,9 +2,11 @@ package mx.jfml;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -15,12 +17,17 @@ public class PantallaJuegoNivelTres extends Nivel {
 
     private static final int ANCHO_MAPA = 6400;
     private static final int ALTO_MAPA = 320;
+    private int DXJefe = 3;
+
 
     private boolean batallaJefeActiva;
     private boolean iniciarBatallaJefe;
     private Array<Bala> balasJefe;
     private float timeAcumDisparoJefe;
     private float timeAcumGenEnemigo;
+    private int xEnemigoJefe;
+    private Sprite spritePared;
+    private Texture texturaPared;
 
     /**
      * Clase abstracta que permite representar los fundamentos de cada nivel
@@ -41,7 +48,14 @@ public class PantallaJuegoNivelTres extends Nivel {
         cargarTexturaBala("Proyectiles/bala1.png");
         Gdx.input.setInputProcessor(HUD);
         definirParedes();
+        inicializarParedJefe();
         crearBotones(new Texture("BotonesHUD/botonDisparar.png"),new Texture("BotonesHUD/botonSaltar.png"));
+    }
+
+    private void inicializarParedJefe() {
+        texturaPared = new Texture("paredTextura.png");
+        spritePared = new Sprite(texturaPared);
+        spritePared.setPosition(5632,128);
     }
 
     private void crearEnemigos(){
@@ -76,7 +90,7 @@ public class PantallaJuegoNivelTres extends Nivel {
         arrEnemigos.add(enemigo);
 
         //Cambiar Sprite Jefe
-        jefe = new Jefe(new Texture("Enemigos/JefeNivelTres.png"), 6240, 128, 1f, 30f, 400, mundo); //Checar JEFE
+        jefe = new Jefe(new Texture("Enemigos/JefeNivelTres.png"), 6240, 128, 1f, 30f, 1200, mundo); //Checar JEFE
         iniciarVariablesJefe();
     }
 
@@ -85,6 +99,7 @@ public class PantallaJuegoNivelTres extends Nivel {
         batallaJefeActiva = false;
         balasJefe = new Array<>();
         timeAcumDisparoJefe = 0;
+        timeAcumGenEnemigo = 0;
     }
 
     @Override
@@ -112,10 +127,14 @@ public class PantallaJuegoNivelTres extends Nivel {
     public void render(float delta){
         super.render(delta);
         batch.setProjectionMatrix(camara.combined);
+        System.out.println(timeAcumGenEnemigo);
 
         batch.begin();
         for (Bala bala : balasJefe){
             bala.render(batch);
+        }
+        if(batallaJefeActiva) {
+            spritePared.draw(batch);
         }
         batch.end();
 
@@ -128,11 +147,24 @@ public class PantallaJuegoNivelTres extends Nivel {
             checarColisiones(arrBalas, jefe);
             checarColisiones(balasJefe, protagonista);
             checarFinal();
-            //generarEnemigos(delta);
+            generarEnemigos(delta);
         }
     }
 
     private void moverJefe(float delta) {
+        if (protagonista.sprite.getX() <= jefe.sprite.getX())
+            jefe.setMovimiento(Personaje.Movimientos.IZQUIERDA);
+        else jefe.setMovimiento(Personaje.Movimientos.DERECHA);
+        if (jefe.movimiento == Personaje.Movimientos.IZQUIERDA) {
+            jefe.sprite.setFlip(true, false);
+        } else if (jefe.movimiento == Personaje.Movimientos.DERECHA) {
+            jefe.sprite.setFlip(false, false);
+        }
+        //Prueba Limites Derecha-Izquierda
+        if (jefe.sprite.getX()>=ANCHO_MAPA-jefe.sprite.getWidth() || jefe.sprite.getX()<=5664){
+            DXJefe = -DXJefe;
+        }
+        jefe.sprite.setPosition(jefe.sprite.getX()+DXJefe,jefe.sprite.getY());
 
     }
 
@@ -141,11 +173,14 @@ public class PantallaJuegoNivelTres extends Nivel {
         if (timeAcumDisparoJefe > 2) {
             if (jefe.movimiento == Personaje.Movimientos.IZQUIERDA) {
                 Bala bala = new Bala(texturaBalaEnemigos, jefe.sprite.getX(), jefe.sprite.getY() + (2 * jefe.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f,
-                        -300f, 0f, 50f);
+                        0, -80, 50f);
                 balasJefe.add(bala);
             } else if (jefe.movimiento == Personaje.Movimientos.DERECHA) {
                 Bala bala = new Bala(texturaBalaEnemigos, jefe.sprite.getX() + jefe.sprite.getWidth() - texturaBalaEnemigos.getWidth(),
-                        jefe.sprite.getY() + (2 * jefe.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f, 300f, 0f, 100f);
+                        jefe.sprite.getY() + (2 * jefe.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f, 0, -80
+
+
+                        , 100f);
                 balasJefe.add(bala);
             }
             timeAcumDisparoJefe = 0;
@@ -156,7 +191,9 @@ public class PantallaJuegoNivelTres extends Nivel {
             if (balasJefe.get(indexBalas) == null) continue;
             Bala bala = balasJefe.get(indexBalas);
             bala.moverX(delta);
-            if (bala.sprite.getX() > camara.position.x + ANCHO / 2 || bala.sprite.getX() < camara.position.x - ANCHO / 2) {
+            bala.moverY(delta);
+            if (bala.sprite.getX() > camara.position.x + ANCHO / 2 || bala.sprite.getX() < camara.position.x - ANCHO / 2 || bala.sprite.getY()<-20
+                    || bala.sprite.getY()>ALTO) {
                 balasJefe.removeIndex(indexBalas);
             }
         }
@@ -191,10 +228,12 @@ public class PantallaJuegoNivelTres extends Nivel {
     }
 
     private void generarEnemigos(float delta){
-        timeAcumDisparoJefe += delta;
-        if (timeAcumDisparoJefe > 2) {
-            Enemigo enemigo = new Enemigo(new Texture("Enemigos/EnemigoNivelTres.png"), 850, 200, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE);
+        timeAcumGenEnemigo+= delta;
+        xEnemigoJefe = MathUtils.random(5700,6300);
+        if (timeAcumGenEnemigo > 5) {
+            Enemigo enemigo = new Enemigo(new Texture("Enemigos/EnemigoNivelTres.png"), xEnemigoJefe, 32, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE);
             arrEnemigos.add(enemigo);
+            timeAcumGenEnemigo = 0;
         }
 
 

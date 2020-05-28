@@ -523,6 +523,7 @@ public abstract class Nivel extends Pantalla {
     private void moverBalasEnemigos(float delta) {
         for (Bala bala : arrBalasEnemigos) {
             bala.moverX(delta);
+            bala.moverY(delta);
         }
     }
 
