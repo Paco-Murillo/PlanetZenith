@@ -158,11 +158,11 @@ public class PantallaJuegoNivelDos extends Nivel {
         timeAcumDisparoJefe += delta;
         if (timeAcumDisparoJefe > 1.8) {
             if (jefe.movimiento == Personaje.Movimientos.IZQUIERDA) {
-                Bala bala = new Bala(new Texture("DisparoEnemigoDos"), jefe.sprite.getX(), jefe.sprite.getY() + (2 * jefe.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f,
+                Bala bala = new Bala(new Texture("Proyectiles/DisparoEnemigoDos.png"), jefe.sprite.getX(), jefe.sprite.getY() + (2 * jefe.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f,
                         -300f, 0f, 50f);
                 balasJefe.add(bala);
             } else if (jefe.movimiento == Personaje.Movimientos.DERECHA) {
-                Bala bala = new Bala(new Texture("DisparoEnemigoDos"), jefe.sprite.getX() + jefe.sprite.getWidth() - texturaBalaEnemigos.getWidth(),
+                Bala bala = new Bala(new Texture("Proyectiles/DisparoEnemigoDos.png"), jefe.sprite.getX() + jefe.sprite.getWidth() - texturaBalaEnemigos.getWidth(),
                         jefe.sprite.getY() + (2 * jefe.sprite.getHeight() / 3) - texturaBalaEnemigos.getHeight() / 2f, 300f, 0f, 100f);
                 balasJefe.add(bala);
             }
