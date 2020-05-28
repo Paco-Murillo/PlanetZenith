@@ -27,12 +27,16 @@ public class PantallaCreditos extends Pantalla {
 
     //Texto
     private Escritura txtCreditos;
+    private Escritura txtAutores;
     private Escritura txtJon;
     private Escritura txtEmi;
     private Escritura txtJulio;
     private Escritura txtJose;
     private Escritura txtDerechos1;
     private  Escritura txtDerechos2;
+    private Escritura txtDerechos3;
+    private Escritura txtDerechos4;
+    private Escritura txtDerechos5;
 
     //Asset manager
     private final AssetManager assetManager;
@@ -102,25 +106,45 @@ public class PantallaCreditos extends Pantalla {
         txtCreditos = new Escritura(ANCHO/2, ALTO - ALTO*.1f);
         txtCreditos.setEnunciado("Creditos");
 
-        txtJon = new Escritura(ANCHO/2, ALTO/3 + 195f);
+        txtAutores = new Escritura(ANCHO/2, 4*ALTO/9 + 195f);
+        txtAutores.setTexto(new Texto("Fuentes/fuente30px.fnt"));
+        txtAutores.setEnunciado("Autores");
+
+        txtJon = new Escritura(ANCHO/2, 4*ALTO/9 + 160f);
+        txtJon.setTexto(new Texto("Fuentes/fuente30px.fnt"));
         txtJon.setEnunciado("Jonathan Rosas");
 
-        txtEmi = new Escritura(ANCHO/2, ALTO/3 + 130f);
+        txtEmi = new Escritura(ANCHO/2, 4*ALTO/9 + 125f);
+        txtEmi.setTexto(new Texto("Fuentes/fuente30px.fnt"));
         txtEmi.setEnunciado("Emiliano Gomez");
 
-        txtJulio = new Escritura(ANCHO/2, ALTO/3 + 65f);
+        txtJulio = new Escritura(ANCHO/2, 4*ALTO/9 + 90f);
+        txtJulio.setTexto(new Texto("Fuentes/fuente30px.fnt"));
         txtJulio.setEnunciado("Julio Cesar Lugo");
 
-        txtJose = new Escritura(ANCHO/2, ALTO/3);
+        txtJose = new Escritura(ANCHO/2, 4*ALTO/9 + 55f);
+        txtJose.setTexto(new Texto("Fuentes/fuente30px.fnt"));
         txtJose.setEnunciado("Jose Francicso Murillo");
 
-        txtDerechos1 = new Escritura(ANCHO/2 + 50, ALTO/10 + 20);
+        txtDerechos1 = new Escritura(ANCHO/2 , 4*ALTO/9 + 20f);
         txtDerechos1.setTexto(new Texto("Fuentes/fuente30px.fnt"));
-        txtDerechos1.setEnunciado("Todos los assets prestados pertenecen");
+        txtDerechos1.setEnunciado("Muchos de los assets prestados son de ");
 
-        txtDerechos2 = new Escritura(ANCHO/2 + 50, ALTO/10);
+        txtDerechos2 = new Escritura(ANCHO/2 , 4*ALTO/9 - 15f);
         txtDerechos2.setTexto(new Texto("Fuentes/fuente30px.fnt"));
-        txtDerechos2.setEnunciado("a sus autores correspondientes");
+        txtDerechos2.setEnunciado("dominio publico o sin regalia");
+
+        txtDerechos3 = new Escritura(ANCHO/2, 4*ALTO/9 - 50f);
+        txtDerechos3.setTexto(new Texto("Fuentes/fuente30px.fnt"));
+        txtDerechos3.setEnunciado("Assets prestados pertenecen a sus autores");
+
+        txtDerechos4 = new Escritura(ANCHO/2, 4*ALTO/9 - 85f);
+        txtDerechos4.setTexto(new Texto("Fuentes/fuente30px.fnt"));
+        txtDerechos4.setEnunciado("Mike Devils");
+
+        txtDerechos5 = new Escritura(ANCHO/2, 4*ALTO/9 - 120f);
+        txtDerechos5.setTexto(new Texto("Fuentes/fuente30px.fnt"));
+        txtDerechos5.setEnunciado("Mike Koeing");
     }
 
     @Override
@@ -134,12 +158,16 @@ public class PantallaCreditos extends Pantalla {
 
         //Textos
         txtCreditos.render(batch);
+        txtAutores.render(batch);
         txtJon.render(batch);
         txtEmi.render(batch);
         txtJulio.render(batch);
         txtJose.render(batch);
         txtDerechos1.render(batch);
         txtDerechos2.render(batch);
+        txtDerechos3.render(batch);
+        txtDerechos4.render(batch);
+        txtDerechos5.render(batch);
 
         batch.end();
 
