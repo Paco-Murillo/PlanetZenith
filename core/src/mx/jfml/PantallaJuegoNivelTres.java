@@ -40,6 +40,7 @@ public class PantallaJuegoNivelTres extends Nivel {
         cargarTexturaBala("Proyectiles/bala1.png");
         Gdx.input.setInputProcessor(HUD);
         definirParedes();
+        crearBotones(new Texture("BotonesHUD/botonDisparar.png"),new Texture("BotonesHUD/botonSaltar.png"));
     }
 
     private void crearEnemigos(){

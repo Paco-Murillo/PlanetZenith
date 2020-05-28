@@ -270,11 +270,10 @@ public abstract class Nivel extends Pantalla {
         orthographicCameraHUD.update();
         viewportHUD = new StretchViewport(ANCHO,ALTO,orthographicCameraHUD);
         HUD = new Stage(viewportHUD);
-        crearBotones();
         crearPad();
     }
 
-    private void crearBotones() {
+    protected void crearBotones(Texture texturaBotonDisparar, Texture texturaBotonSaltar) {
         ImageButton botonPausa = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/pausa.png")));
         botonPausa.setPosition(0,ALTO-botonPausa.getHeight());
         botonPausa.addListener(new ClickListener(){
@@ -288,7 +287,7 @@ public abstract class Nivel extends Pantalla {
         });
         HUD.addActor(botonPausa);
 
-        ImageButton botonDisparar = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/botonDisparar.png")));
+        ImageButton botonDisparar = new ImageButton(new TextureRegionDrawable(texturaBotonDisparar));
         botonDisparar.setPosition(ANCHO-botonDisparar.getWidth()-30,135);
         botonDisparar.addListener(new ClickListener(){
             @Override
@@ -312,7 +311,7 @@ public abstract class Nivel extends Pantalla {
         });
         HUD.addActor(botonDisparar);
 
-        ImageButton botonSaltar = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/botonSaltar.png")));
+        ImageButton botonSaltar = new ImageButton(new TextureRegionDrawable(texturaBotonSaltar));
         botonSaltar.setPosition(ANCHO-botonDisparar.getWidth()-150,25);
         botonSaltar.addListener(new ClickListener(){
             @Override
