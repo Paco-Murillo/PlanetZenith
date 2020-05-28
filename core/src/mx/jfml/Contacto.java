@@ -26,6 +26,8 @@ public class Contacto implements ContactListener {
         Fixture fa = contact.getFixtureA();
         Fixture fb = contact.getFixtureB();
 
+        //Contactos protagonista
+
         if(fa.getUserData() != null && fa.getUserData().equals("sensorPie")) {
             personajeSuelo = true;
         }
@@ -37,12 +39,16 @@ public class Contacto implements ContactListener {
         if(fa.getUserData() != null && fa.getUserData().equals("sensorEnemigoIzquierda") &&
                 fa.getBody().getLinearVelocity().y!=0) {
             fa.getBody().setAwake(true);
+            fa.getBody().applyForceToCenter(20000,0,true);
         }
 
         if(fb.getUserData() != null && fb.getUserData().equals("sensorEnemigoIzquierda") &&
                 fb.getBody().getLinearVelocity().y!=0) {
             fb.getBody().setAwake(true);
+            fb.getBody().applyForceToCenter(20000,0,true);
         }
+
+        //Choque enemigo-enemigo
 
         if(fa.getUserData() != null && fa.getUserData().equals("personaje") &&
                 fb.getUserData() != null && fb.getUserData().equals("sensorEnemigoIzquierda") &&
@@ -55,6 +61,9 @@ public class Contacto implements ContactListener {
                 fa.getBody().getLinearVelocity().y==0){
             fa.getBody().setAwake(false);
         }
+
+        //Contactos enemigo Jetpack
+
         if(fa.getUserData() != null && fa.getUserData().equals("sensorJetPack")){
             fa.getBody().applyForceToCenter(0,25000, true);
         }
@@ -71,6 +80,8 @@ public class Contacto implements ContactListener {
         Fixture fa = contact.getFixtureA();
         Fixture fb = contact.getFixtureB();
 
+        //Contactos protagonista
+
         if(fa.getUserData() != null && fa.getUserData().equals("sensorPie")) {
             personajeSuelo = false;
         }
@@ -82,24 +93,26 @@ public class Contacto implements ContactListener {
         if(fa.getUserData() != null && fa.getUserData().equals("sensorEnemigoIzquierda") &&
                 fa.getBody().getLinearVelocity().y==0) {
             fa.getBody().setAwake(false);
-            fa.getBody().setLinearVelocity(0,0);
         }
 
         if(fb.getUserData() != null && fb.getUserData().equals("sensorEnemigoIzquierda") &&
                 fa.getBody().getLinearVelocity().y==0) {
             fb.getBody().setAwake(false);
-            fb.getBody().setLinearVelocity(0,0);
         }
 
         if(fa.getUserData() != null && fa.getUserData().equals("sensorEnemigoIzquierda") &&
                 fa.getBody().getLinearVelocity().y!=0) {
             fa.getBody().setAwake(true);
+            fa.getBody().applyForceToCenter(20000,0,true);
         }
 
         if(fb.getUserData() != null && fb.getUserData().equals("sensorEnemigoIzquierda") &&
                 fb.getBody().getLinearVelocity().y!=0) {
             fb.getBody().setAwake(true);
+            fb.getBody().applyForceToCenter(20000, 0,true);
         }
+
+        //Choque enemigo-enemigo
 
         if(fa.getUserData() != null && fa.getUserData().equals("personaje") &&
                 fb.getUserData() != null && fb.getUserData().equals("sensorEnemigoIzquierda") &&

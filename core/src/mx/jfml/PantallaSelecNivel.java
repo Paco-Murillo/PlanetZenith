@@ -174,14 +174,24 @@ public class PantallaSelecNivel extends Pantalla {
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 efectoSelec.play(audioManejador.getVolEfectos());
+                try{
+                    Thread.sleep(1500);
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+                musicaFondo.stop();
                 juego.setSeleccionaNivel(seleccionaNivel.NIVELTRES);
+                audioManejador.setTocando(!audioManejador.getTocando());
+                musicaFondo.dispose();
+                efectoSelec.dispose();
+                juego.setScreen(new PantallaJuegoNivelTres(juego));
             }
         });
     }
 
     private void cargarAssets() {
         assetManager.load("Fondos/fondoPantalla.png", Texture.class);
-        assetManager.load("Audio/Musica/superMetroid.mp3", Music.class);
+        assetManager.load("Audio/Musica/principal.wav", Music.class);
         assetManager.load("Audio/Efectos/selecNivel.wav", Sound.class);
         assetManager.load("BotonesConf/btnRegresar.png", Texture.class);
         assetManager.load("BotonesSelNivel/btnNiveles1.png", Texture.class);
@@ -195,7 +205,7 @@ public class PantallaSelecNivel extends Pantalla {
         texturaNvlUno = assetManager.get("BotonesSelNivel/btnNiveles1.png");
         texturaNvlDos = assetManager.get("BotonesSelNivel/btnNiveles2.png");
         texturaNvlTres = assetManager.get("BotonesSelNivel/btnNiveles3.png");
-        musicaFondo = assetManager.get("Audio/Musica/superMetroid.mp3");
+        musicaFondo = assetManager.get("Audio/Musica/principal.wav");
         efectoSelec = assetManager.get("Audio/Efectos/selecNivel.wav");
     }
 
@@ -245,7 +255,7 @@ public class PantallaSelecNivel extends Pantalla {
         assetManager.unload("BotonesSelNivel/btnNiveles1.png");
         assetManager.unload("BotonesSelNivel/btnNiveles2.png");
         assetManager.unload("BotonesSelNivel/btnNiveles3.png");
-        assetManager.unload("Audio/Musica/superMetroid.mp3");
+        assetManager.unload("Audio/Musica/principal.wav");
         assetManager.unload("Audio/Efectos/selecNivel.wav");
     }
 }

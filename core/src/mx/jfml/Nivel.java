@@ -9,15 +9,23 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -93,8 +101,9 @@ public abstract class Nivel extends Pantalla {
     private ShapeRenderer shapeRenderer;
 
     //Musica y Efectos
-    protected Music musicaNivelUno;
-    protected Music musicaNivelDos;
+    private Music musicaNivelUno;
+    private Music musicaNivelDos;
+    private Music musicaNivelTres;
 
     //Selector de nivel dice que musica poner mientras esta el nivel
     private  SeleccionaNivel seleccionaNivel;
@@ -123,6 +132,15 @@ public abstract class Nivel extends Pantalla {
         crearShapeRenderer();
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
     }
+/*
+    protected ParticleEffect crearEfectoMuerte(String particleEmitterFilePath){
+        ParticleEmitter particleEmitter = new ParticleEmitter();
+        ParticleEffect particleEffect = new ParticleEffect();
+        particleEffect.load(Gdx.files.internal(particleEmitterFilePath),Gdx.files.internal(""));
+
+    }
+
+ */
 
     private void cargarMusica() throws GdxRuntimeException {
         switch(seleccionaNivel){
@@ -156,6 +174,18 @@ public abstract class Nivel extends Pantalla {
                     musicaNivelDos.play();
 
                 }
+            case NIVELTRES:
+                try{
+                    musicaNivelTres.setLooping(true);
+                    musicaNivelTres.setVolume(audioManejador.getVolMusica());
+                    musicaNivelTres.play();
+                }catch (GdxRuntimeException e){
+                    recargarMusisca(musicaNivelTres, "Audio/Musica/nivelTres.mp3");
+
+                    musicaNivelTres.setLooping(true);
+                    musicaNivelTres.setVolume(audioManejador.getVolMusica());
+                    musicaNivelTres.play();
+                }
             default:
                 break;
         }
@@ -174,11 +204,13 @@ public abstract class Nivel extends Pantalla {
     private void cargarAssets() {
         assetManager.load("Audio/Musica/nivelUno.mp3", Music.class);
         assetManager.load("Audio/Musica/nivelDos.wav", Music.class);
+        assetManager.load("Audio/Musica/nivelTres.mp3", Music.class);
 
         assetManager.finishLoading();
 
         musicaNivelUno = assetManager.get("Audio/Musica/nivelUno.mp3");
         musicaNivelDos = assetManager.get("Audio/Musica/nivelDos.wav");
+        musicaNivelTres = assetManager.get("Audio/Musica/nivelTres.mp3");
     }
 
     /*
@@ -186,7 +218,7 @@ public abstract class Nivel extends Pantalla {
      */
 
     protected void crearGravedad(){
-        gravedad = new Vector2(0,-125);
+        gravedad = new Vector2(0,-130);
     }
 
     /**
@@ -238,11 +270,10 @@ public abstract class Nivel extends Pantalla {
         orthographicCameraHUD.update();
         viewportHUD = new StretchViewport(ANCHO,ALTO,orthographicCameraHUD);
         HUD = new Stage(viewportHUD);
-        crearBotones();
         crearPad();
     }
 
-    private void crearBotones() {
+    protected void crearBotones(Texture texturaBotonDisparar, Texture texturaBotonSaltar) {
         ImageButton botonPausa = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/pausa.png")));
         botonPausa.setPosition(0,ALTO-botonPausa.getHeight());
         botonPausa.addListener(new ClickListener(){
@@ -256,7 +287,7 @@ public abstract class Nivel extends Pantalla {
         });
         HUD.addActor(botonPausa);
 
-        ImageButton botonDisparar = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/botonDisparar.png")));
+        ImageButton botonDisparar = new ImageButton(new TextureRegionDrawable(texturaBotonDisparar));
         botonDisparar.setPosition(ANCHO-botonDisparar.getWidth()-30,135);
         botonDisparar.addListener(new ClickListener(){
             @Override
@@ -280,15 +311,19 @@ public abstract class Nivel extends Pantalla {
         });
         HUD.addActor(botonDisparar);
 
-        ImageButton botonSaltar = new ImageButton(new TextureRegionDrawable(new Texture("BotonesHUD/botonSaltar.png")));
+        ImageButton botonSaltar = new ImageButton(new TextureRegionDrawable(texturaBotonSaltar));
         botonSaltar.setPosition(ANCHO-botonDisparar.getWidth()-150,25);
         botonSaltar.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 if(contacto.isPersonajeSuelo()) {
-                    protagonista.body.setGravityScale(16/49f);
-                    protagonista.body.applyForceToCenter(0, 25000, true);
+                    protagonista.body.setGravityScale(16 / 49f);
+                    if (pad.isTouched()){
+                        protagonista.body.applyForceToCenter(pad.getKnobPercentX() * 4000, 25000, true);
+                    }else {
+                        protagonista.body.applyForceToCenter(0, 25000, true);
+                    }
                 }
             }
         });
@@ -395,12 +430,6 @@ public abstract class Nivel extends Pantalla {
 
         actualizarBarraJefe();
 
-        if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
-            estadoJuego = EstadoJuego.PAUSADO;
-            escenaPausa = new EscenaPausa(viewportHUD,batch);
-            Gdx.input.setInputProcessor(escenaPausa);
-        }
-
         if(estadoJuego== EstadoJuego.JUGANDO){
             batch.setProjectionMatrix(orthographicCameraHUD.combined);
             HUD.draw();
@@ -427,6 +456,11 @@ public abstract class Nivel extends Pantalla {
             HUD.draw();
             debugMoverCamara();
         }
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)){
+            estadoJuego = EstadoJuego.PAUSADO;
+            escenaPausa = new EscenaPausa(viewportHUD,batch);
+            Gdx.input.setInputProcessor(escenaPausa);
+        }
     }
 
     /**
@@ -448,6 +482,19 @@ public abstract class Nivel extends Pantalla {
         if(jefe.getVida()<=0){
             detenerMusica();
             juego.setScreen(new PantallaGanar(juego));
+        }
+    }
+
+    protected void crearParedesBatallaJefe(TiledMap mapa, World mundo) {
+        MapObjects objetos = mapa.getLayers().get("ParedesJefe").getObjects();
+        for(MapObject objeto: objetos){
+            Shape rectangulo = CargarMapa.getRectangle((RectangleMapObject)objeto);
+            BodyDef bd = new BodyDef();
+            bd.position.set(((RectangleMapObject) objeto).getRectangle().x, ((RectangleMapObject) objeto).getRectangle().y);
+            bd.type  = BodyDef.BodyType.StaticBody;
+            Body body = mundo.createBody(bd);
+            body.createFixture(rectangulo,1);
+            rectangulo.dispose();
         }
     }
 
@@ -527,14 +574,6 @@ public abstract class Nivel extends Pantalla {
                     }
                 }
             }
-
-
-
-
-
-
-
-
         }
     }
 
@@ -587,6 +626,7 @@ public abstract class Nivel extends Pantalla {
                     if(enemigo.getVida()<=0) {
                         mundo.destroyBody(enemigo.body);
                         arrEnemigos.removeIndex(indexEnemigos);
+                        // Particle emitter
                     }
                     arrBalas.removeIndex(indexBala);
                     puntosJugador += 100;
@@ -621,13 +661,16 @@ public abstract class Nivel extends Pantalla {
         }
     }
 
-    protected void detenerMusica(){
+    private void detenerMusica(){
         if(musicaNivelUno.isPlaying()){
             musicaNivelUno.stop();
             musicaNivelUno.dispose();
         } else if (musicaNivelDos.isPlaying()){
             musicaNivelDos.stop();
             musicaNivelUno.dispose();
+        } else if(musicaNivelTres.isPlaying()){
+            musicaNivelTres.stop();
+            musicaNivelTres.dispose();
         }
     }
 

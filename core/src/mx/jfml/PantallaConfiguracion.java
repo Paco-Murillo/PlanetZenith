@@ -156,7 +156,7 @@ public class PantallaConfiguracion extends Pantalla {
 
     private void cargarAssets() {
         //Audio y Musica
-        assetManager.load("Audio/Musica/superMetroid.mp3", Music.class);
+        assetManager.load("Audio/Musica/principal.wav", Music.class);
         assetManager.load("Audio/Efectos/sonidoboton.mp3", Sound.class);
 
         //Textura de botones
@@ -173,7 +173,7 @@ public class PantallaConfiguracion extends Pantalla {
         texturaBtnMute = assetManager.get("BotonesConf/btnMute.png");
         texturaBtnRegresar = assetManager.get("BotonesConf/btnRegresar.png");
 
-        musicaFondo = assetManager.get("Audio/Musica/superMetroid.mp3");
+        musicaFondo = assetManager.get("Audio/Musica/principal.wav");
         efectoBoton = assetManager.get("Audio/Efectos/sonidoboton.mp3");
     }
 
@@ -239,7 +239,7 @@ public class PantallaConfiguracion extends Pantalla {
         assetManager.unload("BotonesConf/btnVolAbajo.png");
         assetManager.unload("BotonesConf/btnMute.png");
         assetManager.unload("BotonesConf/btnRegresar.png");
-        assetManager.unload("Audio/Musica/superMetroid.mp3");
+        assetManager.unload("Audio/Musica/principal.wav");
         assetManager.unload("Audio/Efectos/sonidoboton.mp3");
 
     }

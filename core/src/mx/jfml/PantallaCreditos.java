@@ -88,14 +88,14 @@ public class PantallaCreditos extends Pantalla {
     private void cargarAssets() {
         assetManager.load("BotonesConf/btnRegresar.png", Texture.class);
 
-        assetManager.load("Audio/Musica/superMetroid.mp3", Music.class);
+        assetManager.load("Audio/Musica/principal.wav", Music.class);
 
 
         assetManager.finishLoading();
 
         texturabtnRegresar = assetManager.get("BotonesConf/btnRegresar.png");
 
-        musicaFondo = assetManager.get("Audio/Musica/superMetroid.mp3");
+        musicaFondo = assetManager.get("Audio/Musica/principal.wav");
     }
 
     private void cargarEscritura() {
@@ -171,6 +171,6 @@ public class PantallaCreditos extends Pantalla {
         musicaFondo.dispose();
 
         assetManager.unload("BotonesConf/btnRegresar.png");
-        assetManager.unload("Audio/Musica/superMetroid.mp3");
+        assetManager.unload("Audio/Musica/principal.wav");
     }
 }

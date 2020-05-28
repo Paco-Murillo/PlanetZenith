@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
 public class PantallaPerder extends Pantalla {
 
@@ -50,11 +51,31 @@ public class PantallaPerder extends Pantalla {
         crearPerder();
     }
 
-    private void crearPerder() {
+    private void crearPerder()  throws GdxRuntimeException {
         cargarAssets();
 
         escenaPerder = new Stage(vista);
 
+
+        try{
+            musicaPerder.setLooping(true);
+            musicaPerder.setVolume(audioManejador.getVolMusica());
+            musicaPerder.play();
+        } catch(GdxRuntimeException e){
+            musicaPerder.dispose();
+            assetManager.unload("Audio/Musica/perder.mp3");
+
+            assetManager.load("Audio/Musica/perder.mp3", Music.class);
+
+            assetManager.finishLoading();
+
+            musicaPerder = assetManager.get("Audio/Musica/perder.mp3");
+
+            musicaPerder.setLooping(true);
+            musicaPerder.setVolume(audioManejador.getVolMusica());
+            musicaPerder.play();
+
+        }
         Gdx.input.setInputProcessor(escenaPerder);
 
         Image imageFondo = new Image(texturaFondo);
@@ -68,7 +89,7 @@ public class PantallaPerder extends Pantalla {
         //Boton Hogar
         TextureRegionDrawable trdBtnHogar = new TextureRegionDrawable(new TextureRegion(texturaBtnHogar));
         ImageButton BtnHogar = new ImageButton(trdBtnHogar);
-        BtnHogar.setPosition(ANCHO / 3 - BtnHogar.getWidth() / 2, ALTO / 3 - BtnHogar.getHeight() / 2);
+        BtnHogar.setPosition(4* ANCHO / 9 - BtnHogar.getWidth() / 2, ALTO / 3 - BtnHogar.getHeight() / 2);
         escenaPerder.addActor(BtnHogar);
 
         //Boton Reintentar
@@ -82,6 +103,9 @@ public class PantallaPerder extends Pantalla {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                musicaPerder.stop();
+                musicaPerder.dispose();
+                audioManejador.setTocando(false);
                 juego.setScreen(new PantallaMenu(juego));
             }
         });
@@ -92,12 +116,19 @@ public class PantallaPerder extends Pantalla {
                 super.clicked(event, x, y);
                 switch(seleccionaNivel){
                     case NIVELUNO:
+                        musicaPerder.stop();
+                        musicaPerder.dispose();
                         juego.setScreen(new PantallaJuegoNivelUno(juego));
                         break;
                     case NIVELDOS:
+                        musicaPerder.stop();
+                        musicaPerder.dispose();
                         juego.setScreen(new PantallaJuegoNivelDos(juego));
                         break;
                     case NIVELTRES:
+                        musicaPerder.stop();
+                        musicaPerder.dispose();
+                        juego.setScreen(new PantallaJuegoNivelTres(juego));
                         break;
                     default:
                         break;
@@ -111,6 +142,7 @@ public class PantallaPerder extends Pantalla {
         assetManager.load("Fondos/GameOver.png", Texture.class);
         assetManager.load("BotonesGyP/btnHogar.png", Texture.class);
         assetManager.load("BotonesGyP/btnReintentar.png", Texture.class);
+        assetManager.load("Audio/Musica/perder.mp3", Music.class);
 
 
         assetManager.finishLoading();
@@ -118,6 +150,7 @@ public class PantallaPerder extends Pantalla {
         texturaFondo = assetManager.get("Fondos/GameOver.png");
         texturaBtnHogar = assetManager.get("BotonesGyP/btnHogar.png");
         texturaBtnReintentar = assetManager.get("BotonesGyP/btnReintentar.png");
+        musicaPerder = assetManager.get("Audio/Musica/perder.mp3");
     }
 
     @Override
@@ -148,10 +181,12 @@ public class PantallaPerder extends Pantalla {
         texturaBtnReintentar.dispose();
         texturaBtnHogar.dispose();
         escenaPerder.dispose();
+        musicaPerder.dispose();
 
         assetManager.unload("Fondos/GameOver.png");
         assetManager.unload("BotonesGyP/btnHogar.png");
         assetManager.unload("BotonesGyP/btnReintentar.png");
+        assetManager.unload("Audio/Musica/perder.mp3");
 
     }
 }

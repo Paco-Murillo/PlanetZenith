@@ -44,6 +44,7 @@ public class PantallaJuegoNivelDos extends Nivel {
         cargarTexturaBala("Proyectiles/bala1.png");
         Gdx.input.setInputProcessor(HUD);
         definirParedes();
+        crearBotones(new Texture("BotonesHUD/botonDispararNivelDos.png"),new Texture("BotonesHUD/botonSaltarNivelDos.png"));
     }
 
     private void crearEnemigos(){
@@ -202,23 +203,12 @@ public class PantallaJuegoNivelDos extends Nivel {
     }
 
     private void batallaJefe() {
-        crearParedesBatallaJefe();
+        crearParedesBatallaJefe(mapa,mundo);
         iniciarBatallaJefe = false;
         batallaJefeActiva = true;
     }
 
-    private void crearParedesBatallaJefe() {
-        MapObjects objetos = mapa.getLayers().get("ParedesJefe").getObjects();
-        for(MapObject objeto: objetos){
-            Shape rectangulo = CargarMapa.getRectangle((RectangleMapObject)objeto);
-            BodyDef bd = new BodyDef();
-            bd.position.set(((RectangleMapObject) objeto).getRectangle().x, ((RectangleMapObject) objeto).getRectangle().y);
-            bd.type  = BodyDef.BodyType.StaticBody;
-            Body body = mundo.createBody(bd);
-            body.createFixture(rectangulo,1);
-            rectangulo.dispose();
-        }
-    }
+
 
     private void dispararMurcielago(float delta) {
         for (Enemigo enemy : arrEnemigos) {
