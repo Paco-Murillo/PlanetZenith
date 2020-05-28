@@ -20,6 +20,7 @@ public class PantallaJuegoNivelTres extends Nivel {
     private boolean iniciarBatallaJefe;
     private Array<Bala> balasJefe;
     private float timeAcumDisparoJefe;
+    private float timeAcumGenEnemigo;
 
     /**
      * Clase abstracta que permite representar los fundamentos de cada nivel
@@ -32,6 +33,7 @@ public class PantallaJuegoNivelTres extends Nivel {
 
     @Override
     public void show() {
+
         crearGravedad();
         crearMundo(gravedad);
         crearEnemigos();
@@ -127,6 +129,7 @@ public class PantallaJuegoNivelTres extends Nivel {
             checarColisiones(arrBalas, jefe);
             checarColisiones(balasJefe, protagonista);
             checarFinal(jefe);
+            //generarEnemigos(delta);
         }
     }
 
@@ -186,6 +189,16 @@ public class PantallaJuegoNivelTres extends Nivel {
         crearParedesBatallaJefe(mapa,mundo);
         iniciarBatallaJefe = false;
         batallaJefeActiva = true;
+    }
+
+    private void generarEnemigos(float delta){
+        timeAcumDisparoJefe += delta;
+        if (timeAcumDisparoJefe > 2) {
+            Enemigo enemigo = new Enemigo(new Texture("Enemigos/EnemigoNivelTres.png"), 850, 200, 1f, 30f, 30f, mundo, Enemigo.TipoEnemigo.CAMINANTE);
+            arrEnemigos.add(enemigo);
+        }
+
+
     }
 
 

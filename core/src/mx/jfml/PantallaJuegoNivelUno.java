@@ -128,7 +128,7 @@ public class PantallaJuegoNivelUno extends Nivel {
             moverBalasJefe(delta);
             checarColisiones(arrBalas, jefe);
             checarColisiones(balasJefe, protagonista);
-            checarFinal(jefe);
+            checarFinal();
         }
     }
 
@@ -203,7 +203,7 @@ public class PantallaJuegoNivelUno extends Nivel {
                             100f, 0f, 100f);
                     balasJefe.add(bala);
                 }
-            }else {
+            } else {
                 if (jefe.movimiento == Personaje.Movimientos.IZQUIERDA) {
                     Bala bala = new Bala(texturaBalaEnemigos,
                             jefe.sprite.getX(),

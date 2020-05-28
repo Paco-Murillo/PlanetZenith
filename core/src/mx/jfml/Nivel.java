@@ -478,7 +478,7 @@ public abstract class Nivel extends Pantalla {
 
 
 
-    protected void checarFinal(Jefe jefe) {
+    protected void checarFinal() {
         if(jefe.getVida()<=0){
             detenerMusica();
             juego.setScreen(new PantallaGanar(juego));
