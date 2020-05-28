@@ -33,7 +33,6 @@ public class PantallaJuegoNivelTres extends Nivel {
 
     @Override
     public void show() {
-
         crearGravedad();
         crearMundo(gravedad);
         crearEnemigos();
