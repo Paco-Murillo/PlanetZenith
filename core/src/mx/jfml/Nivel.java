@@ -174,6 +174,7 @@ public abstract class Nivel extends Pantalla {
                     musicaNivelDos.play();
 
                 }
+                break;
             case NIVELTRES:
                 try{
                     musicaNivelTres.setLooping(true);
@@ -186,6 +187,7 @@ public abstract class Nivel extends Pantalla {
                     musicaNivelTres.setVolume(audioManejador.getVolMusica());
                     musicaNivelTres.play();
                 }
+                break;
             default:
                 break;
         }
