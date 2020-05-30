@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObject;
@@ -112,6 +113,10 @@ public abstract class Nivel extends Pantalla {
 
     //Selector de nivel dice que musica poner mientras esta el nivel
     private  SeleccionaNivel seleccionaNivel;
+
+    //Particulas
+    protected ParticleEffect particleEffect;
+    protected Array<ParticleEmitter> particleEmitters;
 
     /**
      * Clase abstracta que permite representar los fundamentos de cada nivel
@@ -402,6 +407,12 @@ public abstract class Nivel extends Pantalla {
         CargarMapa.crearCuerpos(mapa,mundo);
     }
 
+    protected void crearParticulas(String nivel){
+        particleEffect = new ParticleEffect();
+        particleEffect.load(Gdx.files.internal("Enemigos/Particulas/ParticleEmitter_EnemigosNivel"+nivel),Gdx.files.internal(""));
+        particleEmitters = particleEffect.getEmitters();
+    }
+
     @Override
     public void render(float delta) {
         borrarPantalla();
@@ -447,6 +458,8 @@ public abstract class Nivel extends Pantalla {
             bala.render(batch);
         }
         jefe.render(batch);
+        particleEffect.draw(batch);
+
         // jefe.sprite.setPosition(jefe.body.getPosition().x - jefe.sprite.getWidth()/2, jefe.body.getPosition().y - jefe.sprite.getHeight()/2);
         batch.end();
 
@@ -462,6 +475,7 @@ public abstract class Nivel extends Pantalla {
             textoMarcador.render(batch, " Puntos: ", 460, 700);
             textoMarcador.render(batch, Integer.toString(puntosJugador), 560, 700);
             batch.end();
+            particleEffect.update(delta);
             actualizar(delta);
             dispararEnemigos(delta);
             probarColisiones();
@@ -649,6 +663,9 @@ public abstract class Nivel extends Pantalla {
                     enemigo.setVida(bala.getDanio());
                     if(enemigo.getVida()<=0) {
                         mundo.destroyBody(enemigo.body);
+                        Sprite enemySprite = arrEnemigos.get(indexEnemigos).sprite;
+                        particleEmitters.get(0).setPosition(enemySprite.getX(), enemySprite.getY());
+                        particleEffect.start();
                         arrEnemigos.removeIndex(indexEnemigos);
                         // Particle emitter
                     }

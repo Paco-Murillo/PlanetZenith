@@ -45,6 +45,7 @@ public class PantallaJuegoNivelUno extends Nivel {
         Gdx.input.setInputProcessor(HUD);
         definirParedes();
         crearBotones(new Texture("BotonesHUD/botonDisparar.png"),new Texture("BotonesHUD/botonSaltar.png"));
+        crearParticulas("1");
     }
 
     private void crearEnemigos(){

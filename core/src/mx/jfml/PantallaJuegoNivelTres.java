@@ -50,6 +50,7 @@ public class PantallaJuegoNivelTres extends Nivel {
         definirParedes();
         inicializarParedJefe();
         crearBotones(new Texture("BotonesHUD/botonDisparar.png"),new Texture("BotonesHUD/botonSaltar.png"));
+        crearParticulas("3");
     }
 
     private void inicializarParedJefe() {
