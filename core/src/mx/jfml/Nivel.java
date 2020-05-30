@@ -38,6 +38,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import org.w3c.dom.css.Rect;
 
 import java.util.Random;
 
@@ -105,6 +106,10 @@ public abstract class Nivel extends Pantalla {
     private Music musicaNivelDos;
     private Music musicaNivelTres;
 
+    //Botiquines
+    private boolean estadoDibujoBotiquin = true;
+    protected Botiquin botiquin;
+
     //Selector de nivel dice que musica poner mientras esta el nivel
     private  SeleccionaNivel seleccionaNivel;
 
@@ -122,6 +127,7 @@ public abstract class Nivel extends Pantalla {
     @Override
     public void show(){
         crearProtagonista("Principal/PersonajeNormalFinal.png");
+        crearBotiquines();
         cargarTexturaBalaEnemigos("Proyectiles/balaenemigo.png");
         cargarAssets();
         cargarMusica();
@@ -132,6 +138,7 @@ public abstract class Nivel extends Pantalla {
         crearShapeRenderer();
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
     }
+
 /*
     protected ParticleEffect crearEfectoMuerte(String particleEmitterFilePath){
         ParticleEmitter particleEmitter = new ParticleEmitter();
@@ -243,6 +250,15 @@ public abstract class Nivel extends Pantalla {
      */
     private void crearProtagonista(String imgPath){
         protagonista = new Protagonista(new Texture(imgPath), 220, 100, 1f, 30f, 4000,mundo);
+    }
+
+    /**
+     *
+     * @param
+     */
+    private void crearBotiquines() {
+        Texture texturaBotiquin = new Texture("Principal/Botiquin.png");
+        botiquin = new Botiquin(texturaBotiquin, 5344, 64, mundo);
     }
 
     /**
@@ -412,6 +428,10 @@ public abstract class Nivel extends Pantalla {
 
         batch.begin();
         protagonista.render(batch);
+        //dibujar los botiquines
+        if(estadoDibujoBotiquin) {
+            botiquin.render(batch);
+        }
         //render todos los enemigos
         for(Enemigo enemy: arrEnemigos){
             enemy.render(batch);
@@ -446,6 +466,7 @@ public abstract class Nivel extends Pantalla {
             dispararEnemigos(delta);
             probarColisiones();
             probarColisionesProtagonista();
+            porbarColisionBotiquin();
             mundo.step(delta, 6, 2);  //1/60f, 6, 2);
         }
         else if(estadoJuego == EstadoJuego.PAUSADO){
@@ -636,6 +657,18 @@ public abstract class Nivel extends Pantalla {
                     contadorBalas--;
                     return;
                 }
+            }
+        }
+    }
+    /**
+     *
+     */
+    private void porbarColisionBotiquin(){
+        Rectangle recProtagonista = protagonista.sprite.getBoundingRectangle();
+        if (recProtagonista .overlaps(botiquin.sprite.getBoundingRectangle())){
+            if(estadoDibujoBotiquin) {
+                protagonista.setVida(-botiquin.getVidaBotiquin());
+                estadoDibujoBotiquin = false;
             }
         }
     }
