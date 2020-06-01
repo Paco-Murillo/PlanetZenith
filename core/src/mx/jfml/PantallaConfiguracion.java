@@ -28,7 +28,6 @@ public class PantallaConfiguracion extends Pantalla {
     //Botones
     private Texture texturaBtnVolUpMusica;
     private Texture texturaBtnVolDownMusica;
-    private Texture texturaBtnMute;
     private Texture texturaBtnRegresar;
 
 
@@ -83,12 +82,6 @@ public class PantallaConfiguracion extends Pantalla {
         escenaConfig.addActor(btnVolUpMusica);
 
 
-        //Boton Mutear
-        TextureRegionDrawable trdMute = new TextureRegionDrawable(new TextureRegion(texturaBtnMute));
-        ImageButton btnMute = new ImageButton(trdMute);
-        btnMute.setPosition(ANCHO/2 - btnMute.getWidth()/2, ALTO/3 - btnMute.getHeight());
-        escenaConfig.addActor(btnMute);
-
         //Boton Regresar
         TextureRegionDrawable trdRegresar = new TextureRegionDrawable(new TextureRegion(texturaBtnRegresar));
         ImageButton btnRegresar = new ImageButton(trdRegresar);
@@ -128,16 +121,6 @@ public class PantallaConfiguracion extends Pantalla {
             }
         });
 
-        btnMute.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                efectoBoton.play(audioManager.getVolEfectos());
-                audioManager.setVolMusica(0);
-                audioManager.setVolEfectos(0);
-                musicaFondo.setVolume(audioManager.getVolMusica());
-            }
-        });
 
         btnRegresar.addListener(new ClickListener() {
             @Override
@@ -162,7 +145,6 @@ public class PantallaConfiguracion extends Pantalla {
         //Textura de botones
         assetManager.load("BotonesConf/btnVolArriba.png", Texture.class);
         assetManager.load("BotonesConf/btnVolAbajo.png", Texture.class);
-        assetManager.load("BotonesConf/btnMute.png", Texture.class);
         assetManager.load("BotonesConf/btnRegresar.png", Texture.class);
 
         //Se bloquea hasta cargar los recursos
@@ -170,7 +152,6 @@ public class PantallaConfiguracion extends Pantalla {
 
         texturaBtnVolUpMusica = assetManager.get("BotonesConf/btnVolArriba.png");
         texturaBtnVolDownMusica = assetManager.get("BotonesConf/btnVolAbajo.png");
-        texturaBtnMute = assetManager.get("BotonesConf/btnMute.png");
         texturaBtnRegresar = assetManager.get("BotonesConf/btnRegresar.png");
 
         musicaFondo = assetManager.get("Audio/Musica/principal.wav");
@@ -228,7 +209,6 @@ public class PantallaConfiguracion extends Pantalla {
         //Liberar la memoria usada
         texturaFondo.dispose();
         texturaBtnRegresar.dispose();
-        texturaBtnMute.dispose();
         texturaBtnVolUpMusica.dispose();
         musicaFondo.dispose();
         efectoBoton.dispose();
@@ -237,7 +217,6 @@ public class PantallaConfiguracion extends Pantalla {
         //Ahora el asset manager libera los recursos
         assetManager.unload("BotonesConf/btnVolArriba.png");
         assetManager.unload("BotonesConf/btnVolAbajo.png");
-        assetManager.unload("BotonesConf/btnMute.png");
         assetManager.unload("BotonesConf/btnRegresar.png");
         assetManager.unload("Audio/Musica/principal.wav");
         assetManager.unload("Audio/Efectos/sonidoboton.mp3");
