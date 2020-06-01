@@ -25,6 +25,7 @@ public class PantallaJuegoNivelDos extends Nivel {
     private Array<Bala> balasJefe;
     private float timeAcumDisparoJefe;
 
+
     /**
      * Clase abstracta que permite representar los fundamentos de cada nivel
      *

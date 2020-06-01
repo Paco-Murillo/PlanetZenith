@@ -29,6 +29,8 @@ public class PantallaJuegoNivelTres extends Nivel {
     private Sprite spritePared;
     private Texture texturaPared;
 
+
+
     /**
      * Clase abstracta que permite representar los fundamentos de cada nivel
      *

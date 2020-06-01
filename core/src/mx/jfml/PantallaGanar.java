@@ -95,6 +95,7 @@ public class PantallaGanar extends Pantalla {
                     case NIVELUNO:
                         juego.setSeleccionaNivel(SeleccionaNivel.NIVELDOS);
                         juego.setScreen(new PantallaJuegoNivelDos(juego));
+                        break;
                     case NIVELDOS:
                         juego.setSeleccionaNivel(SeleccionaNivel.NIVELTRES);
                         juego.setScreen(new PantallaJuegoNivelTres(juego));
