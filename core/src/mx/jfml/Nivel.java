@@ -48,7 +48,7 @@ public abstract class Nivel extends Pantalla {
 
     //Mundo
     protected World mundo; //Simulacion
-    private Box2DDebugRenderer debugRenderer;
+    //private Box2DDebugRenderer debugRenderer;
     private Contacto contacto;
     protected Vector2 gravedad;
 
@@ -232,7 +232,7 @@ public abstract class Nivel extends Pantalla {
      */
 
     protected void crearGravedad(){
-        gravedad = new Vector2(0,-130);
+        gravedad = new Vector2(0,-175);
     }
 
     /**
@@ -242,7 +242,7 @@ public abstract class Nivel extends Pantalla {
     protected void crearMundo(Vector2 gravedad) {
         Box2D.init();
         mundo = new World(gravedad, true);
-        debugRenderer = new Box2DDebugRenderer();
+        //debugRenderer = new Box2DDebugRenderer();
     }
 
     /*
@@ -254,7 +254,7 @@ public abstract class Nivel extends Pantalla {
      * @param imgPath Path de la imagen
      */
     private void crearProtagonista(String imgPath){
-        protagonista = new Protagonista(new Texture(imgPath), 220, 100, 1f, 30f, 4000,mundo);
+        protagonista = new Protagonista(new Texture(imgPath), 220, 100, 1f, 30f, 300,mundo);
     }
 
     /**
@@ -435,7 +435,7 @@ public abstract class Nivel extends Pantalla {
         mapRenderer.setView(camara);
         mapRenderer.render();
 
-        debugRenderer.render(mundo, camara.combined);
+        //debugRenderer.render(mundo, camara.combined);
 
         batch.begin();
         protagonista.render(batch);
