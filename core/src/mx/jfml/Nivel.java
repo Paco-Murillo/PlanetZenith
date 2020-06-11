@@ -577,12 +577,9 @@ public abstract class Nivel extends Pantalla {
                 protagonista.setMovimiento(Personaje.Movimientos.IZQUIERDA);
                 protagonista.sprite.setFlip(true,false);
             }
-            if(protagonista.body.getLinearVelocity().y > 0) {
+
                 protagonista.body.applyForceToCenter(percentX * 4000, 0, true);
-            }
-            else {
-                protagonista.body.applyForceToCenter(percentX * 4000, -1000*Math.abs(percentX), true);
-            }
+
         }
     }
 
